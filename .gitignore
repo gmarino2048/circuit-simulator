@@ -1,0 +1,10 @@
+
+
+# Ignore editor-specific files
+.devcontainer/
+.vscode/
+
+
+# Ignore Temporary Build files
+build/
+cmake_build_*/
