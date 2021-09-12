@@ -139,11 +139,19 @@ public:
         const State initial_state = FLOATING
     );
 
+    // TODO: Add documentation for Wire member functions
 
     static size_t VCC_ID();
     static size_t GND_ID();
 
+
+    ssize_t id() const;
+    std::string primary_name() const;
+    std::vector<std::string> other_names() const;
     bool externally_driven() const;
+
+    void add_name(const std::string &new_name);
+    std::vector<std::string> other_names() const;
 
     State state() const;
     void state(const State new_state);
