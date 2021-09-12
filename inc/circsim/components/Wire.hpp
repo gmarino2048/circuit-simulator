@@ -18,8 +18,9 @@ public:
      * 
      */
     enum SpecialWireType {
-        VCC,
-        GND
+        VCC,        //!< This is the high voltage rail
+        GND,        //!< This is the grounding rail
+        CLK         //!< This is the clock signal
     };
 
     /**
@@ -42,17 +43,34 @@ public:
 
 private:
 
+    /// Typedef the optional external driver function so the code is cleaner
     typedef std::optional<std::function<State(State)>> extern_func_t;
 
-    ssize_t _id;
-    std::string _name;
 
+    /// The ID of the wire. This will be -1 if it has not been initialized yet
+    ssize_t _id;
+
+    /// The name of the wire. This will be empty if the wire has not been initialized
+    std::string _primary_name;
+
+    /// Sometimes wires can have alternate names, we should list them here in case
+    std::vector<std::string> _other_names;
+
+
+    /// The current state of the wire, given as one of the above Wire States
     State _state;
 
+
+    /// Tells whether this wire is potentially externally driven
     bool _externally_driven;
+
+    /// The external function used to drive the wire (if any)
     extern_func_t _driver_function;
 
+    /// The set of transistors which control this wire
     std::vector<size_t> _trans_ctl_ids;
+
+    /// The set of transistors controlled in turn by this wire
     std::vector<size_t> _trans_gate_ids;
 
 public:
