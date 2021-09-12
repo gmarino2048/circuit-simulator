@@ -4,6 +4,8 @@
 .devcontainer/
 .vscode/
 
+# Ignore doxygen docs
+docs/
 
 # Ignore Temporary Build files
 build/

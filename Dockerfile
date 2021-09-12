@@ -5,6 +5,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt -y upgrade
 
 RUN DEBIAN_FRONTEND=noninteractive apt -y install \
     build-essential \
+    doxygen \
+    graphviz \
     git \
     clang \
     llvm \
