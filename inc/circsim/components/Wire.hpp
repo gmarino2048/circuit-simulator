@@ -61,12 +61,14 @@ public:
 
     Wire(
         const SpecialWireType special_type,
+        const std::vector<size_t> &control_transistors,
         const std::vector<size_t> &gate_transistors
     );
 
     Wire(
         const std::string &name,
         const std::function<State(State)> driver_func,
+        const std::vector<size_t> &control_transistors,
         const std::vector<size_t> &gate_transistors
     );
 
