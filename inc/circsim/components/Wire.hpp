@@ -1,3 +1,17 @@
+/**
+ * @file Wire.hpp
+ * @author Guy Marino (gmarino2048@gmail.com)
+ * @brief Contains the declarations for the Wire class. The wires of the
+ *        circuit drive the transistors and form the basis for all IO
+ *        information. The wires are the most important components, while the
+ *        transistors provide switching functionality **only**.
+ * @version 0.1
+ * @date 2021-09-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #ifndef __CIRCSIM_COMPONENTS_WIRE_HPP
 #define __CIRCSIM_COMPONENTS_WIRE_HPP
 
@@ -9,12 +23,19 @@
 
 namespace circsim::components {
 
+/**
+ * @brief C++ implementation of the wire class. This is **not** intended
+ *        to be the lean version of the wire used for calculation, but is
+ *        instead the fully-featured version of the wire available for
+ *        printing/reading data.
+ * 
+ */
 class Wire final {
 public:
 
     /**
      * @brief Add an enumerator for special wire types like the VCC and
-     *        GND rails, 
+     *        GND rails.
      * 
      */
     enum SpecialWireType {
@@ -147,7 +168,6 @@ public:
 
     ssize_t id() const;
     std::string primary_name() const;
-    std::vector<std::string> other_names() const;
     bool externally_driven() const;
 
     void add_name(const std::string &new_name);
