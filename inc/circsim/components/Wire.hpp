@@ -43,6 +43,12 @@ public:
 
 private:
 
+    /// The ID of the VCC rail
+    static ssize_t _VCC_ID;
+
+    /// The ID of the GND rail
+    static ssize_t _GND_ID;
+
     /// Typedef the optional external driver function so the code is cleaner
     typedef std::optional<std::function<State(State)>> extern_func_t;
 
@@ -132,6 +138,10 @@ public:
         const std::vector<size_t> &gate_transistors,
         const State initial_state = FLOATING
     );
+
+
+    static size_t VCC_ID();
+    static size_t GND_ID();
 
     bool externally_driven() const;
 
