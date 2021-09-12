@@ -75,21 +75,56 @@ private:
 
 public:
 
+    /**
+     * @brief Create an empty wire object. This object will have a negative id,
+     *        showing that it is not valid. This is just a convenience function for
+     *        making a list of pre-allocated Wires.
+     * 
+     */
     Wire();
 
+    /**
+     * @brief Create a special wire from the approved special types. This will use
+     *        a premade driver function and is provided for convenience.
+     * 
+     * @param id                    The id of the wire
+     * @param special_type          The premade special type of the wire object
+     * @param control_transistors   The list of control transistors for this wire
+     * @param gate_transistors      The list of transistors controlled by this wire
+     */
     Wire(
+        const size_t id,
         const SpecialWireType special_type,
         const std::vector<size_t> &control_transistors,
         const std::vector<size_t> &gate_transistors
     );
 
+    /**
+     * @brief Create a custom special wire with a specified driver function.
+     * 
+     * @param id                    The ID of the wire
+     * @param name                  The name of the new special wire
+     * @param driver_func           The function used to drive the special wire
+     * @param control_transistors   The transistors which control this wire
+     * @param gate_transistors      The transistors controlled by this wire
+     */
     Wire(
+        const size_t id,
         const std::string &name,
         const std::function<State(State)> driver_func,
         const std::vector<size_t> &control_transistors,
         const std::vector<size_t> &gate_transistors
     );
 
+    /**
+     * @brief Create a standard wire used within the processor.
+     * 
+     * @param id                    The ID of the wire
+     * @param name                  The name of the wire
+     * @param control_transistors   The transistors which control the wire
+     * @param gate_transistors      The transistors controlled by the wire
+     * @param initial_state         The initial state of the wire
+     */
     Wire(
         const size_t id,
         const std::string &name,
