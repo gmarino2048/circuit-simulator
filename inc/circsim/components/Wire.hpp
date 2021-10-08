@@ -30,7 +30,8 @@ namespace circsim::components {
  *        printing/reading data.
  * 
  */
-class Wire final {
+class Wire final
+{
 public:
 
     /**
@@ -51,7 +52,9 @@ public:
      *        value comparison centered around `FLOATING`.
      * 
      */
-    enum State : uint8_t {
+    enum State : uint8_t
+    {
+        UNKNOWN =           0b00000000,     //!< Unknown state
         GROUNDED =          0b00000001,     //!< Immutable off state
         PULLED_LOW =        0b00000010,     //!< Definitive off state
         FLOATING_LOW =      0b00000100,     //!< Indeterminate state, currently off
@@ -119,7 +122,8 @@ public:
      * @param control_transistors   The list of control transistors for this wire
      * @param gate_transistors      The list of transistors controlled by this wire
      */
-    Wire(
+    Wire
+    (
         const size_t id,
         const SpecialWireType special_type,
         const std::vector<size_t> &control_transistors,
@@ -135,7 +139,8 @@ public:
      * @param control_transistors   The transistors which control this wire
      * @param gate_transistors      The transistors controlled by this wire
      */
-    Wire(
+    Wire
+    (
         const size_t id,
         const std::string &name,
         const std::function<State(State)> driver_func,
@@ -152,7 +157,8 @@ public:
      * @param gate_transistors      The transistors controlled by the wire
      * @param initial_state         The initial state of the wire
      */
-    Wire(
+    Wire
+    (
         const size_t id,
         const std::string &name,
         const std::vector<size_t> &control_transistors,
