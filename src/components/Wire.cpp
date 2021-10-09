@@ -93,4 +93,50 @@ Wire::Wire
 {
     // Use default for all other members
 }
-   
+
+
+// Static special wire getters
+size_t Wire::VCC_ID() { return Wire::_VCC_ID; }
+
+size_t Wire::GND_ID() { return Wire::_GND_ID; }
+
+
+// Wire metadata getters/setters
+ssize_t Wire::id() const noexcept { return this->_id; }
+
+std::string Wire::primary_name() const noexcept { return this->_primary_name; }
+
+bool Wire::externally_driven() const noexcept { return this->_externally_driven; }
+
+
+void Wire::add_name(const std::string &new_name)
+{
+    this->_other_names.push_back(new_name);
+}
+
+std::vector<std::string> Wire::other_names() const noexcept { return this->_other_names; }
+
+
+// Wire state getters/setters
+Wire::State Wire::state() const noexcept { return this->_state; }
+
+void Wire::state(const State new_state) noexcept { this->_state = new_state; } 
+
+
+bool Wire::low() const noexcept
+{
+    static const uint8_t LOW_STATES = GROUNDED | PULLED_LOW | FLOATING_LOW;
+    return (bool)(this->_state & LOW_STATES);
+}
+
+bool Wire::high() const noexcept
+{
+    static const uint8_t HIGH_STATES = HIGH | PULLED_HIGH | FLOATING_HIGH;
+    return (bool)(this->_state & HIGH_STATES);
+}
+
+
+void Wire::set_high_low(const bool new_state)
+{
+    this->_state = new_state ? PULLED_HIGH : PULLED_LOW;
+}

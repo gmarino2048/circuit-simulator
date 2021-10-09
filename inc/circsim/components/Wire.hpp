@@ -189,7 +189,7 @@ public:
      * 
      * @return ssize_t The wire ID
      */
-    ssize_t id() const;
+    ssize_t id() const noexcept;
 
     /**
      * @brief Return the primary name of this wire. The primary name is
@@ -197,7 +197,7 @@ public:
      * 
      * @return std::string The primary name
      */
-    std::string primary_name() const;
+    std::string primary_name() const noexcept;
 
     /**
      * @brief Is this wire driven externally, or by other transistors in the circuit.
@@ -205,7 +205,7 @@ public:
      * @return true     The wire is externally driven
      * @return false    The wire relies on other transistors
      */
-    bool externally_driven() const;
+    bool externally_driven() const noexcept;
 
 
     /**
@@ -221,7 +221,7 @@ public:
      * 
      * @return std::vector<std::string> The list of other names for this wire.
      */
-    std::vector<std::string> other_names() const;
+    std::vector<std::string> other_names() const noexcept;
 
 
     /**
@@ -229,26 +229,30 @@ public:
      * 
      * @return State The wire's current state
      */
-    State state() const;
+    State state() const noexcept;
 
     /**
      * @brief Set the state of this wire.
      * 
      * @param new_state The new state to set the wire to
      */
-    void state(const State new_state);
+    void state(const State new_state) noexcept;
 
     /**
-     * @brief Set this wire low.
+     * @brief Returns whether this wire is low
      * 
+     * @return true The current wire is low
+     * @return false The current wire is high
      */
-    void low() const;
+    bool low() const noexcept;
 
     /**
-     * @brief Set this wire high.
+     * @brief Returns whether this wire is high
      * 
+     * @return true The current wire is high
+     * @return false The current wire is low
      */
-    void high() const;
+    bool high() const noexcept;
 
     /**
      * @brief Convenience method to set the wire high or low.
