@@ -1,4 +1,5 @@
 
+#include <cstdint>
 #include <optional>
 #include <circsim/components/Wire.hpp>
 
@@ -43,6 +44,28 @@ Wire::Wire
     _driver_function = special_wire_func(special_type);
     
     set_special_wire_id(special_type);
+}
+
+
+/**
+ * Create an externally-driven transistor with a custom driver function.
+ */
+Wire::Wire
+(
+    const size_t id,
+    const std::string &name,
+    const std::function<State(State)> driver_func,
+    const std::vector<size_t> &control_transistors,
+    const std::vector<size_t> &gate_transistors
+):  _id(id),
+    _primary_name(name),
+    _state(UNKNOWN),
+    _externally_driven(true),
+    _driver_function(driver_func),
+    _trans_ctl_ids(control_transistors),
+    _trans_gate_ids(gate_transistors)
+{
+    // Use default constructors for other members
 }
 
    
