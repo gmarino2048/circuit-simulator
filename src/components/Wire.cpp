@@ -72,4 +72,25 @@ Wire::Wire
     _state = _driver_function.value()(_state);
 }
 
+
+/**
+ * Constructs a new standard wire which is internally driven
+ */
+Wire::Wire
+(
+    const size_t id,
+    const std::string &name,
+    const std::vector<size_t> &control_transistors,
+    const std::vector<size_t> &gate_transistors,
+    const State initial_state
+):  _id(id),
+    _primary_name(name),
+    _state(initial_state),
+    _externally_driven(false),
+    _driver_function(std::nullopt),
+    _trans_ctl_ids(control_transistors),
+    _trans_gate_ids(gate_transistors)
+{
+    // Use default for all other members
+}
    
