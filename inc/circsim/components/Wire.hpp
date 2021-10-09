@@ -167,28 +167,110 @@ public:
         const State initial_state = FLOATING
     );
 
-    // TODO: Add documentation for Wire member functions
 
+    /**
+     * @brief Get the ID for the VCC Rail
+     * 
+     * @return size_t The VCC Rail ID
+     */
     static size_t VCC_ID();
+
+    /**
+     * @brief Get the ID for the GND Rail
+     * 
+     * @return size_t The GND rail ID
+     */
     static size_t GND_ID();
 
 
+    /**
+     * @brief Get this wire's ID. This will be negative if the wire
+     *        is not initialized.
+     * 
+     * @return ssize_t The wire ID
+     */
     ssize_t id() const;
+
+    /**
+     * @brief Return the primary name of this wire. The primary name is
+     *        the first name with which this wire was defined.
+     * 
+     * @return std::string The primary name
+     */
     std::string primary_name() const;
+
+    /**
+     * @brief Is this wire driven externally, or by other transistors in the circuit.
+     * 
+     * @return true     The wire is externally driven
+     * @return false    The wire relies on other transistors
+     */
     bool externally_driven() const;
 
+
+    /**
+     * @brief Add an additional name to the wire definition. This name will be
+     *        added to the other_names list.
+     * 
+     * @param new_name The new name to add to the wire
+     */
     void add_name(const std::string &new_name);
+
+    /**
+     * @brief Return the list of other names for this wire.
+     * 
+     * @return std::vector<std::string> The list of other names for this wire.
+     */
     std::vector<std::string> other_names() const;
 
+
+    /**
+     * @brief Return the current state of this wire.
+     * 
+     * @return State The wire's current state
+     */
     State state() const;
+
+    /**
+     * @brief Set the state of this wire.
+     * 
+     * @param new_state The new state to set the wire to
+     */
     void state(const State new_state);
 
-    bool low() const;
-    bool high() const;
+    /**
+     * @brief Set this wire low.
+     * 
+     */
+    void low() const;
 
+    /**
+     * @brief Set this wire high.
+     * 
+     */
+    void high() const;
+
+    /**
+     * @brief Convenience method to set the wire high or low.
+     * 
+     * @param new_state On `true`, set this wire to high. On `false`, set to low.
+     */
     void set_high_low(const bool new_state);
 
+
+    /**
+     * @brief Return a string description of this wire.
+     * 
+     * @return std::string The wire description
+     */
     operator std::string();
+
+    /**
+     * @brief Compare this wire with another.
+     * 
+     * @param other The other wire for comparison
+     * @return bool `true` if the wires are the same, `false` otherwise
+     */
     bool operator==(const Wire &other);
 
 private:
