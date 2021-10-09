@@ -39,7 +39,8 @@ public:
      *        GND rails.
      * 
      */
-    enum SpecialWireType {
+    enum SpecialWireType
+    {
         VCC,        //!< This is the high voltage rail
         GND,        //!< This is the grounding rail
         CLK         //!< This is the clock signal
@@ -189,6 +190,14 @@ public:
 
     operator std::string();
     bool operator==(const Wire &other);
+
+private:
+
+    static void set_special_wire_id(const SpecialWireType type);
+
+    static std::string special_wire_name(const SpecialWireType type);
+
+    static extern_func_t special_wire_func(const SpecialWireType type);
 
 };
 
