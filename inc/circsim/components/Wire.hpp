@@ -275,10 +275,28 @@ public:
 
 private:
 
+    /**
+     * @brief Set the static wire ID parameter when the special wire
+     *        is defined.
+     * 
+     * @param type The type of the special wire
+     */
     static void set_special_wire_id(const SpecialWireType type);
 
+    /**
+     * @brief Get the name for the special wire.
+     * 
+     * @param type The type of the special wire
+     * @return std::string The special wire's name
+     */
     static std::string special_wire_name(const SpecialWireType type);
 
+    /**
+     * @brief Get the driver function for a special wire.
+     * 
+     * @param type The type of the special wire
+     * @return extern_func_t The external driver function
+     */
     static extern_func_t special_wire_func(const SpecialWireType type);
 
 };
