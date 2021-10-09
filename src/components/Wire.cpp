@@ -44,6 +44,8 @@ Wire::Wire
     _driver_function = special_wire_func(special_type);
     
     set_special_wire_id(special_type);
+
+    _state = _driver_function.value()(_state);
 }
 
 
@@ -66,6 +68,8 @@ Wire::Wire
     _trans_gate_ids(gate_transistors)
 {
     // Use default constructors for other members
+    // Get the first state value
+    _state = _driver_function.value()(_state);
 }
 
    
