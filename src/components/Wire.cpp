@@ -149,7 +149,7 @@ bool Wire::high() const noexcept
 }
 
 
-void Wire::set_high_low(const bool new_state)
+void Wire::set_high_low(const bool new_state) noexcept
 {
     this->_state = new_state ? PULLED_HIGH : PULLED_LOW;
 }
@@ -166,6 +166,12 @@ Wire::operator std::string()
     ss << "\tState:\t\t" << state_to_string(this->_state) << "\n";
 
     return ss.str();
+}
+
+
+bool Wire::operator==(const Wire &rhs) noexcept
+{
+    return this->_id == rhs._id;
 }
 
 

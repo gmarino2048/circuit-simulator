@@ -259,7 +259,7 @@ public:
      * 
      * @param new_state On `true`, set this wire to high. On `false`, set to low.
      */
-    void set_high_low(const bool new_state);
+    void set_high_low(const bool new_state) noexcept;
 
 
     /**
@@ -272,10 +272,10 @@ public:
     /**
      * @brief Compare this wire with another.
      * 
-     * @param other The other wire for comparison
+     * @param rhs The other wire for comparison
      * @return bool `true` if the wires are the same, `false` otherwise
      */
-    bool operator==(const Wire &other);
+    bool operator==(const Wire &rhs) noexcept;
 
 private:
 
