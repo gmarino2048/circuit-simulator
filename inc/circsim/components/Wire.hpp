@@ -303,6 +303,16 @@ private:
      */
     static extern_func_t special_wire_func(const SpecialWireType type);
 
+
+    /**
+     * @brief Convert the wire's current state to a readable string
+     *        representation.
+     * 
+     * @param state The wire state
+     * @return std::string A string representation of the state
+     */
+    static std::string state_to_string(const State state);
+
 };
 
 }

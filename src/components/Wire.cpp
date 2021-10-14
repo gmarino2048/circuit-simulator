@@ -1,9 +1,22 @@
 
 #include <cstdint>
 #include <optional>
+#include <iomanip>
+#include <sstream>
 #include <circsim/components/Wire.hpp>
 
 using namespace circsim::components;
+
+// Local constants
+const char *ST_UNK = "UNKNOWN";
+const char *ST_GND = "GROUNDED";
+const char *ST_PLL = "PULLED LOW";
+const char *ST_FLL = "FLOATING LOW";
+const char *ST_FLT = "FLOATING";
+const char *ST_FLH = "FLOATING HIGH";
+const char *ST_PLH = "PULLED HIGH";
+const char *ST_HGH = "HIGH";
+
 
 /// Initialize to -1 until it is set
 ssize_t Wire::_VCC_ID = -1;
@@ -139,4 +152,35 @@ bool Wire::high() const noexcept
 void Wire::set_high_low(const bool new_state)
 {
     this->_state = new_state ? PULLED_HIGH : PULLED_LOW;
+}
+
+
+// Wire operators
+Wire::operator std::string()
+{
+    std::stringstream ss;
+
+    ss << "Wire \"" << this->_primary_name << "\":\n";
+    ss << "\tId:\t\t0x" << std::uppercase << std::setfill('0') << std::setw(16)
+        << this->_id << "\n";
+    ss << "\tState:\t\t" << state_to_string(this->_state) << "\n";
+
+    return ss.str();
+}
+
+
+// Helper functions
+std::string Wire::state_to_string(const State state)
+{
+    switch(state)
+    {
+        case GROUNDED:          return ST_GND;
+        case PULLED_LOW:        return ST_PLL;
+        case FLOATING_LOW:      return ST_FLL;
+        case FLOATING:          return ST_FLT;
+        case FLOATING_HIGH:     return ST_FLH;
+        case PULLED_HIGH:       return ST_PLH;
+        case HIGH:              return ST_HGH;
+        default:                return ST_UNK;
+    }
 }
