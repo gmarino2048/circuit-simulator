@@ -96,6 +96,9 @@ private:
     std::vector<std::string> _other_names;
 
 
+    /// Tells whether this wire is connected to a pullup/pulldown
+    bool _pulled;
+
     /// The current state of the wire, given as one of the above Wire States
     State _state;
 
@@ -162,6 +165,7 @@ public:
      * 
      * @param id                    The ID of the wire
      * @param name                  The name of the wire
+     * @param pulled                The pullup/pulldown status of the wire
      * @param control_transistors   The transistors which control the wire
      * @param gate_transistors      The transistors controlled by the wire
      * @param initial_state         The initial state of the wire
@@ -170,6 +174,7 @@ public:
     (
         const size_t id,
         const std::string &name,
+        const bool pulled,
         const std::vector<size_t> &control_transistors,
         const std::vector<size_t> &gate_transistors,
         const State initial_state = FLOATING

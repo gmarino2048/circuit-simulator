@@ -46,6 +46,7 @@ const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
  */
 Wire::Wire(): _id(-1),
               _state(UNKNOWN),
+              _pulled(false),
               _externally_driven(false),
               _driver_function(std::nullopt)
 {
@@ -63,6 +64,7 @@ Wire::Wire
     const std::vector<size_t> &control_transistors,
     const std::vector<size_t> &gate_transistors
 ):  _id(id),
+    _pulled(false),
     _state(UNKNOWN),
     _externally_driven(true),
     _trans_ctl_ids(control_transistors),
@@ -89,6 +91,7 @@ Wire::Wire
     const std::vector<size_t> &gate_transistors
 ):  _id(id),
     _primary_name(name),
+    _pulled(false),
     _state(UNKNOWN),
     _externally_driven(true),
     _driver_function(driver_func),
@@ -108,11 +111,13 @@ Wire::Wire
 (
     const size_t id,
     const std::string &name,
+    const bool pulled,
     const std::vector<size_t> &control_transistors,
     const std::vector<size_t> &gate_transistors,
     const State initial_state
 ):  _id(id),
     _primary_name(name),
+    _pulled(pulled),
     _state(initial_state),
     _externally_driven(false),
     _driver_function(std::nullopt),
@@ -153,7 +158,7 @@ void Wire::state(const State new_state) noexcept { this->_state = new_state; }
 
 bool Wire::pulled() const noexcept
 {
-    return (_state & PULLED_HIGH) | (_state & PULLED_LOW);
+    return _pulled;
 }
 
 bool Wire::low() const noexcept
