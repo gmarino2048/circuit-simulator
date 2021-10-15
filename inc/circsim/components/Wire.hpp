@@ -68,14 +68,22 @@ public:
 
 private:
 
+    /// Typedef the optional external driver function so the code is cleaner
+    typedef std::optional<std::function<State(State)>> extern_func_t;
+
+
     /// The ID of the VCC rail
     static ssize_t _VCC_ID;
 
     /// The ID of the GND rail
     static ssize_t _GND_ID;
 
-    /// Typedef the optional external driver function so the code is cleaner
-    typedef std::optional<std::function<State(State)>> extern_func_t;
+
+    /// The VCC rail state function
+    static const std::function<State(State)> _VCC_FUNC;
+
+    /// The GND rail state function
+    static const std::function<State(State)> _GND_FUNC;
 
 
     /// The ID of the wire. This will be -1 if it has not been initialized yet
@@ -285,7 +293,7 @@ private:
      * 
      * @param type The type of the special wire
      */
-    static void set_special_wire_id(const SpecialWireType type);
+    void set_special_wire_id(const SpecialWireType type);
 
     /**
      * @brief Get the name for the special wire.

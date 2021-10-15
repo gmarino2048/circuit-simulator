@@ -17,12 +17,27 @@ const char *ST_FLH = "FLOATING HIGH";
 const char *ST_PLH = "PULLED HIGH";
 const char *ST_HGH = "HIGH";
 
+const char *WIRE_VCC = "VCC";
+const char *WIRE_GND = "GND";
+
 
 /// Initialize to -1 until it is set
 ssize_t Wire::_VCC_ID = -1;
 
 /// Initialize to -1 until it is set
 ssize_t Wire::_GND_ID = -1;
+
+
+// Initialize special wire functions
+const std::function<Wire::State(Wire::State)> Wire::_VCC_FUNC = [](State)
+{
+    return HIGH;
+};
+
+const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
+{
+    return GROUNDED;
+};
 
 
 /**
@@ -142,6 +157,7 @@ bool Wire::low() const noexcept
     return (bool)(this->_state & LOW_STATES);
 }
 
+
 bool Wire::high() const noexcept
 {
     static const uint8_t HIGH_STATES = HIGH | PULLED_HIGH | FLOATING_HIGH;
@@ -176,9 +192,67 @@ bool Wire::operator==(const Wire &rhs) noexcept
 
 
 // Helper functions
+const char *ERR_UNK_SPECIAL_WIRE = "Unknown special wire type specified";
+
+void Wire::set_special_wire_id(const SpecialWireType type)
+{
+    ssize_t *ID = nullptr;
+
+    switch( type )
+    {
+        case VCC:
+            ID = &this->_VCC_ID;
+            break;
+
+        case GND:
+            ID = &this->_GND_ID;
+            break;
+
+        default:
+            throw std::runtime_error(ERR_UNK_SPECIAL_WIRE);
+    }
+
+    if( *ID == -1 )
+    {
+        *ID = this->_id;
+    }
+    else
+    {
+        throw std::runtime_error
+        (
+            "ID of " + this->_primary_name + "already specified"
+        );
+    }
+}
+
+
+std::string Wire::special_wire_name(const SpecialWireType type)
+{
+    switch( type )
+    {
+        case VCC:       return WIRE_VCC;
+        case GND:       return WIRE_GND;
+        default:
+            throw std::runtime_error(ERR_UNK_SPECIAL_WIRE);
+    }
+}
+
+
+Wire::extern_func_t Wire::special_wire_func(const SpecialWireType type)
+{
+    switch( type )
+    {
+        case VCC:       return _VCC_FUNC;
+        case GND:       return _GND_FUNC;
+        default:
+            throw std::runtime_error(ERR_UNK_SPECIAL_WIRE);
+    }
+}
+
+
 std::string Wire::state_to_string(const State state)
 {
-    switch(state)
+    switch( state )
     {
         case GROUNDED:          return ST_GND;
         case PULLED_LOW:        return ST_PLL;
