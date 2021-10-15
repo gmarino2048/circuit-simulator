@@ -151,6 +151,11 @@ Wire::State Wire::state() const noexcept { return this->_state; }
 void Wire::state(const State new_state) noexcept { this->_state = new_state; } 
 
 
+bool Wire::pulled() const noexcept
+{
+    return (_state & PULLED_HIGH) | (_state & PULLED_LOW);
+}
+
 bool Wire::low() const noexcept
 {
     static const uint8_t LOW_STATES = GROUNDED | PULLED_LOW | FLOATING_LOW;

@@ -246,6 +246,15 @@ public:
      */
     void state(const State new_state) noexcept;
 
+
+    /**
+     * @brief Determines if the wire has been pulled high or low
+     * 
+     * @return true The wire has been pulled high or low
+     * @return false The wire is naturally high, low, or is floating
+     */
+    bool pulled() const noexcept;
+
     /**
      * @brief Returns whether this wire is low
      * 
