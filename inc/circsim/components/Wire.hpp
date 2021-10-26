@@ -21,7 +21,8 @@
 #include <optional>
 #include <functional>
 
-namespace circsim::components {
+namespace circsim::components
+{
 
 /**
  * @brief C++ implementation of the wire class. This is **not** intended

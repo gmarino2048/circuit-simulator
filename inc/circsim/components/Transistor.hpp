@@ -16,7 +16,8 @@
 #include <string>
 #include <circsim/components/Wire.hpp>
 
-namespace circsim::components {
+namespace circsim::components
+{
 
 /**
  * @brief This is the base class for the Transistor class. This can
