@@ -15,14 +15,54 @@
 #ifndef __CIRCSIM_DATA_INTERNALDATABASE_HPP
 #define __CIRCSIM_DATA_INTERNALDATABASE_HPP
 
+#include <map>
+#include <vector>
+
+#include <circsim/components/Transistor.hpp>
+#include <circsim/components/Wire.hpp>
+
 namespace circsim::data
 {
 
 template <class T>
 class InternalDatabase final
 {
+private:
 
-    
+    //
+    // The physical component instances
+    //
+
+    /// Heap array to store physical instances of the transistors
+    std::vector<Transistor> _transistor_instances;
+
+    /// Heap array to store physical instances of the wires
+    std::vector<Wire> _wire_instances;
+
+    //
+    // The component indices to make searching easier
+    //
+
+    /// The index of transistors with their IDs
+    std::map<size_t, Transistor*> _transistor_index;
+
+    /// The index of wires with their IDs
+    std::map<size_t, Wire*> _wire_index;
+
+public:
+
+    InternalDatabase();
+    InternalDatabase(const InternalDatabase &other);
+    InternalDatabase(InternalDatabase &&other) noexcept;
+
+    InternalDatabase& operator=(const InternalDatabase &rhs);
+    InternalDatabase& operator=(InternalDatabase &&rhs) noexcept;
+
+    void set_wire_count(const size_t count);
+    void set_transistor_count(const size_t count);
+
+    void add_component(const Wire &wire);
+    void add_component(const Transistor &transistor);
 
 };
 
