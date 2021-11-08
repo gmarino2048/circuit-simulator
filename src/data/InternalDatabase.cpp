@@ -56,3 +56,21 @@ void InternalDatabase::_index_element(const Transistor &transistor)
     // No need to do boundary checking for set insertion
     _transistor_index[id] = object_ptr;
 }
+
+
+void InternalDatabase::_index_all()
+{
+    this->_clear_index();
+
+    // Go through transistors first
+    for( const Transistor &object : this->_transistor_instances )
+    {
+        this->_index_element(object);
+    }
+
+    // Now go through wires
+    for( const Wire &object : this->_wire_instances )
+    {
+        this->_index_element(object);
+    }
+}
