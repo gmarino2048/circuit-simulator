@@ -29,6 +29,17 @@ class InternalDatabase final
 private:
 
     //
+    // Convenience type definitions
+    //
+
+    /// Convenience declaration of Wire class
+    using Wire = components::Wire;
+
+    /// Convenience declaration of Transistor class
+    using Transistor = components::Transistor;
+
+
+    //
     // The physical component instances
     //
 
