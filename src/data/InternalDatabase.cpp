@@ -74,3 +74,10 @@ void InternalDatabase::_index_all()
         this->_index_element(object);
     }
 }
+
+
+void InternalDatabase::_clear_index()
+{
+    this->_transistor_index.clear();
+    this->_wire_index.clear();
+}
