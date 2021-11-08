@@ -52,10 +52,38 @@ private:
     // Support functions
     //
 
+    /**
+     * @brief Index the element within the internal database. The
+     *        indexing process stores a pointer to the object and stores
+     *        it based on the component ID.
+     * 
+     * @param wire The wire to index
+     * @throw std::runtime_error if the ID of the object is negative
+     */
     void _index_element(const Wire &wire);
+
+    /**
+     * @brief Index the element within the internal database. This stores
+     *        a pointer to the element with the ID of the object.
+     * 
+     * @param transistor The transistor to index
+     * @throw std::runtime_error if the ID of the object is negative
+     */
     void _index_element(const Transistor &transistor);
 
+
+    /**
+     * @brief Re-index all the components in the physical arrays. This is
+     *        primarily used when the database is copied to re-index the new
+     *        physical addresses.
+     * 
+     */
     void _index_all();
+
+    /**
+     * @brief This function clears the index of component pointers.
+     * 
+     */
     void _clear_index();
 
 public:
