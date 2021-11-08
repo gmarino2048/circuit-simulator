@@ -24,7 +24,6 @@
 namespace circsim::data
 {
 
-template <class T>
 class InternalDatabase final
 {
 private:
@@ -49,6 +48,16 @@ private:
     /// The index of wires with their IDs
     std::map<size_t, Wire*> _wire_index;
 
+    //
+    // Support functions
+    //
+
+    void _index_element(const Wire &wire);
+    void _index_element(const Transistor &transistor);
+
+    void _index_all();
+    void _clear_index();
+
 public:
 
     InternalDatabase();
@@ -63,6 +72,9 @@ public:
 
     void add_component(const Wire &wire);
     void add_component(const Transistor &transistor);
+
+    Wire* get_wire() const;
+    Transistor* get_transistor() const;
 
 };
 
