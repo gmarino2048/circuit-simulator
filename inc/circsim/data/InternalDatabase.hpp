@@ -114,10 +114,35 @@ public:
     );
 
 
+    /**
+     * @brief Copy constructor for the internal database object
+     * 
+     * @param other The other object to copy from
+     */
     InternalDatabase(const InternalDatabase &other);
+
+    /**
+     * @brief Move constructor for the internal database object
+     * 
+     * @param other The other object to move from
+     */
     InternalDatabase(InternalDatabase &&other) noexcept;
 
+
+    /**
+     * @brief Copy construction assignment operator
+     * 
+     * @param rhs The refrerence object to copy from
+     * @return InternalDatabase& The new copied instance
+     */
     InternalDatabase& operator=(const InternalDatabase &rhs);
+
+    /**
+     * @brief Move construction assignment operator
+     * 
+     * @param rhs The reference object to move from
+     * @return InternalDatabase& The new moved object
+     */
     InternalDatabase& operator=(InternalDatabase &&rhs) noexcept;
 
     void set_wire_count(const size_t count);
