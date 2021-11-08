@@ -145,6 +145,10 @@ public:
      */
     InternalDatabase& operator=(InternalDatabase &&rhs) noexcept;
 
+
+    /// Default destructor
+    ~InternalDatabase() = default;
+
     void set_wire_count(const size_t count);
     void set_transistor_count(const size_t count);
 
