@@ -91,6 +91,21 @@ public:
 
 
     /**
+     * @brief Return the ID of this transistor
+     * 
+     * @return ssize_t The ID of the transistor
+     */
+    ssize_t id() const noexcept;
+
+    /**
+     * @brief Return the name of this transistor
+     * 
+     * @return std::string The name of the transistor
+     */
+    std::string name() const noexcept;
+
+
+    /**
      * @brief Get the state for the gate wire
      * 
      * @return WireState The wire state of the gate transistor
@@ -111,12 +126,20 @@ public:
      */
     WireState drain_state() const;
 
-    
+
     /**
      * @brief Recalculate the wire states for this transistor
      * 
      */
     virtual void recalc() = 0;
+
+
+    /**
+     * @brief Conversion from transistor to string instance
+     * 
+     * @return std::string A printable representation of the transistor
+     */
+    operator std::string() const;
 
 };
 

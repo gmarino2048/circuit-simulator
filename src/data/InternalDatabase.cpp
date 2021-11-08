@@ -37,3 +37,22 @@ void InternalDatabase::_index_element(const Wire &wire)
     // No need to do boundary checking since this is addition
     _wire_index[id] = object_ptr;
 }
+
+
+void InternalDatabase::_index_element(const Transistor &transistor)
+{
+    if( transistor.id() < 0 )
+    {
+        throw std::runtime_error
+        (
+            "Expected nonnegative transistor ID for object:\n" +
+            static_cast<std::string>(transistor)
+        );
+    }
+
+    size_t id = static_cast<size_t>(transistor.id());
+    Transistor *object_ptr = const_cast<Transistor*>(&transistor);
+
+    // No need to do boundary checking for set insertion
+    _transistor_index[id] = object_ptr;
+}
