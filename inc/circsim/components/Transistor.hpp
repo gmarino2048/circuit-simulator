@@ -128,13 +128,6 @@ public:
 
 
     /**
-     * @brief Recalculate the wire states for this transistor
-     * 
-     */
-    virtual void recalc() = 0;
-
-
-    /**
      * @brief Conversion from transistor to string instance
      * 
      * @return std::string A printable representation of the transistor

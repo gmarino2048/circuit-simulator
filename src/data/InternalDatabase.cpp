@@ -81,3 +81,21 @@ void InternalDatabase::_clear_index()
     this->_transistor_index.clear();
     this->_wire_index.clear();
 }
+
+
+InternalDatabase::InternalDatabase
+(
+    const size_t wire_count,
+    const size_t transistor_count
+)
+{
+    if( wire_count != 0 )
+    {
+        this->_wire_instances.reserve(wire_count);
+    }
+
+    if( transistor_count != 0 )
+    {
+        this->_transistor_instances.reserve(transistor_count);
+    }
+}
