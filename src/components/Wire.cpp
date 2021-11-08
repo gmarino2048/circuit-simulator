@@ -182,7 +182,7 @@ void Wire::set_high_low(const bool new_state) noexcept
 
 
 // Wire operators
-Wire::operator std::string()
+Wire::operator std::string() const
 {
     std::stringstream ss;
 

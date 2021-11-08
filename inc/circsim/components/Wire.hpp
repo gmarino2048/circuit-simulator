@@ -290,7 +290,7 @@ public:
      * 
      * @return std::string The wire description
      */
-    operator std::string();
+    operator std::string() const;
 
     /**
      * @brief Compare this wire with another.
