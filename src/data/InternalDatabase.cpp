@@ -99,3 +99,34 @@ InternalDatabase::InternalDatabase
         this->_transistor_instances.reserve(transistor_count);
     }
 }
+
+
+InternalDatabase::InternalDatabase(const InternalDatabase &other)
+{
+    // Accelerate by avoiding recalc for self-assignment
+    if( this == &other )
+    {
+        return;
+    }
+
+    this->_wire_instances = other._wire_instances;
+    this->_transistor_instances = other._transistor_instances;
+
+    this->_index_all();
+}
+
+
+InternalDatabase::InternalDatabase(InternalDatabase &&other) noexcept
+{
+    // Avoid the self-assignment issue
+    if( this == &other )
+    {
+        return;
+    }
+
+    this->_wire_instances = std::move(other._wire_instances);
+    this->_transistor_instances = std::move(other._transistor_instances);
+
+    this->_wire_index = std::move(other._wire_index);
+    this->_transistor_index = std::move(other._transistor_index);
+}
