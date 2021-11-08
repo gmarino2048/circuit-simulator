@@ -149,10 +149,38 @@ public:
     /// Default destructor
     ~InternalDatabase() = default;
 
+
+    /**
+     * @brief Set the count of the wires and resize the physical array
+     *        to store them. This will clear the wire array.
+     * 
+     * @param count The new wire count
+     */
     void set_wire_count(const size_t count);
+
+    /**
+     * @brief Set the count of the transistors and resize the physical array
+     *        to store them. This will clear the transistor array.
+     * 
+     * @param count The new transistor count
+     */
     void set_transistor_count(const size_t count);
 
+
+    /**
+     * @brief Add a new wire to the database and index the element
+     * 
+     * @param wire The wire to add to the database
+     * @throw std::runtime_error if the component with this ID already exists
+     */
     void add_component(const Wire &wire);
+
+    /**
+     * @brief Add a new transistor to the database and index the element
+     * 
+     * @param transistor The transistor to add to the database
+     * @throw std::runtime_error if the component with the ID already exists
+     */
     void add_component(const Transistor &transistor);
 
     Wire* get_wire() const;
