@@ -183,8 +183,24 @@ public:
      */
     void add_component(const Transistor &transistor);
 
-    Wire* get_wire() const;
-    Transistor* get_transistor() const;
+
+    /**
+     * @brief Get the wire object pointer associated with a given ID
+     * 
+     * @param id The ID number of the wire
+     * @return Wire* The pointer to the object associated with this ID
+     * @throw std::out_of_range if the ID is not in the indexed database
+     */
+    Wire* get_wire(const size_t id) const;
+
+    /**
+     * @brief Get the transistor object pointer associated with a given ID
+     * 
+     * @param id The ID number of the transistor
+     * @return Transistor* The pointer to the object associated with this ID
+     * @throw std::out_of_range if the ID is not in the indexed database
+     */
+    Transistor* get_transistor(const size_t id) const;
 
 };
 
