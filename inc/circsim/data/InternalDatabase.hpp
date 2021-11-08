@@ -185,6 +185,23 @@ public:
 
 
     /**
+     * @brief Update a component in the database with the new object. If the
+     *        ID does not exist, it will be added to the database.
+     * 
+     * @param wire The new wire instance
+     */
+    void update_component(const Wire &wire);
+
+    /**
+     * @brief Update a component in the database with the new object. If the
+     *        ID does not exist, it will be added to the database.
+     * 
+     * @param transistor The new Transistor instance
+     */
+    void update_component(const Transistor &transistor);
+
+
+    /**
      * @brief Get the wire object pointer associated with a given ID
      * 
      * @param id The ID number of the wire
