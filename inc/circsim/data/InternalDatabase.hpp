@@ -99,7 +99,21 @@ private:
 
 public:
 
-    InternalDatabase();
+    /**
+     * @brief This is the default constructor of the internal database object, with
+     *        optional size arguments for the transistor and wire counts for added
+     *        efficiency.
+     * 
+     * @param wire_count The number of wires to initialize the database with
+     * @param transistor_count The number of transistors to initialize the database with
+     */
+    InternalDatabase
+    (
+        const size_t wire_count = 0,
+        const size_t transistor_count = 0
+    );
+
+
     InternalDatabase(const InternalDatabase &other);
     InternalDatabase(InternalDatabase &&other) noexcept;
 
