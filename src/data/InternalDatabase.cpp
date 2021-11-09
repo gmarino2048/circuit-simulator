@@ -130,3 +130,35 @@ InternalDatabase::InternalDatabase(InternalDatabase &&other) noexcept
     this->_wire_index = std::move(other._wire_index);
     this->_transistor_index = std::move(other._transistor_index);
 }
+
+
+InternalDatabase& InternalDatabase::operator=(const InternalDatabase &other)
+{
+    if( this == &other )
+    {
+        return *this;
+    }
+
+    this->_wire_instances = other._wire_instances;
+    this->_transistor_instances = other._transistor_instances;
+
+    this->_index_all();
+    return *this;
+}
+
+
+InternalDatabase& InternalDatabase::operator=(InternalDatabase &&other) noexcept
+{
+    if( this == &other )
+    {
+        return *this;
+    }
+
+    this->_wire_instances = std::move(other._wire_instances);
+    this->_transistor_instances = std::move(other._transistor_instances);
+
+    this->_wire_index = std::move(other._wire_index);
+    this->_transistor_index = std::move(other._transistor_index);
+
+    return *this;
+}
