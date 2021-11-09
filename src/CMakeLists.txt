@@ -4,7 +4,7 @@ file(
 )
 
 add_library(
-    circsim-components
+    circsim-components SHARED
     ${components_SRC}
 )
 
@@ -13,7 +13,7 @@ file(
 )
 
 add_library(
-    circsim-data
+    circsim-data SHARED
     ${data_SRC}
 )
 
