@@ -113,11 +113,7 @@ public:
      * @param wire_count The number of wires to initialize the database with
      * @param transistor_count The number of transistors to initialize the database with
      */
-    InternalDatabase
-    (
-        const size_t wire_count = 0,
-        const size_t transistor_count = 0
-    );
+    InternalDatabase();
 
     /**
      * @brief Construct a new Internal Database object with a predefined wire and
@@ -188,24 +184,6 @@ public:
      * @return size_t The transistor count
      */
     inline size_t transistor_count() { return _transistor_instances.size(); }
-
-
-    /**
-     * @brief Set the count of the wires and resize the physical array
-     *        to store them. This will clear the wire array.
-     * 
-     * @param count The new wire count
-     */
-    void set_wire_count(const size_t count);
-
-    /**
-     * @brief Set the count of the transistors and resize the physical array
-     *        to store them. This will clear the transistor array.
-     * 
-     * @param count The new transistor count
-     */
-    void set_transistor_count(const size_t count);
-
 
     /**
      * @brief Add a new wire to the database and index the element

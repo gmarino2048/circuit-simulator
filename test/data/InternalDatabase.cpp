@@ -35,6 +35,8 @@ protected:
 
     void SetUp() override;
 
+    void _verify_all_components();
+
 };
 
 
@@ -57,49 +59,73 @@ void InternalDatabaseTest::SetUp()
 }
 
 
+void InternalDatabaseTest::_verify_all_components()
+{
+    for( size_t i = 0; i < NORMAL_WIRE_COUNT; i++ )
+    {
+        Wire* wire = nullptr;
+        EXPECT_NO_FATAL_FAILURE(wire = _database.get_wire(i));
+        EXPECT_NE(wire, nullptr);
+    }
+
+    for( size_t i = 0; i < NORMAL_TRANSISTOR_COUNT; i++ )
+    {
+        Transistor* transistor;
+        EXPECT_NO_FATAL_FAILURE(transistor = _database.get_transistor(i));
+        EXPECT_NE(transistor, nullptr);
+    }
+}
+
+
 TEST_F(InternalDatabaseTest, DefaultConstructor)
 {
     // Test no-param default construction
     EXPECT_EQ(_database._wire_instances.size(), 0);
     EXPECT_EQ(_database._transistor_instances.size(), 0);
-
-    // Test parametric default construction
-    _database = InternalDatabase(NORMAL_WIRE_COUNT, NORMAL_TRANSISTOR_COUNT);
-
-    EXPECT_EQ(_database.wire_count(), NORMAL_WIRE_COUNT);
-    EXPECT_EQ(_database.transistor_count(), NORMAL_TRANSISTOR_COUNT);
-
-    for( const Wire& wire : _database._wire_instances )
-    {
-        // Expect wires created by constructor are invalid
-        EXPECT_EQ(wire.id(), -1);
-    }
-
-    for( const Transistor& transistor : _database._transistor_instances )
-    {
-        // Expect transistors created by constructor are invalid
-        EXPECT_EQ(transistor.id(), -1);
-    }
 }
 
 
 TEST_F(InternalDatabaseTest, ComponentConstructor)
 {
-    ASSERT_NO_FATAL_FAILURE
-    (
-        _database = InternalDatabase(_wires, _transistors);
-    );
+    ASSERT_NO_FATAL_FAILURE(_database = InternalDatabase(_wires, _transistors));
 
     ASSERT_EQ(_database.wire_count(), NORMAL_WIRE_COUNT);
     ASSERT_EQ(_database.transistor_count(), NORMAL_TRANSISTOR_COUNT);
 
-    for( size_t i = 0; i < NORMAL_WIRE_COUNT; i++ )
+    _verify_all_components();
+}
+
+
+TEST_F(InternalDatabaseTest, CopyConstructor)
+{
+    InternalDatabase db_original(_wires, _transistors);
+    _database = db_original;
+
+    // Ensure copy
+    ASSERT_EQ(db_original.wire_count(), NORMAL_WIRE_COUNT);
+    ASSERT_EQ(db_original.transistor_count(), NORMAL_TRANSISTOR_COUNT);
+
+    _verify_all_components();
+}
+
+
+TEST_F(InternalDatabaseTest, MoveConstructor)
+{
+    InternalDatabase db_original(_wires, _transistors);
+}
+
+
+TEST_F(InternalDatabaseTest, AddComponentSimple)
+{
+    for( const Wire& wire : _wires )
     {
-        EXPECT_NO_FATAL_FAILURE(_database.get_wire(i));
+        ASSERT_NO_THROW(_database.add_component(wire));
     }
 
-    for( size_t i = 0; i < NORMAL_TRANSISTOR_COUNT; i++ )
+    for( const Transistor& transistor : _transistors )
     {
-        EXPECT_NO_FATAL_FAILURE(_database.get_transistor(i));
+        ASSERT_NO_THROW(_database.add_component(transistor));
     }
+
+    _verify_all_components();
 }

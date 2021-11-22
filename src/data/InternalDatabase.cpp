@@ -88,12 +88,9 @@ void InternalDatabase::_clear_index()
 }
 
 
-InternalDatabase::InternalDatabase
-(
-    const size_t wire_count,
-    const size_t transistor_count
-): _wire_instances(wire_count),
-   _transistor_instances(transistor_count)
+InternalDatabase::InternalDatabase(): 
+    _wire_instances(0),
+    _transistor_instances(0)
 {
     // Default for all other members
 }
