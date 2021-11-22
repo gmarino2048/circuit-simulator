@@ -27,6 +27,7 @@ add_executable(data-test
 )
 
 target_link_libraries(data-test
+    circsim-components
     circsim-data
     GTest::GTest
     GTest::Main

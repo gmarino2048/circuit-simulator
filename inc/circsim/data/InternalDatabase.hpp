@@ -119,6 +119,19 @@ public:
         const size_t transistor_count = 0
     );
 
+    /**
+     * @brief Construct a new Internal Database object with a predefined wire and
+     *        transistor list.
+     * 
+     * @param wires The list of wires to insert
+     * @param transistors The list of transistors to insert
+     */
+    InternalDatabase
+    (
+        const std::vector<Wire>& wires,
+        const std::vector<Transistor>& transistors
+    );
+
 
     /**
      * @brief Copy constructor for the internal database object
@@ -154,6 +167,27 @@ public:
 
     /// Default destructor
     ~InternalDatabase() = default;
+
+
+    /**
+     * @brief Gets the number of wires in the database.
+     * 
+     * This count does not exclude the uninitialized wires, and so the count
+     * may overestimate the number of valid wires in the database.
+     * 
+     * @return size_t The wire count.
+     */
+    inline size_t wire_count() { return _wire_instances.size(); }
+
+    /**
+     * @brief Gets the number of transistors in the database.
+     * 
+     * This count does not exclude uninitialized transistors, and so the number
+     * of usable transistors will always be less than or equal to this number.
+     * 
+     * @return size_t The transistor count
+     */
+    inline size_t transistor_count() { return _transistor_instances.size(); }
 
 
     /**

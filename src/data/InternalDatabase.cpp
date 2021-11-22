@@ -92,17 +92,21 @@ InternalDatabase::InternalDatabase
 (
     const size_t wire_count,
     const size_t transistor_count
-)
+): _wire_instances(wire_count),
+   _transistor_instances(transistor_count)
 {
-    if( wire_count != 0 )
-    {
-        this->_wire_instances.reserve(wire_count);
-    }
+    // Default for all other members
+}
 
-    if( transistor_count != 0 )
-    {
-        this->_transistor_instances.reserve(transistor_count);
-    }
+
+InternalDatabase::InternalDatabase
+(
+    const std::vector<Wire>& wires,
+    const std::vector<Transistor>& transistors
+): _wire_instances(wires),
+   _transistor_instances(transistors)
+{
+    this->_index_all();
 }
 
 
