@@ -267,3 +267,30 @@ void InternalDatabase::add_component(const Transistor& transistor)
     size_t index = transistor_count() - 1;
     _index_element(_transistor_instances[index]);
 }
+
+
+void InternalDatabase::update_component(const Wire& wire)
+{
+    if( contains(wire) )
+    {
+        // Replace the array instance
+        *( _wire_index[wire.id()] ) = wire;
+    }
+    else
+    {
+        add_component(wire);
+    }
+}
+
+
+void InternalDatabase::update_component(const Transistor& transistor)
+{
+    if( contains(transistor) )
+    {
+        *( _transistor_index[transistor.id()] ) = transistor;
+    }
+    else
+    {
+        add_component(transistor);
+    }
+}
