@@ -24,6 +24,12 @@
 namespace circsim::data
 {
 
+/**
+ * @brief This internal database contains the components used by the simulator. It
+ *        holds the instances of the transistors and wires, as well as the indexed
+ *        maps of these components relative to their IDs.
+ * 
+ */
 class InternalDatabase final
 {
 private:
