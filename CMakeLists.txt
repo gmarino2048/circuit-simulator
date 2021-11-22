@@ -4,9 +4,16 @@ project(circuit-simulator VERSION 0.0.0 LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+enable_testing()
+
+include(GoogleTest)
+find_package(GTest REQUIRED)
+
+find_package(Threads REQUIRED)
+
 include_directories("inc")
 add_subdirectory("src")
-
+add_subdirectory("test")
 
 add_executable(circsim
     src/main.cpp
