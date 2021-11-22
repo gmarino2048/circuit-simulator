@@ -57,7 +57,7 @@ public:
 
 
         /// Message getter
-        inline const std::string message() const noexcept { return _message; }
+        inline std::string message() const noexcept { return _message; }
 
         /// Override std::exception error message
         inline const char* what() const noexcept override { return _message.c_str(); }

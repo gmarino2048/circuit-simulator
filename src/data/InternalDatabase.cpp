@@ -42,7 +42,7 @@ void InternalDatabase::_index_element(const Wire &wire)
     // Ensure that ID is not duplicate
     if( this->contains(wire) )
     {
-        throw IndexError("Duplicate Wire ID detected: " + wire.id());
+        throw IndexError("Duplicate Wire ID detected: " + std::to_string(wire.id()));
     }
 
     // No need to do boundary checking since this is addition
@@ -67,7 +67,7 @@ void InternalDatabase::_index_element(const Transistor &transistor)
     // Ensure that ID is not duplicate
     if( this->contains(transistor) )
     {
-        throw IndexError("Duplicate Transistor ID detected: " + transistor.id());
+        throw IndexError("Duplicate Transistor ID detected: " + std::to_string(transistor.id()));
     }
 
     // No need to do boundary checking for set insertion
@@ -180,4 +180,26 @@ InternalDatabase& InternalDatabase::operator=(InternalDatabase &&other) noexcept
 
     // No need to re-index as wire/transistor pointers should remain the same
     return *this;
+}
+
+
+bool InternalDatabase::contains(const Wire& wire) const
+{
+    decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
+
+    // Return true only if the key exists and has a non-null value
+    return it != _wire_index.end()
+        ? it->second != nullptr
+        : false;
+}
+
+
+bool InternalDatabase::contains(const Transistor& transistor) const
+{
+    decltype(_transistor_index)::const_iterator it = _transistor_index.find(transistor.id());
+
+    // Return true only if the key exists and has a non-null value
+    return it != _transistor_index.end()
+        ? it->second != nullptr
+        : false;
 }
