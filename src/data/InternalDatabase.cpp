@@ -229,3 +229,41 @@ bool InternalDatabase::contains_current(const Transistor& transistor) const
 
     return false;
 }
+
+
+void InternalDatabase::add_component(const Wire& wire)
+{
+    if( contains(wire) )
+    {
+        throw IndexError
+        (
+            "Database already contains wire with ID: " + std::to_string(wire.id())
+        );
+    }
+
+    // Note: copy occurs here
+    _wire_instances.push_back(wire);
+
+    // Note, index from instance list, NOT from supplied parameter
+    size_t index = wire_count() - 1;
+    _index_element(_wire_instances[index]);
+}
+
+
+void InternalDatabase::add_component(const Transistor& transistor)
+{
+    if( contains(transistor) )
+    {
+        throw IndexError
+        (
+            "Database already contains transistor with ID: " + std::to_string(transistor.id())
+        );
+    }
+
+    // Note: copy occurs here
+    _transistor_instances.push_back(transistor);
+
+    // Note: need to index the element from the LIST, not the supplied element
+    size_t index = transistor_count() - 1;
+    _index_element(_transistor_instances[index]);
+}
