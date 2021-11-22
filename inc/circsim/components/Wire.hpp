@@ -298,7 +298,7 @@ public:
      * @param rhs The other wire for comparison
      * @return bool `true` if the wires are the same, `false` otherwise
      */
-    bool operator==(const Wire &rhs) noexcept;
+    bool operator==(const Wire &rhs) const;
 
 private:
 

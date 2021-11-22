@@ -195,9 +195,23 @@ Wire::operator std::string() const
 }
 
 
-bool Wire::operator==(const Wire &rhs) noexcept
+bool Wire::operator==(const Wire &rhs) const
 {
-    return this->_id == rhs._id;
+    bool equivalent = _id == rhs._id;
+
+    equivalent &= _primary_name == rhs._primary_name;
+    equivalent &= _other_names == rhs._other_names;
+
+    equivalent &= _pulled == rhs._pulled;
+    equivalent &= _state == rhs._state;
+    equivalent &= _externally_driven == rhs._externally_driven;
+
+    // Don't check function equality, it's not worth it
+
+    equivalent &= _trans_gate_ids == rhs._trans_gate_ids;
+    equivalent &= _trans_ctl_ids == rhs._trans_ctl_ids;
+
+    return equivalent;
 }
 
 

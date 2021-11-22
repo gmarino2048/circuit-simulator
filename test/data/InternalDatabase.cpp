@@ -65,14 +65,18 @@ void InternalDatabaseTest::_verify_all_components()
     {
         Wire* wire = nullptr;
         EXPECT_NO_FATAL_FAILURE(wire = _database.get_wire(i));
-        EXPECT_NE(wire, nullptr);
+
+        ASSERT_NE(wire, nullptr);
+        EXPECT_EQ(*wire, _wires[i]);
     }
 
     for( size_t i = 0; i < NORMAL_TRANSISTOR_COUNT; i++ )
     {
         Transistor* transistor;
         EXPECT_NO_FATAL_FAILURE(transistor = _database.get_transistor(i));
-        EXPECT_NE(transistor, nullptr);
+
+        ASSERT_NE(transistor, nullptr);
+        EXPECT_EQ(*transistor, _transistors[i]);
     }
 }
 

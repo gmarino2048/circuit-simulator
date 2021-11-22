@@ -128,6 +128,16 @@ public:
 
 
     /**
+     * @brief Equality operator. Compares the internal components of two
+     *        transistors.
+     * 
+     * @param rhs The other transistor to compare with.
+     * @return bool Whether the transistors are equivalent.
+     */
+    bool operator==(const Transistor& rhs) const;
+
+
+    /**
      * @brief Conversion from transistor to string instance
      * 
      * @return std::string A printable representation of the transistor

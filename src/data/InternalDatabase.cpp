@@ -203,3 +203,29 @@ bool InternalDatabase::contains(const Transistor& transistor) const
         ? it->second != nullptr
         : false;
 }
+
+
+bool InternalDatabase::contains_current(const Wire& wire) const
+{
+    decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
+
+    if( (it != _wire_index.end()) && (it->second != nullptr) )
+    {
+        return wire == *(it->second);
+    }
+
+    return false;
+}
+
+
+bool InternalDatabase::contains_current(const Transistor& transistor) const
+{
+    decltype(_transistor_index)::const_iterator it = _transistor_index.find(transistor.id());
+
+    if( (it != _transistor_index.end()) && (it->second != nullptr) )
+    {
+        return transistor == *(it->second);
+    }
+
+    return false;
+}

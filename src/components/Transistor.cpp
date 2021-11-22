@@ -71,6 +71,20 @@ std::string Transistor::name() const noexcept
 }
 
 
+bool Transistor::operator==(const Transistor& rhs) const
+{
+    bool equivalent = _id == rhs._id;
+
+    equivalent &= _name == rhs._name;
+
+    equivalent &= _source_id == rhs._source_id;
+    equivalent &= _gate_id == rhs._gate_id;
+    equivalent &= _drain_id == rhs._drain_id;
+
+    return equivalent;
+}
+
+
 Transistor::operator std::string() const
 {
     std::stringstream ss;
