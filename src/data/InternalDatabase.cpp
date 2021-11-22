@@ -39,6 +39,12 @@ void InternalDatabase::_index_element(const Wire &wire)
     size_t id = static_cast<size_t>(wire.id());
     Wire *object_ptr = const_cast<Wire*>(&wire);
 
+    // Ensure that ID is not duplicate
+    if( this->contains(wire) )
+    {
+        throw IndexError("Duplicate Wire ID detected: " + wire.id());
+    }
+
     // No need to do boundary checking since this is addition
     _wire_index[id] = object_ptr;
 }
@@ -57,6 +63,12 @@ void InternalDatabase::_index_element(const Transistor &transistor)
 
     size_t id = static_cast<size_t>(transistor.id());
     Transistor *object_ptr = const_cast<Transistor*>(&transistor);
+
+    // Ensure that ID is not duplicate
+    if( this->contains(transistor) )
+    {
+        throw IndexError("Duplicate Transistor ID detected: " + transistor.id());
+    }
 
     // No need to do boundary checking for set insertion
     _transistor_index[id] = object_ptr;

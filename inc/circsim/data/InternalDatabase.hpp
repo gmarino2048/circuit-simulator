@@ -16,6 +16,7 @@
 #define __CIRCSIM_DATA_INTERNALDATABASE_HPP
 
 #include <map>
+#include <stdexcept>
 #include <vector>
 
 #include <circsim/components/Transistor.hpp>
@@ -23,7 +24,6 @@
 
 namespace circsim::data
 {
-
 /**
  * @brief This internal database contains the components used by the simulator. It
  *        holds the instances of the transistors and wires, as well as the indexed
@@ -32,6 +32,37 @@ namespace circsim::data
  */
 class InternalDatabase final
 {
+public:
+
+    /**
+     * @brief This exception is thrown when there is a problem with element
+     *        indexing within the database. Most commonly when there is a
+     *        duplicate ID.
+     * 
+     */
+    class IndexError final : public std::exception
+    {
+    private:
+
+        /// Internal container for the message
+        std::string _message;
+    
+    public:
+
+        /// Delete default constructor
+        IndexError() = delete;
+
+        /// Instantiate this exception with a message
+        IndexError(const std::string& message): _message(message) { }
+
+
+        /// Message getter
+        inline const std::string message() const noexcept { return _message; }
+
+        /// Override std::exception error message
+        inline const char* what() const noexcept override { return _message.c_str(); }
+    };
+
 private:
 
     //
@@ -184,6 +215,29 @@ public:
      * @return size_t The transistor count
      */
     inline size_t transistor_count() { return _transistor_instances.size(); }
+
+    /**
+     * @brief Checks to see whether a wire with a matching ID exists
+     *        in the database.
+     * 
+     * @param wire The wire to check for.
+     * @return bool Whether a wire with this ID exists in the database.
+     */
+    bool contains(const Wire& wire) const;
+
+    /**
+     * @brief Checks to see whether a transistor with a matching ID
+     *        exists in the database.
+     * 
+     * @param transistor The transistor to search for.
+     * @return bool Whether a transistor with this ID exists in the database.
+     */
+    bool contains(const Transistor& transistor) const;
+
+    bool contains_current(const Wire& wire) const;
+
+    bool contains_current(const Transistor& transistor) const;
+
 
     /**
      * @brief Add a new wire to the database and index the element
