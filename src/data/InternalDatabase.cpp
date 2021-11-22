@@ -15,8 +15,13 @@
 
 #include <circsim/data/InternalDatabase.hpp>
 
+/// Convenience typedef for the Wire class
 using Wire = circsim::components::Wire;
+
+/// Convenience typedef for the Transistor class
 using Transistor = circsim::components::Transistor;
+
+/// Convenience typedef for the InternalDatabase class
 using InternalDatabase = circsim::data::InternalDatabase;
 
 

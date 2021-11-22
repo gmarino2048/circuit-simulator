@@ -116,7 +116,7 @@ WARN_LOGFILE           = docs/doxygen.log
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  =
+INPUT                  = inc src
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
