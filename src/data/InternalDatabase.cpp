@@ -160,5 +160,6 @@ InternalDatabase& InternalDatabase::operator=(InternalDatabase &&other) noexcept
     this->_wire_index = std::move(other._wire_index);
     this->_transistor_index = std::move(other._transistor_index);
 
+    // No need to re-index as wire/transistor pointers should remain the same
     return *this;
 }
