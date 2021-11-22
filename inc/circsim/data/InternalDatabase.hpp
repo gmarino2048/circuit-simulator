@@ -61,6 +61,7 @@ public:
 
         /// Override std::exception error message
         inline const char* what() const noexcept override { return _message.c_str(); }
+
     };
 
 private:
@@ -216,6 +217,7 @@ public:
      */
     inline size_t transistor_count() { return _transistor_instances.size(); }
 
+
     /**
      * @brief Checks to see whether a wire with a matching ID exists
      *        in the database.
@@ -234,8 +236,23 @@ public:
      */
     bool contains(const Transistor& transistor) const;
 
+
+    /**
+     * @brief Checks to see if a wire exactly equal to this one exists in
+     *        the database.
+     * 
+     * @param wire The wire to search for.
+     * @return bool Whether there is an equal wire in the database.
+     */
     bool contains_current(const Wire& wire) const;
 
+    /**
+     * @brief Checks to see if a transistor exactly equal to this one exists in
+     *        the database.
+     * 
+     * @param transistor The transistor to search for.
+     * @return bool Whether there is an equivalent transistor in the database.
+     */
     bool contains_current(const Transistor& transistor) const;
 
 

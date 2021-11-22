@@ -29,7 +29,7 @@ void InternalDatabase::_index_element(const Wire &wire)
 {
     if( wire.id() < 0 )
     {
-        throw std::runtime_error
+        throw IndexError
         (
             "Expected nonnegative wire ID for object:\n" +
             static_cast<std::string>(wire)
@@ -54,7 +54,7 @@ void InternalDatabase::_index_element(const Transistor &transistor)
 {
     if( transistor.id() < 0 )
     {
-        throw std::runtime_error
+        throw IndexError
         (
             "Expected nonnegative transistor ID for object:\n" +
             static_cast<std::string>(transistor)
