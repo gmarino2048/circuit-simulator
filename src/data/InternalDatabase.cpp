@@ -294,3 +294,23 @@ void InternalDatabase::update_component(const Transistor& transistor)
         add_component(transistor);
     }
 }
+
+
+Wire* InternalDatabase::get_wire(const size_t id) const try
+{
+    return _wire_index.at(id);
+}
+catch( const std::out_of_range& )
+{
+    throw IndexError("Database does not have wire with index " + std::to_string(id));
+}
+
+
+Transistor* InternalDatabase::get_transistor(const size_t id) const try
+{
+    return _transistor_index.at(id);
+}
+catch( const std::out_of_range& )
+{
+    throw IndexError("Database does not have transistor with index " + std::to_string(id));
+}
