@@ -10,6 +10,9 @@
  * 
  */
 
+#include <iomanip>
+#include <string>
+#include <sstream>
 
 #include <circsim/components/Transistor.hpp>
 
@@ -53,4 +56,48 @@ Transistor::Transistor
     _drain_id(drain_id)
 {
     // No other members to initialize
+}
+
+
+ssize_t Transistor::id() const noexcept
+{
+    return this->_id;
+}
+
+
+std::string Transistor::name() const noexcept
+{
+    return this->_name;
+}
+
+
+bool Transistor::operator==(const Transistor& rhs) const
+{
+    bool equivalent = _id == rhs._id;
+
+    equivalent &= _name == rhs._name;
+
+    equivalent &= _source_id == rhs._source_id;
+    equivalent &= _gate_id == rhs._gate_id;
+    equivalent &= _drain_id == rhs._drain_id;
+
+    return equivalent;
+}
+
+
+Transistor::operator std::string() const
+{
+    std::stringstream ss;
+
+    ss << "Transistor \"" << this->_name << "\":\n";
+    ss << "\tId:\t\t0x" << std::uppercase << std::setfill('0') << std::setw(16)
+        << this->_id << "\n";
+    ss << "\tGate:\t\t" << std::uppercase << std::setfill('0') << std::setw(16)
+        << this->_gate_id << "\n";
+    ss << "\tSource:\t\t" << std::uppercase << std::setfill('0') << std::setw(16)
+        << this->_source_id << "\n";
+    ss << "\tDrain:\t\t" << std::uppercase << std::setfill('0') << std::setw(16)
+        << this->_drain_id << "\n";
+
+    return ss.str();
 }

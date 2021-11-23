@@ -16,7 +16,8 @@
 #include <string>
 #include <circsim/components/Wire.hpp>
 
-namespace circsim::components {
+namespace circsim::components
+{
 
 /**
  * @brief This is the base class for the Transistor class. This can
@@ -90,6 +91,42 @@ public:
 
 
     /**
+     * @brief Return the ID of this transistor
+     * 
+     * @return ssize_t The ID of the transistor
+     */
+    ssize_t id() const noexcept;
+
+    /**
+     * @brief Return the name of this transistor
+     * 
+     * @return std::string The name of the transistor
+     */
+    std::string name() const noexcept;
+
+    /**
+     * @brief Get the gate wire ID.
+     * 
+     * @return size_t The gate wire ID.
+     */
+    inline size_t gate() const noexcept { return _gate_id; }
+
+    /**
+     * @brief Get the source wire ID.
+     * 
+     * @return size_t The source wire ID.
+     */
+    inline size_t source() const noexcept { return _source_id; }
+
+    /**
+     * @brief Get the drain wire ID.
+     * 
+     * @return size_t The drain wire ID.
+     */
+    inline size_t drain() const noexcept { return _drain_id; }
+
+
+    /**
      * @brief Get the state for the gate wire
      * 
      * @return WireState The wire state of the gate transistor
@@ -110,12 +147,23 @@ public:
      */
     WireState drain_state() const;
 
-    
+
     /**
-     * @brief Recalculate the wire states for this transistor
+     * @brief Equality operator. Compares the internal components of two
+     *        transistors.
      * 
+     * @param rhs The other transistor to compare with.
+     * @return bool Whether the transistors are equivalent.
      */
-    virtual void recalc() = 0;
+    bool operator==(const Transistor& rhs) const;
+
+
+    /**
+     * @brief Conversion from transistor to string instance
+     * 
+     * @return std::string A printable representation of the transistor
+     */
+    operator std::string() const;
 
 };
 

@@ -11,5 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt -y install \
     clang \
     llvm \
     lldb \
+    libgtest-dev \
+    libgmock-dev \
     gdb \
     cmake

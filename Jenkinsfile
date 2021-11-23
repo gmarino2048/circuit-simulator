@@ -83,7 +83,33 @@ pipeline {
 
         }
 
-        // Test here when supported
+        stage('Run Tests') {
+
+            parallel {
+
+                stage('Debug Tests') {
+
+                    steps {
+
+                        sh 'make -C cmake_build_Debug test'
+
+                    }
+
+                }
+
+                stage('Release Tests') {
+
+                    steps {
+
+                        sh 'make -C cmake_build_Release test'
+
+                    }
+
+                }
+
+            }
+
+        }
 
         stage('Generate Docs') {
 

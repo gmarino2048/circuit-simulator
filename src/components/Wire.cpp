@@ -128,38 +128,13 @@ Wire::Wire
 }
 
 
-// Static special wire getters
-size_t Wire::VCC_ID() { return Wire::_VCC_ID; }
-
-size_t Wire::GND_ID() { return Wire::_GND_ID; }
-
-
-// Wire metadata getters/setters
-ssize_t Wire::id() const noexcept { return this->_id; }
-
-std::string Wire::primary_name() const noexcept { return this->_primary_name; }
-
-bool Wire::externally_driven() const noexcept { return this->_externally_driven; }
-
-
 void Wire::add_name(const std::string &new_name)
 {
     this->_other_names.push_back(new_name);
 }
 
-std::vector<std::string> Wire::other_names() const noexcept { return this->_other_names; }
-
-
-// Wire state getters/setters
-Wire::State Wire::state() const noexcept { return this->_state; }
-
 void Wire::state(const State new_state) noexcept { this->_state = new_state; } 
 
-
-bool Wire::pulled() const noexcept
-{
-    return _pulled;
-}
 
 bool Wire::low() const noexcept
 {
@@ -182,7 +157,7 @@ void Wire::set_high_low(const bool new_state) noexcept
 
 
 // Wire operators
-Wire::operator std::string()
+Wire::operator std::string() const
 {
     std::stringstream ss;
 
@@ -195,9 +170,23 @@ Wire::operator std::string()
 }
 
 
-bool Wire::operator==(const Wire &rhs) noexcept
+bool Wire::operator==(const Wire &rhs) const
 {
-    return this->_id == rhs._id;
+    bool equivalent = _id == rhs._id;
+
+    equivalent &= _primary_name == rhs._primary_name;
+    equivalent &= _other_names == rhs._other_names;
+
+    equivalent &= _pulled == rhs._pulled;
+    equivalent &= _state == rhs._state;
+    equivalent &= _externally_driven == rhs._externally_driven;
+
+    // Don't check function equality, it's not worth it
+
+    equivalent &= _trans_gate_ids == rhs._trans_gate_ids;
+    equivalent &= _trans_ctl_ids == rhs._trans_ctl_ids;
+
+    return equivalent;
 }
 
 
