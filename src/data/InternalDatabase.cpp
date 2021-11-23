@@ -241,12 +241,23 @@ void InternalDatabase::add_component(const Wire& wire)
         );
     }
 
+    // Check if the vector will reallocate
+    bool will_realloc =
+        _wire_instances.capacity() == _wire_instances.size();
+
     // Note: copy occurs here
     _wire_instances.push_back(wire);
 
-    // Note, index from instance list, NOT from supplied parameter
-    size_t index = wire_count() - 1;
-    _index_element(_wire_instances[index]);
+    if( will_realloc )
+    {
+        _index_all();
+    }
+    else
+    {
+        // Note, index from instance list, NOT from supplied parameter
+        size_t index = wire_count() - 1;
+        _index_element(_wire_instances[index]);
+    }
 }
 
 
@@ -260,12 +271,24 @@ void InternalDatabase::add_component(const Transistor& transistor)
         );
     }
 
+    // Need to check for reallocation
+    bool will_realloc = 
+        _transistor_instances.capacity() == _transistor_instances.size();
+
     // Note: copy occurs here
     _transistor_instances.push_back(transistor);
 
-    // Note: need to index the element from the LIST, not the supplied element
-    size_t index = transistor_count() - 1;
-    _index_element(_transistor_instances[index]);
+    // If the vector reallocates, we need to index everything again
+    if( will_realloc )
+    {
+        _index_all();
+    }
+    else
+    {
+        // Note: need to index the element from the LIST, not the supplied element
+        size_t index = transistor_count() - 1;
+        _index_element(_transistor_instances[index]);
+    }
 }
 
 
