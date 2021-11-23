@@ -104,6 +104,27 @@ public:
      */
     std::string name() const noexcept;
 
+    /**
+     * @brief Get the gate wire ID.
+     * 
+     * @return size_t The gate wire ID.
+     */
+    inline size_t gate() const noexcept { return _gate_id; }
+
+    /**
+     * @brief Get the source wire ID.
+     * 
+     * @return size_t The source wire ID.
+     */
+    inline size_t source() const noexcept { return _source_id; }
+
+    /**
+     * @brief Get the drain wire ID.
+     * 
+     * @return size_t The drain wire ID.
+     */
+    inline size_t drain() const noexcept { return _drain_id; }
+
 
     /**
      * @brief Get the state for the gate wire

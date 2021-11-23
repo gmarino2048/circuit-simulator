@@ -187,14 +187,14 @@ public:
      * 
      * @return size_t The VCC Rail ID
      */
-    static size_t VCC_ID();
+    static inline size_t VCC_ID() { return _VCC_ID; }
 
     /**
      * @brief Get the ID for the GND Rail
      * 
      * @return size_t The GND rail ID
      */
-    static size_t GND_ID();
+    static inline size_t GND_ID() { return _GND_ID; }
 
 
     /**
@@ -203,7 +203,7 @@ public:
      * 
      * @return ssize_t The wire ID
      */
-    ssize_t id() const noexcept;
+    inline ssize_t id() const noexcept { return _id; }
 
     /**
      * @brief Return the primary name of this wire. The primary name is
@@ -211,7 +211,21 @@ public:
      * 
      * @return std::string The primary name
      */
-    std::string primary_name() const noexcept;
+    inline std::string primary_name() const noexcept { return _primary_name; }
+
+    /**
+     * @brief Return the list of control transistors for this object.
+     * 
+     * @return std::vector<size_t> The IDs of the control transistors.
+     */
+    inline std::vector<size_t> ctrl_transistors() const noexcept { return _trans_ctl_ids; }
+
+    /**
+     * @brief Return the list of gate transistors for this wire.
+     * 
+     * @return std::vector<size_t> The IDs of the gate transistor.
+     */
+    inline std::vector<size_t> gate_transistors() const noexcept { return _trans_gate_ids; }
 
     /**
      * @brief Is this wire driven externally, or by other transistors in the circuit.
@@ -219,7 +233,7 @@ public:
      * @return true     The wire is externally driven
      * @return false    The wire relies on other transistors
      */
-    bool externally_driven() const noexcept;
+    inline bool externally_driven() const noexcept { return _externally_driven; }
 
 
     /**
@@ -235,7 +249,7 @@ public:
      * 
      * @return std::vector<std::string> The list of other names for this wire.
      */
-    std::vector<std::string> other_names() const noexcept;
+    inline std::vector<std::string> other_names() const noexcept { return _other_names; }
 
 
     /**
@@ -243,7 +257,7 @@ public:
      * 
      * @return State The wire's current state
      */
-    State state() const noexcept;
+    inline State state() const noexcept { return _state; }
 
     /**
      * @brief Set the state of this wire.
@@ -259,7 +273,7 @@ public:
      * @return true The wire has been pulled high or low
      * @return false The wire is naturally high, low, or is floating
      */
-    bool pulled() const noexcept;
+    inline bool pulled() const noexcept { return _pulled; }
 
     /**
      * @brief Returns whether this wire is low

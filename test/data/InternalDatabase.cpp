@@ -116,11 +116,15 @@ TEST_F(InternalDatabaseTest, CopyConstructor)
 TEST_F(InternalDatabaseTest, MoveConstructor)
 {
     InternalDatabase db_original(_wires, _transistors);
+    _database = std::move(db_original);
+
+    _verify_all_components();
 }
 
 
 TEST_F(InternalDatabaseTest, AddComponentSimple)
 {
+    // This will trigger a recalc, so don't worry about an extra test for that
     for( const Wire& wire : _wires )
     {
         ASSERT_NO_THROW(_database.add_component(wire));
@@ -129,6 +133,84 @@ TEST_F(InternalDatabaseTest, AddComponentSimple)
     for( const Transistor& transistor : _transistors )
     {
         ASSERT_NO_THROW(_database.add_component(transistor));
+    }
+
+    _verify_all_components();
+}
+
+
+TEST_F(InternalDatabaseTest, FastUpdateComponent)
+{
+    _database = InternalDatabase(_wires, _transistors);
+
+    const size_t index = 5;
+    const Wire::State new_state = Wire::PULLED_HIGH;
+
+    {
+        _database.get_wire(index)->state(new_state);
+    }
+
+    EXPECT_EQ(_database.get_wire(index)->state(), new_state);
+}
+
+
+TEST_F(InternalDatabaseTest, UpdateComponent)
+{
+    // Update Wire
+    const size_t index = 5;
+    const std::string new_name = "NewName";
+    const std::vector<size_t> ctrl_trans = { 2, 3 };
+    const std::vector<size_t> gate_trans = { 4, 5 };
+
+    Wire new_wire(
+        index,
+        new_name,
+        true,
+        ctrl_trans,
+        gate_trans
+    );
+
+    EXPECT_NO_THROW(_database.update_component(new_wire));
+
+    Wire* wire_ptr = _database.get_wire(index);
+    ASSERT_NE(wire_ptr, nullptr);
+
+    EXPECT_EQ(wire_ptr->primary_name(), new_name);
+    EXPECT_EQ(wire_ptr->ctrl_transistors(), ctrl_trans);
+    EXPECT_EQ(wire_ptr->gate_transistors(), gate_trans);
+
+    // Update Transistor
+    size_t new_source = 5;
+    size_t new_gate = 6;
+    size_t new_drain = 7;
+
+    Transistor new_transistor(
+        index,
+        new_gate,
+        new_source,
+        new_drain
+    );
+
+    _database.update_component(new_transistor);
+
+    Transistor* trans_ptr = _database.get_transistor(index);
+    ASSERT_NE(trans_ptr, nullptr);
+
+    EXPECT_EQ(trans_ptr->source(), new_source);
+    EXPECT_EQ(trans_ptr->gate(), new_gate);
+    EXPECT_EQ(trans_ptr->drain(), new_drain);
+}
+
+TEST_F(InternalDatabaseTest, UpdateAddsComponent)
+{
+    for( const Wire& wire : _wires )
+    {
+        _database.update_component(wire);
+    }
+
+    for( const Transistor& transistor : _transistors )
+    {
+        _database.update_component(transistor);
     }
 
     _verify_all_components();
