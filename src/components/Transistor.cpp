@@ -10,18 +10,47 @@
  * 
  */
 
+#include <cstdint>
 #include <iomanip>
+#include <stdexcept>
 #include <string>
 #include <sstream>
 
+#include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
 
 using namespace circsim::components;
+using WireState = circsim::components::Wire::State;
+
+
+static constexpr uint8_t HIGH_STATES = 
+    WireState::HIGH | WireState::PULLED_HIGH | WireState::FLOATING_HIGH;
+
+
+bool Transistor::_update_nmos(const WireState gate_state)
+{
+    State old_state = current_state();
+    _current_state = gate_state & HIGH_STATES ? ON : OFF;
+
+    return current_state() != old_state;
+}
+
+
+bool Transistor::_update_pmos(const WireState gate_state)
+{
+    State old_state = current_state();
+    _current_state = gate_state & HIGH_STATES ? OFF : ON;
+
+    return current_state() != old_state;
+}
+
 
 Transistor::Transistor(): _id(-1),
                           _gate_id(0),
                           _source_id(0),
-                          _drain_id(0)
+                          _drain_id(0),
+                          _type(NMOS),
+                          _current_state(OFF)
 {
     // Default constructor for all other members
 }
@@ -32,11 +61,14 @@ Transistor::Transistor
     const size_t id,
     const size_t gate_id,
     const size_t source_id,
-    const size_t drain_id
+    const size_t drain_id,
+    const Type type
 ):  _id(id),
     _gate_id(gate_id),
     _source_id(source_id),
-    _drain_id(drain_id)
+    _drain_id(drain_id),
+    _type(type),
+    _current_state(OFF)
 {
     // Default constructor for all other members
 }
@@ -48,26 +80,31 @@ Transistor::Transistor
     const std::string &name,
     const size_t gate_id,
     const size_t source_id,
-    const size_t drain_id
+    const size_t drain_id,
+    const Type type
 ):  _id(id),
     _name(name),
     _gate_id(gate_id),
     _source_id(source_id),
-    _drain_id(drain_id)
+    _drain_id(drain_id),
+    _type(type),
+    _current_state(OFF)
 {
     // No other members to initialize
 }
 
 
-ssize_t Transistor::id() const noexcept
+bool Transistor::update_state(const WireState gate_state)
 {
-    return this->_id;
-}
-
-
-std::string Transistor::name() const noexcept
-{
-    return this->_name;
+    switch( this->_type )
+    {
+        case NMOS:
+            return this->_update_nmos(gate_state);
+        case PMOS:
+            return this->_update_pmos(gate_state);
+        default:
+            throw std::runtime_error("Unrecognized transistor type");
+    }
 }
 
 
