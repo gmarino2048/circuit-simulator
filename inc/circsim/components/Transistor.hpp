@@ -25,19 +25,36 @@ namespace circsim::components
  *        differentiated behavior.
  * 
  */
-class Transistor {
+class Transistor final {
 public:
 
     /// Easily get the wire state type
     typedef Wire::State WireState;
 
-protected:
+    /// The switching type of this transistor object
+    enum Type
+    {
+        NMOS,           //!< Gate=HIGH means on
+        PMOS            //!< Gate=LOW means on
+    };
+
+    /// The current state of this transistor
+    enum State
+    {
+        ON,         //!< The transistor is currently a closed circuit
+        OFF         //!< The transistor is currently an open circuit
+    };
+
+private:
 
     /// The ID of this transistor
     ssize_t _id;
 
     /// The name of this transistor, which can be empty if it is unnamed
     std::string _name;
+
+    /// The type of the transistor, either NMOS or PMOS
+    Type _type;
 
 
     /// The ID of the gate wire for the transistor
@@ -48,6 +65,10 @@ protected:
 
     /// The ID of the drain wire for the transistor
     size_t _drain_id;
+
+
+    /// The current state of the transistor
+    State _current_state;
 
 public:
 
@@ -124,28 +145,6 @@ public:
      * @return size_t The drain wire ID.
      */
     inline size_t drain() const noexcept { return _drain_id; }
-
-
-    /**
-     * @brief Get the state for the gate wire
-     * 
-     * @return WireState The wire state of the gate transistor
-     */
-    WireState gate_state() const;
-
-    /**
-     * @brief Get the state for the source wire
-     * 
-     * @return WireState The wire state of the source transistor
-     */
-    WireState source_state() const;
-
-    /**
-     * @brief Get the state for the drain wire
-     * 
-     * @return WireState The wire state of the drain transistor
-     */
-    WireState drain_state() const;
 
 
     /**
