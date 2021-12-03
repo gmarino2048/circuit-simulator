@@ -48,6 +48,17 @@ public:
     };
 
     /**
+     * @brief The pullup/pulldown connection status of the wire
+     * 
+     */
+    enum PulledStatus : uint8_t
+    {
+        PS_NONE         = 0b00,     //!< The wire is not connected to a pullup/pulldown
+        PS_HIGH         = 0b01,     //!< The wire is connected to a pullup
+        PS_LOW          = 0b10      //!< The wire is connected to a pulldown
+    };
+
+    /**
      * @brief One-hot encoded list of potential wire states. The original
      *        circuit simulator library was really inefficient with their
      *        assignment of wire states, so this object allows for simple
@@ -98,7 +109,7 @@ private:
 
 
     /// Tells whether this wire is connected to a pullup/pulldown
-    bool _pulled;
+    PulledStatus _pulled;
 
     /// The current state of the wire, given as one of the above Wire States
     State _state;
@@ -175,7 +186,7 @@ public:
     (
         const size_t id,
         const std::string &name,
-        const bool pulled,
+        const PulledStatus pulled,
         const std::vector<size_t> &control_transistors,
         const std::vector<size_t> &gate_transistors,
         const State initial_state = FLOATING
@@ -270,10 +281,9 @@ public:
     /**
      * @brief Determines if the wire has been pulled high or low
      * 
-     * @return true The wire has been pulled high or low
-     * @return false The wire is naturally high, low, or is floating
+     * @return PulledStatus whether the wire is pulled high, low, or neither
      */
-    inline bool pulled() const noexcept { return _pulled; }
+    inline PulledStatus pulled() const noexcept { return _pulled; }
 
     /**
      * @brief Returns whether this wire is low

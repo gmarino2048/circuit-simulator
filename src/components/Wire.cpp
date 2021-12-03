@@ -46,7 +46,7 @@ const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
  */
 Wire::Wire(): _id(-1),
               _state(UNKNOWN),
-              _pulled(false),
+              _pulled(PS_NONE),
               _externally_driven(false),
               _driver_function(std::nullopt)
 {
@@ -64,7 +64,7 @@ Wire::Wire
     const std::vector<size_t> &control_transistors,
     const std::vector<size_t> &gate_transistors
 ):  _id(id),
-    _pulled(false),
+    _pulled(PS_NONE),
     _state(UNKNOWN),
     _externally_driven(true),
     _trans_ctl_ids(control_transistors),
@@ -91,7 +91,7 @@ Wire::Wire
     const std::vector<size_t> &gate_transistors
 ):  _id(id),
     _primary_name(name),
-    _pulled(false),
+    _pulled(PS_NONE),
     _state(UNKNOWN),
     _externally_driven(true),
     _driver_function(driver_func),
@@ -111,7 +111,7 @@ Wire::Wire
 (
     const size_t id,
     const std::string &name,
-    const bool pulled,
+    const PulledStatus pulled,
     const std::vector<size_t> &control_transistors,
     const std::vector<size_t> &gate_transistors,
     const State initial_state
