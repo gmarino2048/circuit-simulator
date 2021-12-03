@@ -67,7 +67,6 @@ public:
      */
     enum State : uint8_t
     {
-        UNKNOWN =           0b00000000,     //!< Unknown state
         GROUNDED =          0b00000001,     //!< Immutable off state
         PULLED_LOW =        0b00000010,     //!< Definitive off state
         FLOATING_LOW =      0b00000100,     //!< Indeterminate state, currently off
@@ -180,7 +179,6 @@ public:
      * @param pulled                The pullup/pulldown status of the wire
      * @param control_transistors   The transistors which control the wire
      * @param gate_transistors      The transistors controlled by the wire
-     * @param initial_state         The initial state of the wire
      */
     Wire
     (
@@ -188,8 +186,7 @@ public:
         const std::string &name,
         const PulledStatus pulled,
         const std::vector<size_t> &control_transistors,
-        const std::vector<size_t> &gate_transistors,
-        const State initial_state = FLOATING
+        const std::vector<size_t> &gate_transistors
     );
 
 
@@ -300,6 +297,13 @@ public:
      * @return false The current wire is low
      */
     bool high() const noexcept;
+
+    /**
+     * @brief Set the wire to its floating state as
+     *        determined by the pullup/pulldown state
+     * 
+     */
+    void set_floating() noexcept;
 
     /**
      * @brief Convenience method to set the wire high or low.

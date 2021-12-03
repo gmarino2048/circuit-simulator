@@ -171,7 +171,7 @@ void WireGroup::_update_wire_states(const Database& database) const
 
 
 WireGroup::WireGroup() :
-    _state(Wire::UNKNOWN)
+    _state(Wire::FLOATING)
 {
     // All other members use default constructors
 }
@@ -185,7 +185,7 @@ WireGroup::WireGroup(const size_t wire, const Database& database) : WireGroup()
 
 void WireGroup::reset()
 {
-    _state = Wire::UNKNOWN;
+    _state = Wire::FLOATING;
     _wires.clear();
 }
 
