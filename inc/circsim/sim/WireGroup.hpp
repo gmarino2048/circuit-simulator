@@ -49,6 +49,31 @@ private:
     /// The set of all wires in this group. Wires must not be duplicated.
     std::set<size_t> _wires;
 
+
+    /**
+     * @brief Create the wire group given an initial wire and a database
+     *        of components.
+     * 
+     * @param initial The wire used to build the group.
+     * @param database The database of components used for reference.
+     */
+    void _build_wire_group(const size_t initial, const Database& database);
+
+    /**
+     * @brief Recalculate the wire group state given all of the wires in
+     *        the group. Usually this should only be required once.
+     * 
+     * @param database The component database.
+     */
+    void _recalculate_group_state(const Database& database);
+
+    /**
+     * @brief Update the individual wire states in this wire group.
+     * 
+     * @param database The database used to get the wire instances.
+     */
+    void _update_wire_states(const Database& database) const;
+
 public:
 
     /**
@@ -90,20 +115,15 @@ public:
      * @return true The wire group is empty.
      * @return false The wire group is not empty.
      */
-    bool empty() const;
+    inline bool empty() const { return _wires.empty(); }
 
 
     /**
      * @brief Get the state of this wire group.
      * 
-     * Note that the group state is cached in the member variable
-     * _state, and the recalculate parameter allows us to force recalculation
-     * if necessary.
-     * 
-     * @param recalculate Whether to recalculate the wire state.
      * @return Wire::State The state of this wire group.
      */
-    Wire::State group_state(const bool recalculate = false);
+    inline Wire::State group_state() const noexcept { return _state; };
 
     /**
      * @brief Get the gate transistors connected to this wire group.
