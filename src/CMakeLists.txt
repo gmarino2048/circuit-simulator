@@ -27,7 +27,7 @@ file(
 )
 
 add_library(
-    cirsim-sim SHARED
+    circsim-sim SHARED
     ${sim_SRC}
 )
 
