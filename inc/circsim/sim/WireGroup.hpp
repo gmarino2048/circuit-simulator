@@ -1,0 +1,4 @@
+#ifndef __CIRCSIM_SIM_WIREGROUP_HPP
+#define __CIRCSIM_SIM_WIREGROUP_HPP
+
+#endif
