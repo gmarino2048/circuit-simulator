@@ -146,6 +146,11 @@ void WireGroup::_update_wire_states(const Database& database) const
     {
         Wire* wire = database.get_wire(wire_id);
 
+        if( (wire->id() == Wire::VCC_ID()) || (wire->id() == Wire::GND_ID()) )
+        {
+            continue;
+        }
+
         switch( _state )
         {
             case Wire::GROUNDED:
