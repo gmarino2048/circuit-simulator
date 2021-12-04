@@ -45,8 +45,8 @@ const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
  * ID of the wire is -1 so the simulator can quickly detect an error
  */
 Wire::Wire(): _id(-1),
-              _state(UNKNOWN),
-              _pulled(false),
+              _state(FLOATING),
+              _pulled(PS_NONE),
               _externally_driven(false),
               _driver_function(std::nullopt)
 {
@@ -64,8 +64,7 @@ Wire::Wire
     const std::vector<size_t> &control_transistors,
     const std::vector<size_t> &gate_transistors
 ):  _id(id),
-    _pulled(false),
-    _state(UNKNOWN),
+    _pulled(PS_NONE),
     _externally_driven(true),
     _trans_ctl_ids(control_transistors),
     _trans_gate_ids(gate_transistors)
@@ -91,8 +90,7 @@ Wire::Wire
     const std::vector<size_t> &gate_transistors
 ):  _id(id),
     _primary_name(name),
-    _pulled(false),
-    _state(UNKNOWN),
+    _pulled(PS_NONE),
     _externally_driven(true),
     _driver_function(driver_func),
     _trans_ctl_ids(control_transistors),
@@ -100,6 +98,7 @@ Wire::Wire
 {
     // Use default constructors for other members
     // Get the first state value
+    set_floating();
     _state = _driver_function.value()(_state);
 }
 
@@ -111,20 +110,18 @@ Wire::Wire
 (
     const size_t id,
     const std::string &name,
-    const bool pulled,
+    const PulledStatus pulled,
     const std::vector<size_t> &control_transistors,
-    const std::vector<size_t> &gate_transistors,
-    const State initial_state
+    const std::vector<size_t> &gate_transistors
 ):  _id(id),
     _primary_name(name),
     _pulled(pulled),
-    _state(initial_state),
     _externally_driven(false),
     _driver_function(std::nullopt),
     _trans_ctl_ids(control_transistors),
     _trans_gate_ids(gate_transistors)
 {
-    // Use default for all other members
+    set_floating();
 }
 
 
@@ -147,6 +144,23 @@ bool Wire::high() const noexcept
 {
     static const uint8_t HIGH_STATES = HIGH | PULLED_HIGH | FLOATING_HIGH;
     return (bool)(this->_state & HIGH_STATES);
+}
+
+
+void Wire::set_floating() noexcept
+{
+    switch( _pulled )
+    {
+        case PS_HIGH:
+            _state = PULLED_HIGH;
+            break;
+        case PS_LOW:
+            _state = PULLED_LOW;
+            break;
+        default:
+            _state = FLOATING;
+            break;
+    }
 }
 
 

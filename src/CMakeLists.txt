@@ -21,3 +21,18 @@ target_link_libraries(
     circsim-data
     circsim-components
 )
+
+file(
+    GLOB sim_SRC "sim/*.cpp"
+)
+
+add_library(
+    circsim-sim SHARED
+    ${sim_SRC}
+)
+
+target_link_libraries(
+    circsim-sim
+    circsim-components
+    circsim-data
+)

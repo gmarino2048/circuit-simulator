@@ -48,7 +48,7 @@ void InternalDatabaseTest::SetUp()
     // Initialize with disconnected wires
     for( size_t i = 0; i < NORMAL_WIRE_COUNT; i++ )
     {
-        _wires[i] = Wire(i, "test", false, { 0 }, { 0 });
+        _wires[i] = Wire(i, "test", Wire::PS_NONE, { 0 }, { 0 });
     }
 
     // Initialize with disconnected transistors
@@ -165,7 +165,7 @@ TEST_F(InternalDatabaseTest, UpdateComponent)
     Wire new_wire(
         index,
         new_name,
-        true,
+        Wire::PS_HIGH,
         ctrl_trans,
         gate_trans
     );

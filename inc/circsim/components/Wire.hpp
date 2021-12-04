@@ -48,6 +48,17 @@ public:
     };
 
     /**
+     * @brief The pullup/pulldown connection status of the wire
+     * 
+     */
+    enum PulledStatus : uint8_t
+    {
+        PS_NONE         = 0b00,     //!< The wire is not connected to a pullup/pulldown
+        PS_HIGH         = 0b01,     //!< The wire is connected to a pullup
+        PS_LOW          = 0b10      //!< The wire is connected to a pulldown
+    };
+
+    /**
      * @brief One-hot encoded list of potential wire states. The original
      *        circuit simulator library was really inefficient with their
      *        assignment of wire states, so this object allows for simple
@@ -56,7 +67,6 @@ public:
      */
     enum State : uint8_t
     {
-        UNKNOWN =           0b00000000,     //!< Unknown state
         GROUNDED =          0b00000001,     //!< Immutable off state
         PULLED_LOW =        0b00000010,     //!< Definitive off state
         FLOATING_LOW =      0b00000100,     //!< Indeterminate state, currently off
@@ -98,7 +108,7 @@ private:
 
 
     /// Tells whether this wire is connected to a pullup/pulldown
-    bool _pulled;
+    PulledStatus _pulled;
 
     /// The current state of the wire, given as one of the above Wire States
     State _state;
@@ -169,16 +179,14 @@ public:
      * @param pulled                The pullup/pulldown status of the wire
      * @param control_transistors   The transistors which control the wire
      * @param gate_transistors      The transistors controlled by the wire
-     * @param initial_state         The initial state of the wire
      */
     Wire
     (
         const size_t id,
         const std::string &name,
-        const bool pulled,
+        const PulledStatus pulled,
         const std::vector<size_t> &control_transistors,
-        const std::vector<size_t> &gate_transistors,
-        const State initial_state = FLOATING
+        const std::vector<size_t> &gate_transistors
     );
 
 
@@ -270,10 +278,9 @@ public:
     /**
      * @brief Determines if the wire has been pulled high or low
      * 
-     * @return true The wire has been pulled high or low
-     * @return false The wire is naturally high, low, or is floating
+     * @return PulledStatus whether the wire is pulled high, low, or neither
      */
-    inline bool pulled() const noexcept { return _pulled; }
+    inline PulledStatus pulled() const noexcept { return _pulled; }
 
     /**
      * @brief Returns whether this wire is low
@@ -290,6 +297,13 @@ public:
      * @return false The current wire is low
      */
     bool high() const noexcept;
+
+    /**
+     * @brief Set the wire to its floating state as
+     *        determined by the pullup/pulldown state
+     * 
+     */
+    void set_floating() noexcept;
 
     /**
      * @brief Convenience method to set the wire high or low.
