@@ -66,28 +66,28 @@ public:
     (
         const size_t id,
         const WireState state,
-        const bool resolve = true
+        const bool update = true
     );
 
     void update_by_name
     (
         const std::string &name,
         const WireState state,
-        const bool resolve = true
+        const bool update = true
     );
 
     void update_all_by_id
     (
         const std::vector<size_t> &id_list,
         const std::vector<WireState> &state_list,
-        const bool resolve = true
+        const bool update = true
     );
 
     void update_all_by_name
     (
         const std::vector<std::string> &name_list,
         const std::vector<WireState> &state_list,
-        const bool resolve = true
+        const bool update = true
     );
 
 };
