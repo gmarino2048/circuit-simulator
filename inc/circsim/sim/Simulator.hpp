@@ -11,9 +11,12 @@
  * 
  */
 
-#include <queue>
 #include <cstdint>
+#include <queue>
+#include <string>
+#include <vector>
 
+#include <circsim/components/Wire.hpp>
 #include <circsim/data/InternalDatabase.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
@@ -34,17 +37,58 @@ namespace circsim::sim
  */
 class Simulator final
 {
+public:
+
+    using WireState = components::Wire::State;
+
 private:
 
+    size_t _iteration_count;
     size_t _iteration_limit;
 
     std::queue<size_t> _wire_update_list;
 
     data::InternalDatabase _internal_database;
 
+    void _create_wire_group(const size_t wire_id, WireGroup &group);
+    void _update_transistors(const WireGroup &group);
+
 public:
 
     Simulator();
+
+    void update_next();
+    void update_all();
+
+    void reset_iteration_count();
+
+    void update_by_id
+    (
+        const size_t id,
+        const WireState state,
+        const bool resolve = true
+    );
+
+    void update_by_name
+    (
+        const std::string &name,
+        const WireState state,
+        const bool resolve = true
+    );
+
+    void update_all_by_id
+    (
+        const std::vector<size_t> &id_list,
+        const std::vector<WireState> &state_list,
+        const bool resolve = true
+    );
+
+    void update_all_by_name
+    (
+        const std::vector<std::string> &name_list,
+        const std::vector<WireState> &state_list,
+        const bool resolve = true
+    );
 
 };
 
