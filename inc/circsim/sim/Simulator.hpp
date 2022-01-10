@@ -55,7 +55,13 @@ private:
 
 public:
 
-    Simulator();
+    Simulator(const size_t iteration_limit = 2500);
+
+    Simulator
+    (
+        const data::InternalDatabase &database,
+        const size_t iteration_limit = 2500
+    );
 
     inline data::InternalDatabase& database() { return _internal_database; }
     inline void database(const data::InternalDatabase &database) { _internal_database = database; }
