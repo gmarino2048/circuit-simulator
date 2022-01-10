@@ -39,15 +39,21 @@ class Simulator final
 {
 public:
 
+    /// Easy-access definition for the wire state enum
     using WireState = components::Wire::State;
 
 private:
 
+    /// The current iteration count of the simulator
     size_t _iteration_count;
+
+    /// The iteration limit of the simulator
     size_t _iteration_limit;
 
+    /// The list of wires which need to be updated
     std::queue<size_t> _wire_update_list;
 
+    /// The internal component database for the simulator
     data::InternalDatabase _internal_database;
 
     void _create_wire_group(const size_t wire_id, WireGroup &group);
