@@ -115,7 +115,8 @@ public:
      * 
      * @param database The new database to use.
      */
-    void database(const data::InternalDatabase &database);
+    inline void database(const data::InternalDatabase &database) 
+    { this->_internal_database = database; }
 
 
     /**
