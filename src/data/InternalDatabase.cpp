@@ -13,6 +13,7 @@
 
 #include <string>
 
+#include <circsim/common/IndexError.hpp>
 #include <circsim/data/InternalDatabase.hpp>
 
 /// Convenience typedef for the Wire class
@@ -29,7 +30,7 @@ void InternalDatabase::_index_element(const Wire &wire)
 {
     if( wire.id() < 0 )
     {
-        throw IndexError
+        throw common::IndexError
         (
             "Expected nonnegative wire ID for object:\n" +
             static_cast<std::string>(wire)
@@ -42,7 +43,7 @@ void InternalDatabase::_index_element(const Wire &wire)
     // Ensure that ID is not duplicate
     if( this->contains(wire) )
     {
-        throw IndexError("Duplicate Wire ID detected: " + std::to_string(wire.id()));
+        throw common::IndexError("Duplicate Wire ID detected: " + std::to_string(wire.id()));
     }
 
     // No need to do boundary checking since this is addition
@@ -54,7 +55,7 @@ void InternalDatabase::_index_element(const Transistor &transistor)
 {
     if( transistor.id() < 0 )
     {
-        throw IndexError
+        throw common::IndexError
         (
             "Expected nonnegative transistor ID for object:\n" +
             static_cast<std::string>(transistor)
@@ -67,7 +68,10 @@ void InternalDatabase::_index_element(const Transistor &transistor)
     // Ensure that ID is not duplicate
     if( this->contains(transistor) )
     {
-        throw IndexError("Duplicate Transistor ID detected: " + std::to_string(transistor.id()));
+        throw common::IndexError
+        (
+            "Duplicate Transistor ID detected: " + std::to_string(transistor.id())
+        );
     }
 
     // No need to do boundary checking for set insertion
@@ -235,7 +239,7 @@ void InternalDatabase::add_component(const Wire& wire)
 {
     if( contains(wire) )
     {
-        throw IndexError
+        throw common::IndexError
         (
             "Database already contains wire with ID: " + std::to_string(wire.id())
         );
@@ -265,7 +269,7 @@ void InternalDatabase::add_component(const Transistor& transistor)
 {
     if( contains(transistor) )
     {
-        throw IndexError
+        throw common::IndexError
         (
             "Database already contains transistor with ID: " + std::to_string(transistor.id())
         );
@@ -325,7 +329,10 @@ Wire* InternalDatabase::get_wire(const size_t id) const try
 }
 catch( const std::out_of_range& )
 {
-    throw IndexError("Database does not have wire with index " + std::to_string(id));
+    throw common::IndexError
+    (
+        "Database does not have wire with index " + std::to_string(id)
+    );
 }
 
 
@@ -335,5 +342,8 @@ Transistor* InternalDatabase::get_transistor(const size_t id) const try
 }
 catch( const std::out_of_range& )
 {
-    throw IndexError("Database does not have transistor with index " + std::to_string(id));
+    throw common::IndexError
+    (
+        "Database does not have transistor with index " + std::to_string(id)
+    );
 }
