@@ -19,6 +19,10 @@
 namespace circsim::common
 {
 
+/**
+ * @brief Error thrown when an internal limit is exceeded.
+ * 
+ */
 class LimitError final : public std::exception
 {
 
