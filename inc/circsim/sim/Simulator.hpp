@@ -144,6 +144,7 @@ public:
      * @brief Update all the remaining wires in the queue until convergence is
      *        reached or until the iteration limit is reached.
      * 
+     * @throw circsim::common::LimitError if the limit is exceeded
      */
     void update_all();
 
@@ -181,6 +182,9 @@ public:
      * @param state The new state of the wire
      * @param update_all If set, this call will continue until the state
      *                   of the chip converges or the limit is reached.
+     * 
+     * @throw circsim::common::IndexError if the wire ID cannot be found
+     * @throw circsim::common::LimitError if the update limit is exceeded
      */
     void update_by_id
     (
@@ -198,6 +202,9 @@ public:
      * @param state The new wire state to set
      * @param update_all If set, this call will continue until the state
      *                   of the chip converges or the limit is reached.
+     * 
+     * @throw circsim::common::IndexError if the wire name cannot be found
+     * @throw circsim::common::LimitError if the update limit is exceeded
      */
     void update_by_name
     (
@@ -212,10 +219,13 @@ public:
      *        the state list. The lists must be the same size for this to
      *        work.
      * 
-     * @param id_list 
-     * @param state_list 
+     * @param id_list The list of wire IDs
+     * @param state_list The list of wire states to update to
      * @param update_all If set, this call will continue until the state
      *                   of the chip converges or the limit is reached.
+     * 
+     * @throw circsim::common::IndexError if the wire ID cannot be found
+     * @throw circsim::common::LimitError if the update limit is exceeded
      */
     void update_all_by_id
     (
@@ -234,6 +244,9 @@ public:
      * @param state_list The list of wire states
      * @param update_all If set, this call will continue until the state
      *                   of the chip converges or the limit is reached.
+     * 
+     * @throw circsim::common::IndexError if the wire name cannot be found
+     * @throw circsim::common::LimitError if the update limit is exceeded
      */
     void update_all_by_name
     (

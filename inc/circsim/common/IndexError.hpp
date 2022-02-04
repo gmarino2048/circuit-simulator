@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef __CIRCSIM_COMMON_INDEXERROR_HPP
+#define __CIRCSIM_COMMON_INDEXERROR_HPP
+
 #include <exception>
 #include <string>
 
@@ -46,3 +49,5 @@ public:
 };
 
 }
+
+#endif
