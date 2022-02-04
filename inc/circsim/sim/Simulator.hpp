@@ -132,38 +132,114 @@ public:
      */
     inline void iteration_limit(const size_t count) { _iteration_limit = count; }
 
+
+    /**
+     * @brief Run a single iteration of the update algorithm. This will
+     *        only work on the next wire that needs to be updated.
+     * 
+     */
     void update_next();
+
+    /**
+     * @brief Update all the remaining wires in the queue until convergence is
+     *        reached or until the iteration limit is reached.
+     * 
+     */
     void update_all();
 
-    void reset_update_list();
-    void reset_iteration_count();
 
+    /**
+     * @brief Reset the circuit to its original, powered off state.
+     * 
+     */
+    void reset_circuit();
+
+    /**
+     * @brief Removes all elements from the update list, leaving the current
+     *        state of the processor untouched.
+     * 
+     */
+    void reset_update_list();
+
+    /**
+     * @brief Reset the current iteration counter to 0, allowing more
+     *        iterations to be performed on a subsequent pass.
+     * 
+     */
+    inline void reset_iteration_count()
+    {
+        this->_iteration_count = 0;
+    }
+
+
+    /**
+     * @brief Update a wire using its ID and a given State. This method
+     *        will change the wire to the provided state and add the wire
+     *        to the simulator's internal recalculation list.
+     * 
+     * @param id The wire ID to modify
+     * @param state The new state of the wire
+     * @param update_all If set, this call will continue until the state
+     *                   of the chip converges or the limit is reached.
+     */
     void update_by_id
     (
         const size_t id,
         const WireState state,
-        const bool update = true
+        const bool update_all = true
     );
 
+    /**
+     * @brief Update a wire by searching for the name and then changing the
+     *        value to the one provided, then will add the wire to the
+     *        simulator's recalculation list.
+     * 
+     * @param name The wire name to search for
+     * @param state The new wire state to set
+     * @param update_all If set, this call will continue until the state
+     *                   of the chip converges or the limit is reached.
+     */
     void update_by_name
     (
         const std::string &name,
         const WireState state,
-        const bool update = true
+        const bool update_all = true
     );
 
+    /**
+     * @brief Update the list of provided wire IDs to the desired state.
+     *        The value of the ID corresponds to the matching state in
+     *        the state list. The lists must be the same size for this to
+     *        work.
+     * 
+     * @param id_list 
+     * @param state_list 
+     * @param update_all If set, this call will continue until the state
+     *                   of the chip converges or the limit is reached.
+     */
     void update_all_by_id
     (
         const std::vector<size_t> &id_list,
         const std::vector<WireState> &state_list,
-        const bool update = true
+        const bool update_all = true
     );
 
+    /**
+     * @brief Update the list of provided wires to the list of provided
+     *        states. The two lists follow a one-to-one correlation when
+     *        updating, searching for the wire which matches the desired
+     *        name and then setting it to the provided state.
+     * 
+     * @param name_list The list of wire names
+     * @param state_list The list of wire states
+     * @param update_all If set, this call will continue until the state
+     *                   of the chip converges or the limit is reached.
+     */
     void update_all_by_name
     (
         const std::vector<std::string> &name_list,
         const std::vector<WireState> &state_list,
-        const bool update = true
+        const bool update_all = true
     );
 
 };
