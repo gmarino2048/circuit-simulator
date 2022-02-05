@@ -27,6 +27,13 @@
 namespace circsim::sim
 {
 
+/**
+ * @brief This object represents a group of connected wires within the
+ *        simulator. Since the wires are all connected, they will all share
+ *        the same state, which is determined by analyzing the wire state of
+ *        all wires in the group.
+ * 
+ */
 class WireGroup final
 {
 public:
@@ -116,6 +123,15 @@ public:
      * @return false The wire group is not empty.
      */
     inline bool empty() const { return _wires.empty(); }
+
+
+    /**
+     * @brief Get the set of wire IDs in the wire group, so that they
+     *        can be iterated over if needed.
+     * 
+     * @return std::set<size_t> The IDs of the wire in the set.
+     */
+    inline std::set<size_t> wire_ids() const { return _wires; }
 
 
     /**
