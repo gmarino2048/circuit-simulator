@@ -9,6 +9,10 @@
  * 
  */
 
+#include <list>
+#include <pair>
+#include <set>
+#include <circsim/components/Transistor.hpp>
 #include <circsim/sim/Simulator.hpp>
 
 using namespace circsim;

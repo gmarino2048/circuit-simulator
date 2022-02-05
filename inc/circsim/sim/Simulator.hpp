@@ -12,7 +12,7 @@
  */
 
 #include <cstdint>
-#include <queue>
+#include <list>
 #include <string>
 #include <vector>
 
@@ -51,7 +51,7 @@ private:
     size_t _iteration_limit;
 
     /// The list of wires which need to be updated
-    std::queue<size_t> _wire_update_list;
+    std::list<size_t> _wire_update_list;
 
     /// The internal component database for the simulator
     data::InternalDatabase _internal_database;
@@ -77,6 +77,8 @@ private:
      * @param group The WireGroup used to update the transistors
      */
     void _update_transistors(const WireGroup &group);
+
+    void _set_floating(const size_t wire_id);
 
 public:
 
