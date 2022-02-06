@@ -277,6 +277,15 @@ public:
      */
     Transistor* get_transistor(const size_t id) const;
 
+    /**
+     * @brief Find the first wire associated with the given name. Note that
+     *        the name must exactly match the name of the wire or its aliases.
+     * 
+     * @param wire_name The name of the wire
+     * @return Wire* The firs wire with this name
+     */
+    Wire* find_wire(const std::string &wire_name) const;
+
 };
 
 }

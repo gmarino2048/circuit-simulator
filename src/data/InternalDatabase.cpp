@@ -11,6 +11,7 @@
  * 
  */
 
+#include <algorithm>
 #include <string>
 
 #include <circsim/common/IndexError.hpp>
@@ -346,4 +347,58 @@ catch( const std::out_of_range& )
     (
         "Database does not have transistor with index " + std::to_string(id)
     );
+}
+
+
+Wire* InternalDatabase::find_wire(const std::string &wire_name) const
+{
+    auto match_name = [&](const Wire &wire)
+    {
+        return wire.primary_name() == wire_name;
+    };
+
+    std::vector<Wire>::const_iterator wire_found;
+    wire_found = std::find_if
+    (
+        _wire_instances.begin(),
+        _wire_instances.end(),
+        match_name
+    );
+
+    if ( wire_found != _wire_instances.end())
+    {
+        return const_cast<Wire*>(&(*wire_found));
+    }
+
+    auto match_other_names = [&](const Wire &wire)
+    {
+        for( const std::string &other_name : wire.other_names() )
+        {
+            if( wire_name == other_name )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    wire_found = std::find_if
+    (
+        _wire_instances.begin(),
+        _wire_instances.end(),
+        match_other_names
+    );
+
+    if ( wire_found != _wire_instances.end())
+    {
+        return const_cast<Wire*>(&(*wire_found));
+    }
+    else
+    {
+        throw common::IndexError
+        (
+            "Wire not found matching name \"" + wire_name + "\""
+        );
+    }
 }
