@@ -78,6 +78,17 @@ private:
      */
     void _update_transistors(const WireGroup &group);
 
+    /**
+     * @brief Set the wire state to the correct floating state based on the
+     *        current state.
+     * 
+     * @details If the current state of the wire is high, then some of that
+     *          charge will remain, meaning that the new state is floating
+     *          high. Similarly, a previously low charge will result in a
+     *          floating low configuration. 
+     * 
+     * @param wire_id The ID of the wire to set as floating
+     */
     void _set_floating(const size_t wire_id);
 
 public:

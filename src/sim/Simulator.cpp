@@ -102,6 +102,32 @@ void Simulator::_update_transistors(const WireGroup &group)
 }
 
 
+void Simulator::_set_floating(const size_t wire_id)
+{
+    components::Wire *wire_object = _internal_database.get_wire(wire_id);
+
+    WireState current_state = wire_object->state();
+    switch ( current_state )
+    {
+        case WireState::HIGH:           // Fallthrough
+        case WireState::PULLED_HIGH:    // Fallthrough
+        case WireState::FLOATING_HIGH:
+            wire_object->state(WireState::FLOATING_HIGH);
+            break;
+
+        case WireState::GROUNDED:       // Fallthrough
+        case WireState::PULLED_LOW:     // Fallthrough
+        case WireState::FLOATING_LOW:
+            wire_object->state(WireState::FLOATING_LOW);
+            break;
+
+        default:
+            wire_object->state(WireState::FLOATING);
+            break;
+    }
+}
+
+
 Simulator::Simulator(const size_t iteration_limit) :
     _iteration_count(0),
     _iteration_limit(iteration_limit),
