@@ -224,3 +224,24 @@ void Simulator::update_by_id
         this->update_all();
     }
 }
+
+
+void Simulator::update_by_name
+(
+    const std::string &name,
+    const WireState state,
+    const bool update_all
+)
+{
+    components::Wire *wire_object =
+        _internal_database.find_wire(name);
+
+    // Preserve the internal order of the update list
+    wire_object->state(state);
+    _wire_update_list.push_back(wire_object->id());
+
+    if( update_all )
+    {
+        this->update_all();
+    }
+}

@@ -282,7 +282,10 @@ public:
      *        the name must exactly match the name of the wire or its aliases.
      * 
      * @param wire_name The name of the wire
-     * @return Wire* The firs wire with this name
+     * @return Wire* The first wire with this name
+     * 
+     * @throw circsim::common::IndexError if the wire with the specified name
+     *        cannot be found
      */
     Wire* find_wire(const std::string &wire_name) const;
 
