@@ -53,10 +53,13 @@ void Simulator::_update_transistors(const WireGroup &group)
     using ControlWirePair = std::pair<size_t, size_t>;
 
     // Convert transistor Ids to objects
-    std::vector<size_t> transistors_to_update = group.gate_transistors();
+    std::vector<size_t> transistors_to_update =
+        group.gate_transistors(_internal_database);
+
     for( const size_t id : transistors_to_update )
     {
-        components::Transistor *transistor_object = _internal_database.get_transistor(id);
+        components::Transistor *transistor_object =
+            _internal_database.get_transistor(id);
 
         bool state_changed = transistor_object->update_state(group.group_state());
 

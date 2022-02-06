@@ -144,13 +144,13 @@ public:
     /**
      * @brief Get the gate transistors connected to this wire group.
      * 
-     * This function will return a group of unique transistor IDs whose
-     * gate nodes are connected to this wire group. This will allow us to
-     * easily determine which transistors are going to switch.
-     * 
+     * @details This function will return a group of unique transistor IDs whose
+     *          gate nodes are connected to this wire group. This will allow us to
+     *          easily determine which transistors are going to switch.
+     * P
      * @return std::vector<size_t> The IDs of the gate transistors for the group.
      */
-    std::vector<size_t> gate_transistors() const;
+    std::vector<size_t> gate_transistors(const Database &database) const;
 
 };
 
