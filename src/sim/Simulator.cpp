@@ -9,6 +9,7 @@
  * 
  */
 
+#include <algorithm>
 #include <list>
 #include <set>
 #include <utility>
@@ -67,8 +68,20 @@ void Simulator::_update_transistors(const WireGroup &group)
 
         // Don't add if they're already in the update list
         std::list<size_t>::const_iterator source_update, drain_update;
-        source_update = _wire_update_list.find(transistor_object->source());
-        drain_update = _wire_update_list.find(transistor_object->drain());
+
+        source_update = std::find
+        (
+            _wire_update_list.begin(),
+            _wire_update_list.end(),
+            transistor_object->source()
+        );
+
+        drain_update = std::find
+        (
+            _wire_update_list.begin(),
+            _wire_update_list.end(),
+            transistor_object->drain()
+        );
 
         // Different actions depending on the state of the transistor
         if( transistor_object->current_state() == components::Transistor::ON )
