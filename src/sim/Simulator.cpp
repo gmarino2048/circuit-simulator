@@ -203,3 +203,24 @@ void Simulator::update_all()
 
     throw common::LimitError("Iteration Limit Exceeded");
 }
+
+
+void Simulator::update_by_id
+(
+    const size_t id,
+    const WireState state,
+    const bool update_all
+)
+{
+    components::Wire *wire_object =
+        _internal_database.get_wire(id);
+
+    // Preserve the internal order of the update list
+    wire_object->state(state);
+    _wire_update_list.push_back(wire_object->id());
+
+    if( update_all )
+    {
+        this->update_all();
+    }
+}
