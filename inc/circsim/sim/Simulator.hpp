@@ -166,6 +166,10 @@ public:
      * @brief Update all the remaining wires in the queue until convergence is
      *        reached or until the iteration limit is reached.
      * 
+     * @details This method first resets the iteration count, then runs the
+     *          update algorithm until convergence is reached or the iteration
+     *          limit is reached.
+     * 
      * @throw circsim::common::LimitError if the limit is exceeded
      */
     void update_all();

@@ -10,9 +10,12 @@
  */
 
 #include <list>
-#include <pair>
 #include <set>
+#include <utility>
+
+#include <circsim/common/LimitError.hpp>
 #include <circsim/components/Transistor.hpp>
+#include <circsim/components/Wire.hpp>
 #include <circsim/sim/Simulator.hpp>
 
 using namespace circsim;
@@ -165,4 +168,22 @@ bool Simulator::update_next()
     _update_transistors(wire_group);
 
     return false;
+}
+
+
+void Simulator::update_all()
+{
+    reset_iteration_count();
+
+    while( _iteration_count < _iteration_limit )
+    {
+        bool finished = update_next();
+
+        if ( finished )
+        {
+            return;
+        }
+    }
+
+    throw common::LimitError("Iteration Limit Exceeded");
 }
