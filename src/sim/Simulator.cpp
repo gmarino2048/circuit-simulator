@@ -149,7 +149,20 @@ Simulator::Simulator
 }
 
 
-void Simulator::update_next()
+bool Simulator::update_next()
 {
+    // Get the next wire to run the simulation on
+    if ( _wire_update_list.size() == 0 )
+    {
+        return true;
+    }
 
+    size_t next_wire = _wire_update_list.front();
+    _wire_update_list.pop_front();
+
+    WireGroup wire_group;
+    _create_wire_group(next_wire, wire_group);
+    _update_transistors(wire_group);
+
+    return false;
 }

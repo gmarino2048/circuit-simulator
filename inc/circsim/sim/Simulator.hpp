@@ -129,7 +129,9 @@ public:
      * @param database The new database to use.
      */
     inline void database(const data::InternalDatabase &database) 
-    { this->_internal_database = database; }
+    {
+        this->_internal_database = database;
+    }
 
 
     /**
@@ -151,8 +153,14 @@ public:
      * @brief Run a single iteration of the update algorithm. This will
      *        only work on the next wire that needs to be updated.
      * 
+     * @details This method will **not** increase the iteration counter,
+     *          as it only performs a single run, and the iteration limit
+     *          is designed to prevent runaway automatic operations.
+     * 
+     * @return true if there are no more wires to update
+     * @return false if there are more wires to update
      */
-    void update_next();
+    bool update_next();
 
     /**
      * @brief Update all the remaining wires in the queue until convergence is
