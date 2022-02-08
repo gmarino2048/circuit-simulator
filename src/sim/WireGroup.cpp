@@ -203,3 +203,22 @@ void WireGroup::initialize(const size_t wire, const Database& database)
     _recalculate_group_state(database);
     _update_wire_states(database);
 }
+
+
+std::vector<size_t> WireGroup::gate_transistors(const Database &database) const
+{
+    std::vector<size_t> transistor_ids;
+
+    for ( const size_t wire_id : _wires )
+    {
+        const Wire *wire_object = database.get_wire(wire_id);
+
+        std::vector<size_t> gate_ids = wire_object->gate_transistors();
+        for( const size_t trans_id : gate_ids )
+        {
+            transistor_ids.push_back(trans_id);
+        }
+    }
+
+    return transistor_ids;
+}

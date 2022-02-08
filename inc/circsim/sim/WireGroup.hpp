@@ -27,6 +27,13 @@
 namespace circsim::sim
 {
 
+/**
+ * @brief This object represents a group of connected wires within the
+ *        simulator. Since the wires are all connected, they will all share
+ *        the same state, which is determined by analyzing the wire state of
+ *        all wires in the group.
+ * 
+ */
 class WireGroup final
 {
 public:
@@ -119,6 +126,15 @@ public:
 
 
     /**
+     * @brief Get the set of wire IDs in the wire group, so that they
+     *        can be iterated over if needed.
+     * 
+     * @return std::set<size_t> The IDs of the wire in the set.
+     */
+    inline std::set<size_t> wire_ids() const { return _wires; }
+
+
+    /**
      * @brief Get the state of this wire group.
      * 
      * @return Wire::State The state of this wire group.
@@ -128,13 +144,13 @@ public:
     /**
      * @brief Get the gate transistors connected to this wire group.
      * 
-     * This function will return a group of unique transistor IDs whose
-     * gate nodes are connected to this wire group. This will allow us to
-     * easily determine which transistors are going to switch.
-     * 
+     * @details This function will return a group of unique transistor IDs whose
+     *          gate nodes are connected to this wire group. This will allow us to
+     *          easily determine which transistors are going to switch.
+     * P
      * @return std::vector<size_t> The IDs of the gate transistors for the group.
      */
-    std::vector<size_t> gate_transistors() const;
+    std::vector<size_t> gate_transistors(const Database &database) const;
 
 };
 
