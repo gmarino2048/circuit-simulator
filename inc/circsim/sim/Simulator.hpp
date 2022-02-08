@@ -252,6 +252,8 @@ public:
      * 
      * @throw circsim::common::IndexError if the wire ID cannot be found
      * @throw circsim::common::LimitError if the update limit is exceeded
+     * @throw circsim::common::FormatError if the size of the id list does not
+     *        match that of the state list
      */
     void update_all_by_id
     (
@@ -273,6 +275,8 @@ public:
      * 
      * @throw circsim::common::IndexError if the wire name cannot be found
      * @throw circsim::common::LimitError if the update limit is exceeded
+     * @throw circsim::common::FormatError if the size of the id list does not
+     *        match that of the state list
      */
     void update_all_by_name
     (

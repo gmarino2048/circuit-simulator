@@ -14,6 +14,7 @@
 #include <set>
 #include <utility>
 
+#include <circsim/common/FormatError.hpp>
 #include <circsim/common/LimitError.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
@@ -241,6 +242,76 @@ void Simulator::update_by_name
     _wire_update_list.push_back(wire_object->id());
 
     if( update_all )
+    {
+        this->update_all();
+    }
+}
+
+
+void Simulator::update_all_by_id
+(
+    const std::vector<size_t> &id_list,
+    const std::vector<WireState> &state_list,
+    const bool update_all
+)
+{
+    // First check the size of the two lists
+    if ( id_list.size() != state_list.size() )
+    {
+        throw circsim::common::FormatError
+        (
+            "The size of the wire ID list ("
+            + std::to_string(id_list.size())
+            + ") must match that of the wire state list ("
+            + std::to_string(state_list.size())
+            + ")"
+        );
+    }
+
+    for ( size_t i = 0; i < id_list.size(); i++ )
+    {
+        size_t wire_id = id_list[i];
+        WireState wire_state = state_list[i];
+
+        update_by_id(wire_id, wire_state, false);
+    }
+
+    if ( update_all )
+    {
+        this->update_all();
+    }
+}
+
+
+void Simulator::update_all_by_name
+(
+    const std::vector<std::string> &name_list,
+    const std::vector<WireState> &state_list,
+    const bool update_all
+)
+{
+    // First check the size of the two lists
+    if ( name_list.size() != state_list.size() )
+    {
+        throw circsim::common::FormatError
+        (
+            "The size of the wire name list ("
+            + std::to_string(name_list.size())
+            + ") must match that of the wire state list ("
+            + std::to_string(state_list.size())
+            + ")"
+        );
+    }
+
+    for ( size_t i = 0; i < name_list.size(); i++ )
+    {
+        std::string wire_name = name_list[i];
+        WireState wire_state = state_list[i];
+
+        update_by_name(wire_name, wire_state, false);
+    }
+
+    if ( update_all )
     {
         this->update_all();
     }
