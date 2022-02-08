@@ -107,7 +107,8 @@ private:
      *        it based on the component ID.
      * 
      * @param wire The wire to index
-     * @throw std::runtime_error if the ID of the object is negative
+     * @throw IndexError if the ID of the object is negative or a
+     * duplicate
      */
     void _index_element(const Wire &wire);
 
@@ -116,7 +117,8 @@ private:
      *        a pointer to the element with the ID of the object.
      * 
      * @param transistor The transistor to index
-     * @throw std::runtime_error if the ID of the object is negative
+     * @throw IndexError if the ID of the object is negative or a
+     * duplicate
      */
     void _index_element(const Transistor &transistor);
 
@@ -260,7 +262,7 @@ public:
      * @brief Add a new wire to the database and index the element
      * 
      * @param wire The wire to add to the database
-     * @throw std::runtime_error if the component with this ID already exists
+     * @throw IndexError if the component with this ID already exists
      */
     void add_component(const Wire &wire);
 
@@ -268,7 +270,7 @@ public:
      * @brief Add a new transistor to the database and index the element
      * 
      * @param transistor The transistor to add to the database
-     * @throw std::runtime_error if the component with the ID already exists
+     * @throw IndexError if the component with the ID already exists
      */
     void add_component(const Transistor &transistor);
 
@@ -295,7 +297,7 @@ public:
      * 
      * @param id The ID number of the wire
      * @return Wire* The pointer to the object associated with this ID
-     * @throw std::out_of_range if the ID is not in the indexed database
+     * @throw IndexError if the ID is not in the indexed database
      */
     Wire* get_wire(const size_t id) const;
 
@@ -304,7 +306,7 @@ public:
      * 
      * @param id The ID number of the transistor
      * @return Transistor* The pointer to the object associated with this ID
-     * @throw std::out_of_range if the ID is not in the indexed database
+     * @throw IndexError if the ID is not in the indexed database
      */
     Transistor* get_transistor(const size_t id) const;
 
