@@ -103,7 +103,11 @@ bool Transistor::update_state(const WireState gate_state)
         case PMOS:
             return this->_update_pmos(gate_state);
         default:
-            throw std::runtime_error("Unrecognized transistor type");
+            throw std::runtime_error
+            (
+                "Unrecognized transistor type: " +
+                std::to_string(this->_type)
+            );
     }
 }
 

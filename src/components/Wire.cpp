@@ -205,7 +205,7 @@ bool Wire::operator==(const Wire &rhs) const
 
 
 // Helper functions
-const char *ERR_UNK_SPECIAL_WIRE = "Unknown special wire type specified";
+const char *ERR_UNK_SPECIAL_WIRE = "Unknown special wire type specified: ";
 
 void Wire::set_special_wire_id(const SpecialWireType type)
 {
@@ -222,7 +222,11 @@ void Wire::set_special_wire_id(const SpecialWireType type)
             break;
 
         default:
-            throw std::runtime_error(ERR_UNK_SPECIAL_WIRE);
+            throw std::runtime_error
+            (
+                ERR_UNK_SPECIAL_WIRE +
+                std::to_string(type)
+            );
     }
 
     if( *ID == -1 )
@@ -233,7 +237,7 @@ void Wire::set_special_wire_id(const SpecialWireType type)
     {
         throw std::runtime_error
         (
-            "ID of " + this->_primary_name + "already specified"
+            "ID of " + this->_primary_name + " already specified"
         );
     }
 }
@@ -246,7 +250,11 @@ std::string Wire::special_wire_name(const SpecialWireType type)
         case VCC:       return WIRE_VCC;
         case GND:       return WIRE_GND;
         default:
-            throw std::runtime_error(ERR_UNK_SPECIAL_WIRE);
+            throw std::runtime_error
+            (
+                ERR_UNK_SPECIAL_WIRE +
+                std::to_string(type)
+            );
     }
 }
 
@@ -258,7 +266,11 @@ Wire::extern_func_t Wire::special_wire_func(const SpecialWireType type)
         case VCC:       return _VCC_FUNC;
         case GND:       return _GND_FUNC;
         default:
-            throw std::runtime_error(ERR_UNK_SPECIAL_WIRE);
+            throw std::runtime_error
+            (
+                ERR_UNK_SPECIAL_WIRE +
+                std::to_string(type)
+            );
     }
 }
 
