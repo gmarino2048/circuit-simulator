@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 
+#include <circsim/common/StateError.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 using WireGroup = circsim::sim::WireGroup;
@@ -113,6 +114,17 @@ void WireGroup::_recalculate_group_state(const Database& database)
     for( const size_t wire_id : _wires )
     {
         Wire* wire = database.get_wire(wire_id);
+        wire->set_floating();
+
+        if ( wire->state() == Wire::State::FLOATING_HIGH )
+        {
+            fh_count++;
+        }
+        else if ( wire->state() == Wire::State::FLOATING_LOW )
+        {
+            fl_count++;
+        }
+        
         value |= static_cast<uint8_t>(wire->state());
     }
 
