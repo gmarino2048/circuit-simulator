@@ -204,6 +204,12 @@ public:
      */
     static inline size_t GND_ID() { return _GND_ID; }
 
+    /**
+     * @brief Reset the class instance to its original state.
+     * 
+     */
+    static void RESET_CLASS();
+
 
     /**
      * @brief Get this wire's ID. This will be negative if the wire
@@ -272,7 +278,15 @@ public:
      * 
      * @param new_state The new state to set the wire to
      */
-    void state(const State new_state) noexcept;
+    inline void state(const State new_state) noexcept { _state = new_state; }
+
+
+    /**
+     * @brief Return whether this method is a pullup or pulldown.
+     * 
+     * @return bool Whether the wire is pulled or not
+     */
+    bool pulled() const noexcept;
 
 
     /**
@@ -280,7 +294,7 @@ public:
      * 
      * @return PulledStatus whether the wire is pulled high, low, or neither
      */
-    inline PulledStatus pulled() const noexcept { return _pulled; }
+    inline PulledStatus pulled_state() const noexcept { return _pulled; }
 
     /**
      * @brief Returns whether this wire is low
@@ -303,7 +317,7 @@ public:
      *        determined by the pullup/pulldown state
      * 
      */
-    void set_floating() noexcept;
+    void set_floating();
 
     /**
      * @brief Convenience method to set the wire high or low.

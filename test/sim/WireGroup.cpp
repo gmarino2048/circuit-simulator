@@ -1,8 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include <Nand.hpp>
-#include <Nor.hpp>
+#include <Gates.hpp>
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>

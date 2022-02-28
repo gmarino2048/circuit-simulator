@@ -16,6 +16,7 @@
 
 #include <circsim/common/FormatError.hpp>
 #include <circsim/common/LimitError.hpp>
+#include <circsim/common/StateError.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/sim/Simulator.hpp>
@@ -98,15 +99,13 @@ void Simulator::_update_transistors(const WireGroup &group)
 
             if( add_source )
             {
-                _wire_update_list.push_back(transistor_object->id());
+                _wire_update_list.push_back(transistor_object->source());
             }
         }
         else
         {
             // Wires are now disconnected
-            // First, set both to floating
-            _set_floating(transistor_object->source());
-            _set_floating(transistor_object->drain());
+            // No need to set floating since WireGroup will do this for us
 
             // Only add source/drain if they're not already in update list
             if( source_update == _wire_update_list.end() )
@@ -118,32 +117,6 @@ void Simulator::_update_transistors(const WireGroup &group)
                 _wire_update_list.push_back(transistor_object->drain());
             }
         }
-    }
-}
-
-
-void Simulator::_set_floating(const size_t wire_id)
-{
-    components::Wire *wire_object = _internal_database.get_wire(wire_id);
-
-    WireState current_state = wire_object->state();
-    switch ( current_state )
-    {
-        case WireState::HIGH:           // Fallthrough
-        case WireState::PULLED_HIGH:    // Fallthrough
-        case WireState::FLOATING_HIGH:
-            wire_object->state(WireState::FLOATING_HIGH);
-            break;
-
-        case WireState::GROUNDED:       // Fallthrough
-        case WireState::PULLED_LOW:     // Fallthrough
-        case WireState::FLOATING_LOW:
-            wire_object->state(WireState::FLOATING_LOW);
-            break;
-
-        default:
-            wire_object->state(WireState::FLOATING);
-            break;
     }
 }
 
