@@ -3,6 +3,8 @@
 #include <optional>
 #include <iomanip>
 #include <sstream>
+
+#include <circsim/common/StateError.hpp>
 #include <circsim/components/Wire.hpp>
 
 using namespace circsim::components;
@@ -125,12 +127,31 @@ Wire::Wire
 }
 
 
+void Wire::RESET_CLASS()
+{
+    _VCC_ID = -1;
+    _GND_ID = -1;
+}
+
+
 void Wire::add_name(const std::string &new_name)
 {
     this->_other_names.push_back(new_name);
 }
 
-void Wire::state(const State new_state) noexcept { this->_state = new_state; } 
+
+bool Wire::pulled() const noexcept
+{
+    switch ( pulled_state() )
+    {
+        case PS_HIGH:       // Fallthrough
+        case PS_LOW:
+            return true;
+
+        default:
+            return false;
+    }
+}
 
 
 bool Wire::low() const noexcept
@@ -147,18 +168,50 @@ bool Wire::high() const noexcept
 }
 
 
-void Wire::set_floating() noexcept
+void Wire::set_floating()
 {
-    switch( _pulled )
+    // If the wire is VCC or GND, DON'T update the state
+    if ( externally_driven() )
     {
-        case PS_HIGH:
-            _state = PULLED_HIGH;
+        return;
+    }
+
+    // Handle the case where wire is pullup or pulldown
+    if ( pulled() )
+    {
+        switch ( pulled_state() )
+        {
+            case components::Wire::PulledStatus::PS_HIGH:
+                state(State::PULLED_HIGH);
+                break;
+
+            case components::Wire::PulledStatus::PS_LOW:
+                state(State::PULLED_LOW);
+                break;
+
+            default:
+                throw common::StateError("Wire is pulled but pulled state not recognized!");
+        }
+
+        return;
+    }
+
+    switch ( state() )
+    {
+        case State::HIGH:           // Fallthrough
+        case State::PULLED_HIGH:    // Fallthrough
+        case State::FLOATING_HIGH:
+            state(State::FLOATING_HIGH);
             break;
-        case PS_LOW:
-            _state = PULLED_LOW;
+
+        case State::GROUNDED:       // Fallthrough
+        case State::PULLED_LOW:     // Fallthrough
+        case State::FLOATING_LOW:
+            state(State::FLOATING_LOW);
             break;
+
         default:
-            _state = FLOATING;
+            state(State::FLOATING);
             break;
     }
 }
