@@ -12,9 +12,15 @@
 #ifndef __CIRCSIM_DATA_EXTERNALDATABASE_HPP
 #define __CIRCSIM_DATA_EXTERNALDATABASE_HPP
 
-#include <sqlite3.h>
+// C++ stdlib includes
 #include <filesystem>
 #include <string>
+
+// Third-party includes
+#include <sqlite3.h>
+
+// Project includes
+#include <circsim/data/DatabaseObject.hpp>
 
 namespace circsim::data
 {
@@ -42,6 +48,18 @@ public:
      * 
      */
     ExternalDatabase();
+
+    /**
+     * @brief Constructor to make an open the external database
+     * 
+     * @param db_file The database file to use
+     * @param overwrite Whether to overwrite the existing file
+     */
+    ExternalDatabase
+    (
+        const std::filesystem::path db_file,
+        const bool overwrite = true
+    );
 
 
     /**
