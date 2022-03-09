@@ -12,6 +12,9 @@
 #ifndef __CIRCSIM_DATA_EXTERNALDATABASE_HPP
 #define __CIRCSIM_DATA_EXTERNALDATABASE_HPP
 
+#include <sqlite3.h>
+#include <filesystem>
+
 namespace circsim::data
 {
 
@@ -19,7 +22,20 @@ class ExternalDatabase final
 {
 private:
 
-    
+    ::sqlite3 *_db_connection_obj;
+    std::filesystem::path _db_filepath;
+
+public:
+
+    ExternalDatabase();
+
+    ExternalDatabase(const ExternalDatabase &other);
+    ExternalDatabase(ExternalDatabase &&other) noexcept;
+
+    ~ExternalDatabase();
+
+    ExternalDatabase& operator=(const ExternalDatabase &other);
+    ExternalDatabase& operator=(ExternalDatabase &&other) noexcept;
 
 };
 

@@ -10,6 +10,9 @@ include(GoogleTest)
 find_package(GTest REQUIRED)
 
 find_package(Threads REQUIRED)
+find_package(SQLite3 REQUIRED)
+
+include_directories(${SQLITE3_INCLUDE_DIRS})
 
 include_directories("inc")
 add_subdirectory("src")

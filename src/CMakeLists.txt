@@ -20,6 +20,7 @@ add_library(
 target_link_libraries(
     circsim-data
     circsim-components
+    ${SQLITE3_LIBRARIES}
 )
 
 file(

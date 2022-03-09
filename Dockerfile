@@ -13,5 +13,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt -y install \
     lldb \
     libgtest-dev \
     libgmock-dev \
+    libsqlite3-dev \
     gdb \
     cmake
