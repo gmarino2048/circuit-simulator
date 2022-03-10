@@ -9,7 +9,9 @@ add_library(
 )
 
 file(
-    GLOB data_SRC "data/*.cpp"
+    GLOB data_SRC
+    "data/*.cpp"
+    "data/objects/*.cpp"
 )
 
 add_library(

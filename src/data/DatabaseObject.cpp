@@ -22,6 +22,7 @@
 #include <circsim/data/DatabaseObject.hpp>
 
 using namespace circsim::data;
+using DbValue = DatabaseObject::DbValue;
 
 // File constants
 
@@ -454,4 +455,60 @@ std::string DatabaseObject::insert_all
 
     stream << ";";
     return stream.str();
+}
+
+template<>
+DbValue DatabaseObject::format_value<bool>(const bool &object)
+{
+    size_t int_value = object ? 1 : 0;
+    return format_value(object);
+}
+
+
+template<>
+DbValue DatabaseObject::format_value<size_t>(const size_t &object)
+{
+    std::string value_string = std::to_string(object);
+    DbValue value =
+    {
+        .type = DbType::DBT_INTEGER,
+        .value = value_string
+    };
+
+    return value;
+}
+
+
+template<>
+DbValue DatabaseObject::format_value<std::string>(const std::string &object)
+{
+    // Check the string value
+    static const std::regex string_match
+    (
+        "[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\. ]*",
+        std::regex_constants::optimize
+    );
+
+    std::smatch match;
+    bool valid = std::regex_match(object, match, string_match);
+
+    if ( valid )
+    {
+        std::string value_string = "\"" + object + "\"";
+        DbValue value =
+        {
+            .type = DbType::DBT_TEXT,
+            .value = value_string
+        };
+
+        return value;
+    }
+    else
+    {
+        throw common::ValueError
+        (
+            "Invalid characters found in string \"" +
+            object + "\""
+        );
+    }
 }
