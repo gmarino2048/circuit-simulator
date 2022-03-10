@@ -15,6 +15,7 @@
 // C++ stdlib includes
 #include <filesystem>
 #include <string>
+#include <vector>
 
 // Third-party includes
 #include <sqlite3.h>
@@ -40,6 +41,14 @@ private:
 
     /// The filepath to the database file
     std::filesystem::path _db_filepath;
+
+    /**
+     * @brief Look in the database and see if the table exists
+     * 
+     * @param table_name The name of the table to look for
+     * @return true if the table of data exists
+     */
+    bool _table_exists(const std::string &table_name);
 
 public:
 
@@ -103,6 +112,29 @@ public:
      * 
      */
     void close();
+
+
+    /**
+     * @brief Create a table for the provided type of object
+     * 
+     * @param object The object to create a table for
+     */
+    void create_table(const DatabaseObject *object);
+
+    /**
+     * @brief Insert a single element into the table
+     * 
+     * @param object The object to insert to the table
+     */
+    void insert(const DatabaseObject *object);
+
+    /**
+     * @brief Insert all elements to the table. All of the elements
+     *        in the list must be of the same object type
+     * 
+     * @param objects The list of objects to insert
+     */
+    void insert_all(const std::vector<DatabaseObject*> &objects);
 
 
     /**
