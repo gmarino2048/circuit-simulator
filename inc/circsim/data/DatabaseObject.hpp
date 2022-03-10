@@ -136,7 +136,7 @@ protected:
      * 
      * @return std::vector<DbColumn> A list of column definitions
      */
-    virtual std::vector<DbColumn> _get_columns() = 0;
+    virtual std::vector<DbColumn> _get_columns() const = 0;
 
 
     /**
@@ -177,6 +177,24 @@ public:
      */
     static bool validate_value(const DbValue &db_val);
 
+    /**
+     * @brief Convert a Sqlite3 database type to a string
+     * 
+     * @param type The type to convert
+     * @return std::string The string representation for the command
+     */
+    static std::string type_to_string(const DbType type);
+
+    /**
+     * @brief Convert a database input value to string format
+     * 
+     * @tparam T The C++ type of the object to convert
+     * @param object The instance of the object to convert
+     * @return DbValue The value resulting from this conversion
+     */
+    template<class T>
+    static DbValue format_value(const T &object);
+
 // Instance methods
 
     /**
@@ -203,22 +221,15 @@ public:
 
 
     /**
-     * @brief Convert a Sqlite3 database type to a string
+     * @brief Validate all the columns in this object,
+     *        including the primary key.
      * 
-     * @param type The type to convert
-     * @return std::string The string representation for the command
-     */
-    std::string type_to_string(const DbType type) const;
-
-    /**
-     * @brief Convert a database input value to string format
+     * If this method returns, then the values are valid.
+     * If there are any invalid values, then this method will
+     * throw an exception.
      * 
-     * @tparam T The C++ type of the object to convert
-     * @param object The instance of the object to convert
-     * @return DbValue The value resulting from this conversion
      */
-    template<class T>
-    DbValue value_to_string(const T &object) const;
+    void validate_columns() const;
 
 
     /**
