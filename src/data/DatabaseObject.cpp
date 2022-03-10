@@ -121,6 +121,78 @@ bool DatabaseObject::_validate_text(const std::string &value)
 }
 
 
+void DatabaseObject::_check_values
+(
+    const DbValue &pkey_value,
+    const std::vector<DbColumn> &columns,
+    const std::vector<DbValue> &values
+)
+{
+    // First, validate the primary key value
+    if ( pkey_value.type != DbType::DBT_INTEGER )
+    {
+        throw common::FormatError
+        (
+            "Primary Key Type " +
+            type_to_string(pkey_value.type) +
+            " Unexpected"
+        );
+    }
+    else if ( !validate_value(pkey_value) )
+    {
+        throw common::FormatError
+        (
+            "Primary Key value field \"" +
+            pkey_value.value +
+            "\" does not conform to expected type " +
+            type_to_string(pkey_value.type)
+        );
+    }
+
+    // Make sure columns and values are the same size
+    if ( columns.size() != values.size() )
+    {
+        throw common::FormatError
+        (
+            "Column size " +
+            std::to_string(columns.size()) +
+            " does not match value size " + 
+            std::to_string(values.size())
+        );
+    }
+
+    // Next, check and make sure that the types match
+    for ( size_t i = 0; i < columns.size(); i++ )
+    {
+        if ( columns[i].type != values[i].type )
+        {
+            throw common::FormatError
+            (
+                "Column type " +
+                type_to_string(columns[i].type) +
+                " does not match value type " +
+                type_to_string(values[i].type)
+            );
+        }
+    }
+
+    // Finally, check the value type formatting
+    for ( const DbValue &value : values )
+    {
+        if ( !validate_value(value) )
+        {
+            throw common::FormatError
+            (
+                "Value field \"" +
+                value.value +
+                "\" does not conform to expected type " +
+                type_to_string(value.type)
+            );
+        }
+    }
+}
+
+
 bool DatabaseObject::validate_column(const std::string &col_name)
 {
     // Make matching as fast as possible
@@ -237,56 +309,48 @@ void DatabaseObject::check_columns() const
 
 void DatabaseObject::check_values() const
 {
-    // First, make sure that the size matches
-    DbValue pkey_value = _get_primary_key();
-
     std::vector<DbColumn> columns = _get_columns();
+
+    DbValue pkey_value = _get_primary_key();
     std::vector<DbValue> values = _get_values();
 
-    if ( columns.size() != values.size() )
-    {
-        throw common::FormatError
-        (
-            "Column size " +
-            std::to_string(columns.size()) +
-            " does not match value size " + 
-            std::to_string(values.size())
-        );
-    }
-
-    // Next, check and make sure that the types match
-    for ( size_t i = 0; i < columns.size(); i++ )
-    {
-        if ( columns[i].type != values[i].type )
-        {
-            throw common::FormatError
-            (
-                "Column type " +
-                type_to_string(columns[i].type) +
-                " does not match value type " +
-                type_to_string(values[i].type)
-            );
-        }
-    }
-
-    // Finally, check the value type formatting
-    for ( const DbValue &value : values )
-    {
-        if ( !validate_value(value) )
-        {
-            throw common::FormatError
-            (
-                "Value field \"" +
-                value.value +
-                "\" does not conform to expected type " +
-                type_to_string(value.type)
-            );
-        }
-    }
+    _check_values
+    (
+        pkey_value,
+        columns,
+        values
+    );
 }
 
 
-std::string DatabaseObject::create_table()
+void DatabaseObject::check_values_against_current
+(
+    const DatabaseObject *other
+) const
+{
+    if ( other == nullptr )
+    {
+        throw common::ValueError
+        (
+            "Unexpected null pointer when checking batch values"
+        );
+    }
+
+    std::vector<DbColumn> columns = this->_get_columns();
+
+    DbValue pkey_value = other->_get_primary_key();
+    std::vector<DbValue> values = other->_get_values();
+
+    _check_values
+    (
+        pkey_value,
+        columns,
+        values
+    );
+}
+
+
+std::string DatabaseObject::create_table() const
 {
     // First validate the columns
     check_columns();
@@ -316,7 +380,7 @@ std::string DatabaseObject::create_table()
 }
 
 
-std::string DatabaseObject::insert_item()
+std::string DatabaseObject::insert_item() const
 {
     // Make sure that the columns match the values
     check_columns();
@@ -343,5 +407,51 @@ std::string DatabaseObject::insert_item()
     }
 
     stream << " );";
+    return stream.str();
+}
+
+
+std::string DatabaseObject::insert_all
+(
+    const std::vector<DatabaseObject*> &others
+) const
+{
+    // Make sure the columns are good to go
+    check_columns();
+
+    // Form the insertion string
+    std::stringstream stream;
+    stream << "INSERT INTO " << _table_name << " ( ";
+    stream << _pkey_col_name;
+
+    for ( const DbColumn &col : _get_columns() )
+    {
+        stream << ", ";
+        stream << col.name;
+    }
+
+    stream << " ) VALUES ";
+
+    using DbIterator = std::vector<DatabaseObject*>::const_iterator;
+    for ( DbIterator it = others.begin(); it != others.end(); it++ )
+    {
+        if ( it != others.begin() )
+        {
+            stream << ", ";
+        }
+
+        check_values_against_current(*it);
+        stream << "( " << (*it)->_get_primary_key().value;
+
+        for ( const DbValue &val : (*it)->_get_values() )
+        {
+            stream << ", ";
+            stream << val.value;
+        }
+
+        stream << " )";
+    }
+
+    stream << ";";
     return stream.str();
 }

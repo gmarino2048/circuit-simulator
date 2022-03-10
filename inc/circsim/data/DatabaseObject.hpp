@@ -157,6 +157,22 @@ protected:
      */
     virtual std::vector<DbValue> _get_values() const = 0;
 
+
+    /**
+     * @brief Helper method for checking database values against
+     *        the database column specification
+     * 
+     * @param pkey_value The value of the primary key
+     * @param columns The columns of the specification
+     * @param values The values to check against
+     */
+    static void _check_values
+    (
+        const DbValue &pkey_value,
+        const std::vector<DbColumn> &columns,
+        const std::vector<DbValue> &values
+    );
+
 public:
 
 // Static helper methods
@@ -242,6 +258,19 @@ public:
      */
     void check_values() const;
 
+    /**
+     * @brief Check the values of the provided object against the
+     *        columns of this object.
+     * 
+     * If this method returns, then the values are valid.
+     * If there are any invalid values, then this method will
+     * throw an exception.
+     * 
+     * @param other The object whose values we will check against
+     *              this object's columns.
+     */
+    void check_values_against_current(const DatabaseObject *other) const;
+
 
     /**
      * @brief Generate the SQL command to create the table
@@ -249,7 +278,7 @@ public:
      * 
      * @return std::string The SQL command to create a table
      */
-    std::string create_table();
+    std::string create_table() const;
 
     /**
      * @brief Generate the SQL command to insert an item into
@@ -257,7 +286,24 @@ public:
      * 
      * @return std::string The SQL command to insert an item
      */
-    std::string insert_item();
+    std::string insert_item() const;
+
+    /**
+     * @brief Generate the SQL command to batch-insert all of the
+     *        provided values into the database.
+     * 
+     * This method will NOT add this object to the database. The
+     * current instance is only used to verify the columns match the
+     * values. If you want to add this object, you will need to
+     * provide a pointer to it in the provided list.
+     * 
+     * @param others The objects to add to the batch insertion command.
+     * @return std::string The batch insertion SQL command
+     */
+    std::string insert_all
+    (
+        const std::vector<DatabaseObject*> &others
+    ) const;
 
 };
 
