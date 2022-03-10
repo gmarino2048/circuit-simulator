@@ -144,7 +144,7 @@ protected:
      * 
      * @return DbValue The value of the primary key
      */
-    virtual DbValue _get_primary_key() = 0;
+    virtual DbValue _get_primary_key() const = 0;
 
     /**
      * @brief Get the values for each of the columns
@@ -155,7 +155,7 @@ protected:
      * 
      * @return std::vector<DbValue> 
      */
-    virtual std::vector<DbValue> _get_values() = 0;
+    virtual std::vector<DbValue> _get_values() const = 0;
 
 public:
 
@@ -229,7 +229,18 @@ public:
      * throw an exception.
      * 
      */
-    void validate_columns() const;
+    void check_columns() const;
+
+    /**
+     * @brief Check the values to ensure that they align with
+     *        what's expected from the columns.
+     * 
+     * If this method returns, then the values are valid.
+     * If there are any invalid values, then this method will
+     * throw an exception.
+     * 
+     */
+    void check_values() const;
 
 
     /**

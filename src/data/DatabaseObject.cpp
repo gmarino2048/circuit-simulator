@@ -212,7 +212,7 @@ DatabaseObject::DatabaseObject
 DatabaseObject::~DatabaseObject() = default;
 
 
-void DatabaseObject::validate_columns() const
+void DatabaseObject::check_columns() const
 {
     auto throw_err = [](const std::string &invalid_name)
     {
@@ -235,10 +235,61 @@ void DatabaseObject::validate_columns() const
 }
 
 
+void DatabaseObject::check_values() const
+{
+    // First, make sure that the size matches
+    DbValue pkey_value = _get_primary_key();
+
+    std::vector<DbColumn> columns = _get_columns();
+    std::vector<DbValue> values = _get_values();
+
+    if ( columns.size() != values.size() )
+    {
+        throw common::FormatError
+        (
+            "Column size " +
+            std::to_string(columns.size()) +
+            " does not match value size " + 
+            std::to_string(values.size())
+        );
+    }
+
+    // Next, check and make sure that the types match
+    for ( size_t i = 0; i < columns.size(); i++ )
+    {
+        if ( columns[i].type != values[i].type )
+        {
+            throw common::FormatError
+            (
+                "Column type " +
+                type_to_string(columns[i].type) +
+                " does not match value type " +
+                type_to_string(values[i].type)
+            );
+        }
+    }
+
+    // Finally, check the value type formatting
+    for ( const DbValue &value : values )
+    {
+        if ( !validate_value(value) )
+        {
+            throw common::FormatError
+            (
+                "Value field \"" +
+                value.value +
+                "\" does not conform to expected type " +
+                type_to_string(value.type)
+            );
+        }
+    }
+}
+
+
 std::string DatabaseObject::create_table()
 {
     // First validate the columns
-    validate_columns();
+    check_columns();
 
     // Use stringstream to construct the table stm
     std::stringstream stream;
@@ -251,7 +302,7 @@ std::string DatabaseObject::create_table()
     stream << "INTEGER PRIMARY KEY NOT NULL";
 
     // Add the other columns
-    for ( const DbColumn col : _get_columns() )
+    for ( const DbColumn &col : _get_columns() )
     {
         stream << ", " << col.name << " ";
         stream << type_to_string(col.type) << " ";
@@ -261,5 +312,36 @@ std::string DatabaseObject::create_table()
     }
 
     stream << ");";
+    return stream.str();
+}
+
+
+std::string DatabaseObject::insert_item()
+{
+    // Make sure that the columns match the values
+    check_columns();
+    check_values();
+
+    // Form the insertion string
+    std::stringstream stream;
+    stream << "INSERT INTO " << _table_name << " ( ";
+    stream << _pkey_col_name;
+
+    for ( const DbColumn &col : _get_columns() )
+    {
+        stream << ", ";
+        stream << col.name;
+    }
+
+    stream << " ) VALUES ( ";
+    stream << _get_primary_key().value;
+
+    for ( const DbValue &val : _get_values() )
+    {
+        stream << ", ";
+        stream << val.value;
+    }
+
+    stream << " );";
     return stream.str();
 }
