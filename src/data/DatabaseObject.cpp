@@ -33,12 +33,14 @@ const char *DB_TEXT_STR = "TEXT";
 const char *DB_BLOB_STR = "BLOB";
 
 
+const char *NULL_REGEX = "NULL";
+
 bool DatabaseObject::_validate_null(const std::string &value)
 {
     // Make matching as fast as possible
     static const std::regex re_null
     (
-        "NULL",
+        NULL_REGEX,
         std::regex_constants::optimize |
         std::regex_constants::icase
     );
@@ -56,12 +58,14 @@ bool DatabaseObject::_validate_null(const std::string &value)
 }
 
 
+const char *INT_REGEX = "[0-9]+";
+
 bool DatabaseObject::_validate_integer(const std::string &value)
 {
     // Make matching as fast as possible
     static const std::regex re_integer
     (
-        "[0-9]+",
+        INT_REGEX,
         std::regex_constants::optimize
     );
 
@@ -78,12 +82,14 @@ bool DatabaseObject::_validate_integer(const std::string &value)
 }
 
 
+const char *REAL_REGEX = "[0-9]+(\\.[0-9])?";
+
 bool DatabaseObject::_validate_real(const std::string &value)
 {
     // Make matching as fast as possible
     static const std::regex re_real
     (
-        "[0-9]+(\\.[0-9])?",
+        REAL_REGEX,
         std::regex_constants::optimize
     );
 
@@ -100,12 +106,14 @@ bool DatabaseObject::_validate_real(const std::string &value)
 }
 
 
+const char *TEXT_REGEX = "\"[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\. ]*\"";
+
 bool DatabaseObject::_validate_text(const std::string &value)
 {
     // Make matching as fast as possible
     static const std::regex re_text
     (
-        "\"[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\. ]*\"",
+        TEXT_REGEX,
         std::regex_constants::optimize
     );
 
@@ -194,12 +202,14 @@ void DatabaseObject::_check_values
 }
 
 
+const char *COLUMN_REGEX = "[A-Za-z][A-Za-z0-9_]*";
+
 bool DatabaseObject::validate_column(const std::string &col_name)
 {
     // Make matching as fast as possible
     static const std::regex re_column
     (
-        "[A-Za-z][A-Za-z0-9_]*",
+        COLUMN_REGEX,
         std::regex_constants::optimize
     );
 
@@ -479,13 +489,15 @@ DbValue DatabaseObject::format_value<size_t>(const size_t &object)
 }
 
 
+const char *STRING_REGEX = "[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\. ]*";
+
 template<>
 DbValue DatabaseObject::format_value<std::string>(const std::string &object)
 {
     // Check the string value
     static const std::regex string_match
     (
-        "[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\. ]*",
+        STRING_REGEX,
         std::regex_constants::optimize
     );
 
@@ -511,4 +523,92 @@ DbValue DatabaseObject::format_value<std::string>(const std::string &object)
             object + "\""
         );
     }
+}
+
+
+using IntList = std::vector<size_t>;
+
+template<>
+DbValue DatabaseObject::format_value<IntList>(const IntList &object)
+{
+    std::stringstream stream;
+    stream << "\"";
+
+    IntList::const_iterator it = object.begin();
+    stream << std::to_string(*it);
+
+    while( it != object.end() )
+    {
+        stream << ",";
+        stream << std::to_string(*it);
+
+        it++;
+    }
+
+    stream << "\"";
+
+    DbValue value =
+    {
+        .type = DbType::DBT_TEXT,
+        .value = stream.str()
+    };
+
+    return value;
+}
+
+
+using StringList = std::vector<std::string>;
+
+template<>
+DbValue DatabaseObject::format_value<StringList>(const StringList &object)
+{
+    static const std::regex string_match
+    (
+        STRING_REGEX,
+        std::regex_constants::optimize
+    );
+
+    std::stringstream stream;
+    stream << "\"";
+
+    for
+    (
+        StringList::const_iterator it = object.begin();
+        it != object.end();
+        it++
+    )
+    {
+        if ( it != object.begin() )
+        {
+            stream << ",";
+        }
+
+        std::smatch match;
+        bool re_match = std::regex_match
+        (
+            *it,
+            match,
+            string_match
+        );
+
+        if ( !re_match )
+        {
+            throw common::ValueError
+            (
+                "Invalid characters found in string \"" +
+                *it + "\""
+            );
+        }
+
+        stream << "'" << *it << "'";
+    }
+
+    stream << "\"";
+    DbValue value =
+    {
+        .type = DbType::DBT_TEXT,
+        .value = stream.str()
+    };
+
+    return value;
 }

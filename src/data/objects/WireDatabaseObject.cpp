@@ -79,5 +79,26 @@ DbValue WireDatabaseObject::_get_primary_key() const
 
 std::vector<DbValue> WireDatabaseObject::_get_values() const
 {
-    return std::vector<DbValue>();
+    std::vector<DbValue> values;
+    values.reserve(_columns.size());
+
+    bool is_special = _wire_object.externally_driven();
+    values.push_back(format_value(is_special));
+
+    std::string primary_name = _wire_object.primary_name();
+    values.push_back(format_value(primary_name));
+
+    std::vector<std::string> other_names = _wire_object.other_names();
+    values.push_back(format_value(other_names));
+
+    size_t pulled = (size_t) _wire_object.pulled();
+    values.push_back(format_value(pulled));
+
+    std::vector<size_t> ctrl_ids = _wire_object.ctrl_transistors();
+    values.push_back(format_value(ctrl_ids));
+
+    std::vector<size_t> gate_ids = _wire_object.gate_transistors();
+    values.push_back(format_value(gate_ids));
+
+    return values;
 }
