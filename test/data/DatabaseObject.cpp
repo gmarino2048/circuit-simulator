@@ -105,3 +105,38 @@ TEST(DatabaseObject, TestGoodStringConversion)
 
     EXPECT_EQ(outputs, expected_outputs);
 }
+
+
+TEST(DatabaseObject, TestIntListConversion)
+{
+    std::vector<size_t> int_list =
+    {
+        1, 1, 2, 3, 5, 8, 13, 21
+    };
+
+    std::string expected_str = "\"1,1,2,3,5,8,13,21\"";
+
+    DbValue value = DatabaseObject::format_value(int_list);
+
+    EXPECT_EQ(value.type, DbType::DBT_TEXT);
+    EXPECT_EQ(value.value, expected_str);
+}
+
+
+TEST(DatabaseObject, TestGoodStringListConversion)
+{
+    std::vector<std::string> string_list =
+    {
+        "Hello",
+        "World!",
+        "Message"
+    };
+
+    std::string expected_str =
+        "\"'Hello','World!','Message'\"";
+
+    DbValue value = DatabaseObject::format_value(string_list);
+
+    EXPECT_EQ(value.type, DbType::DBT_TEXT);
+    EXPECT_EQ(value.value, expected_str);
+}

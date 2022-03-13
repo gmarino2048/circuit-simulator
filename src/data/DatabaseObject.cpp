@@ -537,8 +537,9 @@ DbValue DatabaseObject::format_value<IntList>(const IntList &object)
 
     IntList::const_iterator it = object.begin();
     stream << std::to_string(*it);
+    it++;
 
-    while( it != object.end() )
+    while ( it != object.end() )
     {
         stream << ",";
         stream << std::to_string(*it);
