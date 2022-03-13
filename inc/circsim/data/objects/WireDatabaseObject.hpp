@@ -19,6 +19,11 @@
 namespace circsim::data::objects
 {
 
+/**
+ * @brief The wire database object used to convert individual
+ *        wires to objects within an SQL database.
+ * 
+ */
 class WireDatabaseObject final : public DatabaseObject
 {
 private:
