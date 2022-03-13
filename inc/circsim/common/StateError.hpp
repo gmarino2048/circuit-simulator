@@ -18,6 +18,11 @@
 namespace circsim::common
 {
 
+/**
+ * @brief An error occurring when the simulator finds itself
+ *        in some invalid state.
+ * 
+ */
 class StateError final : public std::exception
 {
 private:

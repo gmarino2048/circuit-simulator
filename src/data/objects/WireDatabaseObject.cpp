@@ -95,7 +95,7 @@ std::vector<DbValue> WireDatabaseObject::_get_values() const
     std::vector<std::string> other_names = _wire_object.other_names();
     values.push_back(format_value(other_names));
 
-    size_t pulled = (size_t) _wire_object.pulled();
+    size_t pulled = (size_t) _wire_object.pulled_state();
     values.push_back(format_value(pulled));
 
     std::vector<size_t> ctrl_ids = _wire_object.ctrl_transistors();

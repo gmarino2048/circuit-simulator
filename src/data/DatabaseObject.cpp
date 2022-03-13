@@ -106,7 +106,7 @@ bool DatabaseObject::_validate_real(const std::string &value)
 }
 
 
-const char *TEXT_REGEX = "\"[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\., ]*\"";
+const char *TEXT_REGEX = "\"[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\.,' ]*\"";
 
 bool DatabaseObject::_validate_text(const std::string &value)
 {
@@ -372,8 +372,8 @@ std::string DatabaseObject::create_table() const
     // Use stringstream to construct the table stm
     std::stringstream stream;
 
-    stream << "CREATE TABLE " << _table_name << " ";
-    stream << "IF NOT EXISTS (";
+    stream << "CREATE TABLE IF NOT EXISTS ";
+    stream << _table_name << " (";
 
     // Add the primary key
     stream << _pkey_col_name << " ";
