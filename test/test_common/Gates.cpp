@@ -1,9 +1,20 @@
+/**
+ * @file Gates.cpp
+ * @author Guy Marino (gmarino2048@gmail.com)
+ * @brief File for easily making logic gates for the test framework
+ * @version 0.1
+ * @date 2022-03-13
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
-#include "Gates.hpp"
+// Test Framework Includes
+#include <Gates.hpp>
 
+// Project Includes
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-
 #include <circsim/data/InternalDatabase.hpp>
 
 using Wire = circsim::components::Wire;
