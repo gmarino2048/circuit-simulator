@@ -24,6 +24,10 @@ using namespace circsim::data::objects;
 using DbColumn = DatabaseObject::DbColumn;
 using DbValue = DatabaseObject::DbValue;
 
+const char *WireDatabaseObject::_wire_table_name = "wires";
+
+const char *WireDatabaseObject::_wire_pkey_col_name = "id";
+
 const std::vector<DbColumn> WireDatabaseObject::_columns = 
 {
     {
@@ -101,4 +105,22 @@ std::vector<DbValue> WireDatabaseObject::_get_values() const
     values.push_back(format_value(gate_ids));
 
     return values;
+}
+
+
+WireDatabaseObject::WireDatabaseObject(): DatabaseObject
+(
+    _columns.size(),
+    _wire_table_name,
+    _wire_pkey_col_name
+)
+{
+    // Constructor intentionally left blank
+}
+
+
+WireDatabaseObject::WireDatabaseObject(const Wire &wire):
+    WireDatabaseObject()
+{
+    _wire_object = wire;
 }

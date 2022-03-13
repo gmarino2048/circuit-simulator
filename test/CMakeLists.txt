@@ -30,7 +30,9 @@ gtest_add_tests(
 
 
 file(
-    GLOB data-test_SRC "data/*.cpp"
+    GLOB data-test_SRC 
+    "data/*.cpp"
+    "data/objects/*.cpp"
 )
 
 add_executable(data-test

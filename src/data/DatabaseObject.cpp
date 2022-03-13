@@ -313,7 +313,10 @@ void DatabaseObject::check_columns() const
 
     for ( const DbColumn col : _get_columns() )
     {
-        throw_err(col.name);
+        if ( !validate_column(col.name) )
+        {
+            throw_err(col.name);
+        }
     }
 }
 

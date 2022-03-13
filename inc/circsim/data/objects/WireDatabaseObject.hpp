@@ -26,6 +26,11 @@ private:
     /// The internal wire object used as reference by this class
     components::Wire _wire_object;
 
+    /// The database table name for wire objects
+    static const char *_wire_table_name;
+
+    static const char *_wire_pkey_col_name;
+
     /// The columns to be used in the database itself
     static const std::vector<DbColumn> _columns;
 
