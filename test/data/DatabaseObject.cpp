@@ -20,8 +20,10 @@
 #include <vector>
 
 // Project Includes
+#include <circsim/common/ValueError.hpp>
 #include <circsim/data/DatabaseObject.hpp>
 
+using namespace circsim::common;
 using namespace circsim::data;
 using DbType = DatabaseObject::DbType;
 using DbValue = DatabaseObject::DbValue;
@@ -139,4 +141,40 @@ TEST(DatabaseObject, TestGoodStringListConversion)
 
     EXPECT_EQ(value.type, DbType::DBT_TEXT);
     EXPECT_EQ(value.value, expected_str);
+}
+
+
+TEST(DatabaseObject, TestBadStringConversion)
+{
+    std::string single_quotes = "'Hello'";
+    std::string double_quotes = "\"Hello\"";
+    std::string semicolon = "Hello;";
+    std::string weird_char = "@Hello";
+
+    std::vector<std::string> invalid_strings =
+    {
+        single_quotes,
+        double_quotes,
+        semicolon,
+        weird_char
+    };
+
+    for ( const std::string &str : invalid_strings )
+    {
+        EXPECT_THROW(DatabaseObject::format_value(str), ValueError);
+    }
+}
+
+
+TEST(DatabaseObject, TestBadStringListConversion)
+{
+    std::vector<std::string> bad_string_list =
+    {
+        "Hello",
+        "World",
+        "It's",
+        "Me"
+    };
+
+    EXPECT_THROW(DatabaseObject::format_value(bad_string_list), ValueError);
 }
