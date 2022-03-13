@@ -467,13 +467,6 @@ std::string DatabaseObject::insert_all
     return stream.str();
 }
 
-template<>
-DbValue DatabaseObject::format_value<bool>(const bool &object)
-{
-    size_t int_value = object ? 1 : 0;
-    return format_value(object);
-}
-
 
 template<>
 DbValue DatabaseObject::format_value<size_t>(const size_t &object)
@@ -486,6 +479,14 @@ DbValue DatabaseObject::format_value<size_t>(const size_t &object)
     };
 
     return value;
+}
+
+
+template<>
+DbValue DatabaseObject::format_value<bool>(const bool &object)
+{
+    size_t int_value = object ? 1 : 0;
+    return format_value<size_t>(int_value);
 }
 
 
