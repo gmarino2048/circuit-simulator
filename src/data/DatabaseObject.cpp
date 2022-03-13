@@ -106,7 +106,7 @@ bool DatabaseObject::_validate_real(const std::string &value)
 }
 
 
-const char *TEXT_REGEX = "\"[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\. ]*\"";
+const char *TEXT_REGEX = "\"[A-Za-z0-9_\\-\\[\\]\\(\\)\\?\\!\\., ]*\"";
 
 bool DatabaseObject::_validate_text(const std::string &value)
 {
