@@ -12,8 +12,15 @@
 #ifndef __CIRCSIM_COMMON_FORMATERROR_HPP
 #define __CIRCSIM_COMMON_FORMATERROR_HPP
 
+// C++ Stdlib Includes
 #include <exception>
 #include <string>
+
+// Library Includes
+// (none)
+
+// Project Includes
+// (none)
 
 namespace circsim::common
 {

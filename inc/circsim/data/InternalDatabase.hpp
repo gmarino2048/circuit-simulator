@@ -15,10 +15,15 @@
 #ifndef __CIRCSIM_DATA_INTERNALDATABASE_HPP
 #define __CIRCSIM_DATA_INTERNALDATABASE_HPP
 
+// C++ Stdlib Includes
 #include <map>
 #include <stdexcept>
 #include <vector>
 
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
 

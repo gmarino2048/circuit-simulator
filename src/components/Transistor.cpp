@@ -10,12 +10,17 @@
  * 
  */
 
+// C++ Stdlib Includes
 #include <cstdint>
 #include <iomanip>
 #include <stdexcept>
 #include <string>
 #include <sstream>
 
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
 

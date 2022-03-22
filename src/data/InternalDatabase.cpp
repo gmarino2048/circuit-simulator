@@ -11,9 +11,14 @@
  * 
  */
 
+// C++ Stdlib Includes
 #include <algorithm>
 #include <string>
 
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/common/IndexError.hpp>
 #include <circsim/data/InternalDatabase.hpp>
 

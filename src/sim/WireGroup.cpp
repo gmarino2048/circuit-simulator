@@ -10,10 +10,15 @@
  * 
  */
 
+// C++ Stdlib Includes
 #include <queue>
 #include <string>
 #include <vector>
 
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/common/StateError.hpp>
 #include <circsim/sim/WireGroup.hpp>
 

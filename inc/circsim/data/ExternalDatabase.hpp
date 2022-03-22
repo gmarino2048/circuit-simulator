@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-// Third-party includes
+// Library includes
 #include <sqlite3.h>
 
 // Project includes

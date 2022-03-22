@@ -13,7 +13,13 @@
 #ifndef __CIRCSIM_COMPONENTS_TRANSISTOR_HPP
 #define __CIRCSIM_COMPONENTS_TRANSISTOR_HPP
 
+// C++ Stdlib Includes
 #include <string>
+
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/components/Wire.hpp>
 
 namespace circsim::components

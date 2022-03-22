@@ -9,11 +9,18 @@
  * 
  */
 
+#ifndef __CIRCSIM_COMMON_STATEERROR_HPP
+#define __CIRCSIM_COMMON_STATEERROR_HPP
+
+// C++ Stdlib Includes
 #include <exception>
 #include <string>
 
-#ifndef __CIRCSIM_COMMON_STATEERROR_HPP
-#define __CIRCSIM_COMMON_STATEERROR_HPP
+// Library Includes
+// (none)
+
+// Project Includes
+// (none)
 
 namespace circsim::common
 {

@@ -12,10 +12,16 @@
 #ifndef __CIRCSIM_DATA_DATABASEOBJECT_HPP
 #define __CIRCSIM_DATA_DATABASEOBJECT_HPP
 
-// C++ stdlib includes
+// C++ Stdlib includes
 #include <cstdint>
 #include <string>
 #include <vector>
+
+// Library Includes
+// (none)
+
+// Project Includes
+// (none)
 
 namespace circsim::data
 {

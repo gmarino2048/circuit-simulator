@@ -12,8 +12,15 @@
 #ifndef __CIRCSIM_COMMON_INDEXERROR_HPP
 #define __CIRCSIM_COMMON_INDEXERROR_HPP
 
+// C++ Stdlib Includes
 #include <exception>
 #include <string>
+
+// Library Includes
+// (none)
+
+// Project Includes
+// (none)
 
 namespace circsim::common
 {
