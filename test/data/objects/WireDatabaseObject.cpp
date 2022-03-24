@@ -108,18 +108,15 @@ TEST(WireDatabaseObject, TestMultipleWireInsertion)
         
         "( 0, 1, \"GND\", \"\", 0, \"1,3,5\", \"2,4,6\" );";
 
-    WireDatabaseObject object(wire);
-    WireDatabaseObject object2(wire2);
-    WireDatabaseObject object3(wire3);
+    WireDatabaseObject db_objects[3] = { wire, wire2, wire3 };
+    std::vector<DatabaseObject*> objects;
 
-    std::vector<DatabaseObject*> objects =
+    for ( WireDatabaseObject &object : db_objects )
     {
-        static_cast<DatabaseObject*>(&object),
-        static_cast<DatabaseObject*>(&object2),
-        static_cast<DatabaseObject*>(&object3)
-    };
+        objects.push_back(static_cast<DatabaseObject*>(&object));
+    }
 
-    std::string result = object.insert_all(objects);
+    std::string result = db_objects[0].insert_all(objects);
 
     ASSERT_EQ(wire_insertion_string, result);
 }
