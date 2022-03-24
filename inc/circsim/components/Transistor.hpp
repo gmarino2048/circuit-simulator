@@ -14,6 +14,7 @@
 #define __CIRCSIM_COMPONENTS_TRANSISTOR_HPP
 
 // C++ Stdlib Includes
+#include <cstdint>
 #include <string>
 
 // Library Includes
@@ -38,10 +39,10 @@ public:
     typedef Wire::State WireState;
 
     /// The switching type of this transistor object
-    enum Type
+    enum Type : uint8_t
     {
-        NMOS,           //!< Gate=HIGH means on
-        PMOS            //!< Gate=LOW means on
+        NMOS        = 0,    //!< Gate=HIGH means on
+        PMOS        = 1     //!< Gate=LOW means on
     };
 
     /// The current state of this transistor

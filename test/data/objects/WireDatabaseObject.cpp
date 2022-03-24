@@ -120,7 +120,6 @@ TEST(WireDatabaseObject, TestMultipleWireInsertion)
     };
 
     std::string result = object.insert_all(objects);
-    std::cout << result << std::endl;
 
     ASSERT_EQ(wire_insertion_string, result);
 }
