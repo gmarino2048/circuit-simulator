@@ -17,7 +17,7 @@
 // (none)
 
 // Library Includes
-// (none)
+#include <sqlite3.h>
 
 // Project includes
 #include <circsim/components/Transistor.hpp>
@@ -105,6 +105,15 @@ public:
     {
         _transistor_object = transistor;
     }
+
+
+    /**
+     * @brief Import a Transistor object from a row in the provided
+     *        statement, and assign it to this object.
+     * 
+     * @param statement The statement to import from.
+     */
+    void import(sqlite3_stmt *statement) override;
 
 };
 

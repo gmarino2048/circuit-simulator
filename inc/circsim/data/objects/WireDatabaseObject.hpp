@@ -16,7 +16,7 @@
 // (none)
 
 // Library Includes
-// (none)
+#include <sqlite3.h>
 
 // Project includes
 #include <circsim/components/Wire.hpp>
@@ -97,6 +97,15 @@ public:
      * @param wire The new wire object for this instance
      */
     inline void wire(const components::Wire &wire) { _wire_object = wire; }
+
+
+    /**
+     * @brief Import a wire object from a single row in a statement, and
+     *        assign that wire object to this database object.
+     * 
+     * @param statement The SQLite statement to fetch the row from.
+     */
+    void import(sqlite3_stmt *statement) override;
 
 };
 

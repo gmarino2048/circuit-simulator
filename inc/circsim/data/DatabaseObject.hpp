@@ -18,7 +18,7 @@
 #include <vector>
 
 // Library Includes
-// (none)
+#include <sqlite3.h>
 
 // Project Includes
 // (none)
@@ -310,6 +310,17 @@ public:
     (
         const std::vector<DatabaseObject*> &others
     ) const;
+
+
+    /**
+     * @brief Overwrite this object using the imported values
+     *        from the provided statement. Note that the statement
+     *        must be prepared and at least partially executed to
+     *        function properly.
+     * 
+     * @param statement The SQLite3 statement to import from
+     */
+    virtual void import(sqlite3_stmt *statement) = 0;
 
 };
 

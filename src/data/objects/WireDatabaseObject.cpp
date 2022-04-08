@@ -13,7 +13,7 @@
 // (none)
 
 // Library Includes
-// (none)
+#include <sqlite3.h>
 
 // Project includes
 #include <circsim/common/ValueError.hpp>
@@ -129,4 +129,10 @@ WireDatabaseObject::WireDatabaseObject(const Wire &wire):
     WireDatabaseObject()
 {
     _wire_object = wire;
+}
+
+
+void WireDatabaseObject::import(sqlite3_stmt *statement)
+{
+    // TODO: Fill this in
 }

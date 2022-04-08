@@ -10,10 +10,13 @@
  * 
  */
 
-// C++ Stdlib includes
+// C++ Stdlib Includes
 // (none)
 
-// Project includes
+// Library Includes
+#include <sqlite3.h>
+
+// Project Includes
 #include <circsim/common/ValueError.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/data/DatabaseObject.hpp>
@@ -125,4 +128,10 @@ TransistorDatabaseObject::TransistorDatabaseObject
 ) : TransistorDatabaseObject()
 {
     _transistor_object = transistor;
+}
+
+
+void TransistorDatabaseObject::import(sqlite3_stmt *statement)
+{
+    // TODO: Fill this in.
 }
