@@ -15,6 +15,7 @@
 // C++ stdlib includes
 #include <filesystem>
 #include <string>
+#include <optional>
 #include <vector>
 
 // Library includes
@@ -56,6 +57,22 @@ private:
         const std::string &query,
         sqlite3_stmt *statement
     );
+
+    /**
+     * @brief Fetch the results of the database object and return them
+     *        in the generated list. If the type supplied does not
+     *        match the return type, an error will be thrown.
+     * 
+     * std::nullopt_t is used to denote when the query is expected to not
+     * return any rows. If the query returns a row and std::nullopt_t is
+     * put as the type parameter, then an error will be generated.
+     * 
+     * @tparam DatabaseObjectT 
+     * @param statement 
+     * @return std::vector<DatabaseObjectT> 
+     */
+    template<class DatabaseObjectT = std::nullopt_t>
+    std::vector<DatabaseObjectT> _fetch_results(sqlite3_stmt *statement);
 
     /**
      * @brief Look in the database and see if the table exists

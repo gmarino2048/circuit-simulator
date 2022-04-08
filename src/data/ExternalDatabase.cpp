@@ -66,3 +66,80 @@ void ExternalDatabase::_prepare_statement
         );
     }
 }
+
+template<>
+std::vector<std::nullopt_t> ExternalDatabase::_fetch_results(sqlite3_stmt *statement)
+{
+    int step_result = ::sqlite3_step(statement);
+
+    if ( step_result == SQLITE_ROW )
+    {
+        throw ValueError
+        (
+            (std::string)
+            "A return value was not expected from this query, " +
+            "but one was returned anyway."
+        );
+    }
+
+    if ( step_result == SQLITE_DONE )
+    {
+        return {};
+    }
+    else
+    {
+        const char *errmsg = ::sqlite3_errmsg(this->_db_connection_obj);
+        throw StateError
+        (
+            (std::string)
+            "Database Error: " + errmsg
+        );
+    }
+}
+
+
+template<class DatabaseObjectT>
+std::vector<DatabaseObjectT> ExternalDatabase::_fetch_results(sqlite3_stmt *statement)
+{
+    std::vector<DatabaseObjectT> objects;
+
+    int step_result;
+    for
+    (
+        step_result = ::sqlite3_step(statement);
+        step_result == SQLITE_ROW;
+        // Row is automatically iterated
+    )
+    {
+        DatabaseObjectT &obj_ref = objects.emplace_back();
+
+        // Enforce direct inheritence from DatabaseObject
+        DatabaseObject *obj_pointer = static_cast<DatabaseObject*>(&obj_ref);
+        obj_pointer->import(statement);
+    }
+
+    if ( step_result != SQLITE_DONE )
+    {
+        const char *errmsg = ::sqlite3_errmsg(this->_db_connection_obj);
+        throw StateError
+        (
+            (std::string)
+            "Database Error: " + errmsg
+        );
+    }
+
+    return objects;
+}
+
+template std::vector<WireDatabaseObject>
+ExternalDatabase::_fetch_results<WireDatabaseObject>(sqlite3_stmt *statement);
+
+template std::vector<TransistorDatabaseObject>
+ExternalDatabase::_fetch_results<TransistorDatabaseObject>(sqlite3_stmt *statement);
+
+
+bool ExternalDatabase::_table_exists(const std::string &table_name)
+{
+    // TODO: fill this in
+    return true;
+}
