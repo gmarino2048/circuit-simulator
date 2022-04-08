@@ -43,6 +43,21 @@ private:
     std::filesystem::path _db_filepath;
 
     /**
+     * @brief Prepare an SQLite3 statement for execution within the
+     *        database object. This method performs error handling for
+     *        the SQLite query.
+     * 
+     * @param query The string query to be performed.
+     * @param statement The statement to be prepared with the given
+     *                  query.
+     */
+    void _prepare_statement
+    (
+        const std::string &query,
+        sqlite3_stmt *statement
+    );
+
+    /**
      * @brief Look in the database and see if the table exists
      * 
      * @param table_name The name of the table to look for
