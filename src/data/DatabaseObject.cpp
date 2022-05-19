@@ -620,3 +620,21 @@ DbValue DatabaseObject::format_value<StringList>(const StringList &object)
 
     return value;
 }
+
+
+template<>
+size_t DatabaseObject::decode_value(sqlite3_stmt *statement, const uint32_t col_number)
+{
+    int64_t value = sqlite3_column_int64(statement, col_number);
+
+    if ( value < 0 )
+    {
+        throw common::FormatError
+        (
+            "Cannot cast negative number " + std::to_string(value) + " to size_t"
+        );
+    }
+
+    return static_cast<size_t>(value);
+}
+
