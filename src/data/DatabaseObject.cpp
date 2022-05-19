@@ -638,3 +638,19 @@ size_t DatabaseObject::decode_value(sqlite3_stmt *statement, const uint32_t col_
     return static_cast<size_t>(value);
 }
 
+template<>
+bool DatabaseObject::decode_value(sqlite3_stmt *statement, const uint32_t col_number)
+{
+    int64_t value = sqlite3_column_int64(statement, col_number);
+
+    switch ( value )
+    {
+        case 0: return false;
+        case 1: return true;
+        default:
+            throw common::FormatError
+            (
+                "Cannot cast value " + std::to_string(value) + " to boolean"
+            );
+    }
+}
