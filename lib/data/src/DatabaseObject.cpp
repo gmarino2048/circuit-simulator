@@ -702,8 +702,4 @@ IntList DatabaseObject::decode_value
     std::smatch comma_match;
     std::string::const_iterator start = value.begin();
     std::string::const_iterator end = value.begin();
-    while ( std::regex_search(value, comma_match, re_comma) 
-    {
-        
-    }
 }

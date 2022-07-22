@@ -14,10 +14,8 @@ find_package(SQLite3 REQUIRED)
 
 include_directories(${SQLite3_INCLUDE_DIRS})
 
-include_directories("inc")
-add_subdirectory("src")
-add_subdirectory("test")
-
-add_executable(circsim
-    src/main.cpp
-)
+add_subdirectory(lib/common)
+add_subdirectory(lib/components)
+add_subdirectory(lib/data)
+add_subdirectory(lib/sim)
+add_subdirectory(lib/test)
