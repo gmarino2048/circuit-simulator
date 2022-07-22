@@ -134,5 +134,6 @@ WireDatabaseObject::WireDatabaseObject(const Wire &wire):
 
 void WireDatabaseObject::import(sqlite3_stmt *statement)
 {
-    // TODO: Fill this in
+    // Get the ID information
+    size_t id = decode_value<size_t>(statement, 0);
 }
