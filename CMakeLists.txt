@@ -16,7 +16,6 @@ include_directories(${SQLite3_INCLUDE_DIRS})
 
 include_directories(inc)
 add_subdirectory(lib)
-add_subdirectory(test)
 
 add_executable(circsim
     lib/main.cpp

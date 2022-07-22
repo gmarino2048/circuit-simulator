@@ -1,31 +1,7 @@
 
-include_directories(test_common)
-
-file(
-    GLOB testing-common_SRC "test_common/*.cpp"
-)
-
-add_library(testing-common
-    ${testing-common_SRC}
-)
 
 file(
     GLOB components-test_SRC "components/*.cpp"
-)
-
-add_executable(components-test
-    ${components-test_SRC}
-)
-
-target_link_libraries(components-test
-    circsim-components
-    testing-common
-    GTest::GTest
-    GTest::Main
-)
-
-gtest_add_tests(
-    TARGET components-test
 )
 
 
