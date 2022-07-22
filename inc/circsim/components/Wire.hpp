@@ -15,11 +15,18 @@
 #ifndef __CIRCSIM_COMPONENTS_WIRE_HPP
 #define __CIRCSIM_COMPONENTS_WIRE_HPP
 
+// C++ Stdlib Includes
 #include <cstdint>
 #include <string>
 #include <vector>
 #include <optional>
 #include <functional>
+
+// Library Includes
+// (none)
+
+// Project Includes
+// (none)
 
 namespace circsim::components
 {

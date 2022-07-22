@@ -9,7 +9,9 @@ add_library(
 )
 
 file(
-    GLOB data_SRC "data/*.cpp"
+    GLOB data_SRC
+    "data/*.cpp"
+    "data/objects/*.cpp"
 )
 
 add_library(
@@ -20,6 +22,7 @@ add_library(
 target_link_libraries(
     circsim-data
     circsim-components
+    ${SQLite3_LIBRARIES}
 )
 
 file(

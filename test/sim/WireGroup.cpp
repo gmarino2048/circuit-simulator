@@ -1,3 +1,13 @@
+/**
+ * @file WireGroup.cpp
+ * @author Guy Marino (gmarino2048@gmail.com)
+ * @brief Unit test file for the wire group object
+ * @version 0.1
+ * @date 2022-03-13
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
 #include <gtest/gtest.h>
 

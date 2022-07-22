@@ -9,11 +9,16 @@
  * 
  */
 
+// C++ Stdlib Includes
 #include <algorithm>
 #include <list>
 #include <set>
 #include <utility>
 
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/common/FormatError.hpp>
 #include <circsim/common/LimitError.hpp>
 #include <circsim/common/StateError.hpp>

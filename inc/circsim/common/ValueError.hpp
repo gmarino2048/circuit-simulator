@@ -1,16 +1,16 @@
 /**
- * @file StateError.hpp
+ * @file ValueError.hpp
  * @author Guy Marino (gmarino2048@gmail.com)
- * @brief Declaration file for the StateError object
+ * @brief Contains the definition for the ValueError class.
  * @version 0.1
- * @date 2022-02-28
+ * @date 2022-02-07
  * 
  * @copyright Copyright (c) 2022
  * 
  */
 
-#ifndef __CIRCSIM_COMMON_STATEERROR_HPP
-#define __CIRCSIM_COMMON_STATEERROR_HPP
+#ifndef __CIRCSIM_COMMON_VALUEERROR_HPP
+#define __CIRCSIM_COMMON_VALUEERROR_HPP
 
 // C++ Stdlib Includes
 #include <exception>
@@ -26,11 +26,11 @@ namespace circsim::common
 {
 
 /**
- * @brief An error occurring when the simulator finds itself
- *        in some invalid state.
+ * @brief An exception meant to be used when the input to
+ *        some method and/or process is malformed.
  * 
  */
-class StateError final : public std::exception
+class ValueError final : public std::exception
 {
 private:
 
@@ -40,10 +40,10 @@ private:
 public:
 
     /// Remove the default constructor to require a message
-    StateError() = delete;
+    ValueError() = delete;
 
     /// Only constructor for the exception requires message initialization
-    StateError(const std::string &message) : _message(message) { }
+    ValueError(const std::string &message) : _message(message) { }
 
 
     /// Get a string representation of the message
@@ -51,8 +51,9 @@ public:
 
     /// Get a c-string representation of the message
     const char *what() const noexcept { return _message.c_str(); }
+
 };
 
 }
 
-#endif  // #ifndef __CIRCSIM_COMMON_STATEERROR_HPP
+#endif

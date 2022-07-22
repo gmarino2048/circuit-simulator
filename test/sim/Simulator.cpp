@@ -9,11 +9,14 @@
  * 
  */
 
-#include <stdexcept>
-
+// Test framework Includes
 #include <Gates.hpp>
 #include <gtest/gtest.h>
 
+// C++ Stdlib Includes
+#include <stdexcept>
+
+// Project includes
 #include <circsim/sim/Simulator.hpp>
 
 using namespace circsim::components;

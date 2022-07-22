@@ -1,8 +1,21 @@
+/**
+ * @file Transistor.cpp
+ * @author Guy Marino (gmarino2048@gmail.com)
+ * @brief Unit test file for the Transistor object
+ * @version 0.1
+ * @date 2022-03-13
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
+// Test framework include
 #include <gtest/gtest.h>
 
+// C++ stdlib includes
 #include <vector>
 
+// Project includes
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
 

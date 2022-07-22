@@ -1,9 +1,24 @@
+/**
+ * @file Wire.cpp
+ * @author Guy Marino (gmarino2048@gmail.com)
+ * @brief This file contains the definitions for the wire component.
+ * @version 0.1
+ * @date 2022-03-22
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
+// C++ Stdlib Includes
 #include <cstdint>
 #include <optional>
 #include <iomanip>
 #include <sstream>
 
+// Library Includes
+// (none)
+
+// Project Includes
 #include <circsim/common/StateError.hpp>
 #include <circsim/components/Wire.hpp>
 
