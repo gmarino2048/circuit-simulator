@@ -19,7 +19,3 @@ add_subdirectory(lib/components)
 add_subdirectory(lib/data)
 add_subdirectory(lib/sim)
 add_subdirectory(lib/test)
-
-add_executable(circsim
-    lib/main.cpp
-)
