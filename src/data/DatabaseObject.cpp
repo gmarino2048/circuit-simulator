@@ -654,3 +654,56 @@ bool DatabaseObject::decode_value(sqlite3_stmt *statement, const uint32_t col_nu
             );
     }
 }
+
+template<>
+std::string DatabaseObject::decode_value
+(
+    sqlite3_stmt *statement,
+    const uint32_t col_number
+)
+{
+    // Assuming string from this is well-formed
+    const unsigned char *input = sqlite3_column_text(statement, col_number);
+    const char *c_string = reinterpret_cast<const char*>(input);
+
+    return std::string(c_string);
+}
+
+
+template<>
+IntList DatabaseObject::decode_value
+(
+    sqlite3_stmt *statement,
+    const uint32_t col_number
+)
+{
+    // We need to get the value as a string first
+    std::string value = decode_value<std::string>(statement, col_number);
+
+    // Make sure that the string is in the proper format
+    static const char *INTLIST_REGEX = "([0-9]+)?(,[0-9]+)*";
+    static const std::regex re_intlist(INTLIST_REGEX, std::regex_constants::optimize);
+
+    if ( !std::regex_match(value, re_intlist) )
+    {
+        throw common::ValueError
+        (
+            "Invalid format for integer list. Expected matching: \"" +
+            std::string(INTLIST_REGEX) +
+            "\". Received value: \"" +
+            value + "\""
+        );
+    }
+
+    // Value is good
+    static const char *COMMA_REGEX = ",";
+    static const std::regex re_comma(COMMA_REGEX, std::regex_constants::optimize);
+
+    std::smatch comma_match;
+    std::string::const_iterator start = value.begin();
+    std::string::const_iterator end = value.begin();
+    while ( std::regex_search(value, comma_match, re_comma) 
+    {
+        
+    }
+}

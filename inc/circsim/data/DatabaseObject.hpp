@@ -217,6 +217,18 @@ public:
     template<class T>
     static DbValue format_value(const T &object);
 
+    /**
+     * @brief Convert the input type to the output type, with added
+     *        bounds and format checking for safety.
+     * 
+     * @tparam T the type to decode from the 
+     * @param statement The SQLite statement to read information from
+     * @param col_number The column number of the SQLite Statement
+     * @return T The output value determined by the type parameters
+     */
+    template<class T>
+    static T decode_value(sqlite3_stmt *statement, const uint32_t col_number);
+
 // Instance methods
 
     /**
