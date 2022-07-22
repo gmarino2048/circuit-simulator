@@ -1,12 +1,5 @@
 
-file(
-    GLOB components_SRC "components/*.cpp"
-)
-
-add_library(
-    circsim-components SHARED
-    ${components_SRC}
-)
+add_subdirectory(components)
 
 file(
     GLOB data_SRC
