@@ -12,3 +12,8 @@ target_sources(circsim-components
         ${CMAKE_CURRENT_LIST_DIR}/src/Transistor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Wire.cpp
 )
+
+target_link_libraries(circsim-components
+    PRIVATE
+        circsim-common
+)

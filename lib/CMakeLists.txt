@@ -1,22 +1,7 @@
 
+add_subdirectory(common)
 add_subdirectory(components)
-
-file(
-    GLOB data_SRC
-    "data/*.cpp"
-    "data/objects/*.cpp"
-)
-
-add_library(
-    circsim-data SHARED
-    ${data_SRC}
-)
-
-target_link_libraries(
-    circsim-data
-    circsim-components
-    ${SQLite3_LIBRARIES}
-)
+add_subdirectory(data)
 
 file(
     GLOB sim_SRC "sim/*.cpp"
