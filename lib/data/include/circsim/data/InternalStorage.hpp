@@ -77,26 +77,17 @@ private:
     //
 
     /**
-     * @brief Index the element within the internal database. The
-     *        indexing process stores a pointer to the object and stores
-     *        it based on the component ID.
+     * @brief Index the desired element within the internal database.
      * 
-     * @param wire The wire to index
-     * @throw IndexError if the ID of the object is negative or a
-     * duplicate
-     */
-    void _index_element(const Wire &wire);
-
-    /**
-     * @brief Index the element within the internal database. This stores
-     *        a pointer to the element with the ID of the object.
+     *        Indexing means taking a pointer to the object and storing that in a
+     *        hash map with the object's ID, meaning that we have the best of both
+     *        worlds in terms of mimum-size and maximum-speed object storage.
      * 
-     * @param transistor The transistor to index
-     * @throw IndexError if the ID of the object is negative or a
-     * duplicate
+     * @tparam T The type of the object which needs to be indexed
+     * @param object The object to store and add to the index maps
      */
-    void _index_element(const Transistor &transistor);
-
+    template<class T>
+    void _index_element(const T& object);
 
     /**
      * @brief Re-index all the components in the physical arrays. This is

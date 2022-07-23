@@ -34,6 +34,14 @@ using InternalStorage = circsim::data::InternalStorage;
 
 // Explicit template initialization
 
+// InternalStorage::_index_element
+template<>
+void InternalStorage::_index_element<Wire>(const Wire& object);
+
+template<>
+void InternalStorage::_index_element<Transistor>(const Transistor& object);
+
+
 // InternalStorage::count
 template<>
 size_t InternalStorage::count<Wire>() const;
@@ -60,24 +68,25 @@ bool InternalStorage::contains_current(const Transistor& object) const;
 
 // Method declarations
 
-void InternalStorage::_index_element(const Wire &wire)
+template<>
+void InternalStorage::_index_element(const Wire &object)
 {
-    if( wire.id() < 0 )
+    if( object.id() < 0 )
     {
         throw common::IndexError
         (
-            "Expected nonnegative wire ID for object:\n" +
-            static_cast<std::string>(wire)
+            "Expected nonnegative object ID for object:\n" +
+            static_cast<std::string>(object)
         );
     }
 
-    size_t id = static_cast<size_t>(wire.id());
-    Wire *object_ptr = const_cast<Wire*>(&wire);
+    size_t id = static_cast<size_t>(object.id());
+    Wire *object_ptr = const_cast<Wire*>(&object);
 
     // Ensure that ID is not duplicate
-    if( this->contains(wire) )
+    if( this->contains(object) )
     {
-        throw common::IndexError("Duplicate Wire ID detected: " + std::to_string(wire.id()));
+        throw common::IndexError("Duplicate Wire ID detected: " + std::to_string(object.id()));
     }
 
     // No need to do boundary checking since this is addition
@@ -85,26 +94,27 @@ void InternalStorage::_index_element(const Wire &wire)
 }
 
 
-void InternalStorage::_index_element(const Transistor &transistor)
+template<>
+void InternalStorage::_index_element(const Transistor &object)
 {
-    if( transistor.id() < 0 )
+    if( object.id() < 0 )
     {
         throw common::IndexError
         (
-            "Expected nonnegative transistor ID for object:\n" +
-            static_cast<std::string>(transistor)
+            "Expected nonnegative object ID for object:\n" +
+            static_cast<std::string>(object)
         );
     }
 
-    size_t id = static_cast<size_t>(transistor.id());
-    Transistor *object_ptr = const_cast<Transistor*>(&transistor);
+    size_t id = static_cast<size_t>(object.id());
+    Transistor *object_ptr = const_cast<Transistor*>(&object);
 
     // Ensure that ID is not duplicate
-    if( this->contains(transistor) )
+    if( this->contains(object) )
     {
         throw common::IndexError
         (
-            "Duplicate Transistor ID detected: " + std::to_string(transistor.id())
+            "Duplicate Transistor ID detected: " + std::to_string(object.id())
         );
     }
 
