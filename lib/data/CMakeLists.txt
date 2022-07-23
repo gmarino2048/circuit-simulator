@@ -21,7 +21,7 @@ target_sources(circsim-data
 
 target_link_libraries(circsim-data
     PUBLIC
-        SQLite3
+        sqlite3
 
         circsim-common
         circsim-components
