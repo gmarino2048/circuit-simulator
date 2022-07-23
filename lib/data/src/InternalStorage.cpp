@@ -32,6 +32,26 @@ using Transistor = circsim::components::Transistor;
 using InternalStorage = circsim::data::InternalStorage;
 
 
+// Explicit template initialization
+
+// InternalStorage::count
+template<>
+size_t InternalStorage::count<Wire>() const;
+
+template<>
+size_t InternalStorage::count<Transistor>() const;
+
+
+// InternalStorage::contains
+template<>
+bool InternalStorage::contains<Wire>(const Wire& object) const;
+
+template<>
+bool InternalStorage::contains<Transistor>(const Transistor& object) const;
+
+
+// Method declarations
+
 void InternalStorage::_index_element(const Wire &wire)
 {
     if( wire.id() < 0 )
@@ -207,9 +227,10 @@ size_t InternalStorage::count<Transistor>() const
 }
 
 
-bool InternalStorage::contains(const Wire& wire) const
+template<>
+bool InternalStorage::contains(const Wire& object) const
 {
-    decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
+    decltype(_wire_index)::const_iterator it = _wire_index.find(object.id());
 
     // Return true only if the key exists and has a non-null value
     return it != _wire_index.end()
@@ -218,9 +239,10 @@ bool InternalStorage::contains(const Wire& wire) const
 }
 
 
-bool InternalStorage::contains(const Transistor& transistor) const
+template<>
+bool InternalStorage::contains(const Transistor& object) const
 {
-    decltype(_transistor_index)::const_iterator it = _transistor_index.find(transistor.id());
+    decltype(_transistor_index)::const_iterator it = _transistor_index.find(object.id());
 
     // Return true only if the key exists and has a non-null value
     return it != _transistor_index.end()

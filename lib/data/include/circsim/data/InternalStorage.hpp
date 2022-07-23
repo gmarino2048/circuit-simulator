@@ -187,22 +187,16 @@ public:
 
 
     /**
-     * @brief Checks to see whether a wire with a matching ID exists
-     *        in the database.
+     * @brief Checks to see if the internal storage object contains the given
+     *        instance (or a matching instance).
      * 
-     * @param wire The wire to check for.
-     * @return bool Whether a wire with this ID exists in the database.
+     * @tparam T The type of object to search for
+     * @param object The instance of the object used to find a match
+     * @return true if a matching object was found
+     * @return false if a matching object was not found
      */
-    bool contains(const Wire& wire) const;
-
-    /**
-     * @brief Checks to see whether a transistor with a matching ID
-     *        exists in the database.
-     * 
-     * @param transistor The transistor to search for.
-     * @return bool Whether a transistor with this ID exists in the database.
-     */
-    bool contains(const Transistor& transistor) const;
+    template<class T>
+    bool contains(const T& object) const;
 
 
     /**
