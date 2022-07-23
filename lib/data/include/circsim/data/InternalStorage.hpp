@@ -29,6 +29,7 @@
 
 namespace circsim::data
 {
+
 /**
  * @brief This internal database contains the components used by the simulator. It
  *        holds the instances of the transistors and wires, as well as the indexed
@@ -174,24 +175,15 @@ public:
 
 
     /**
-     * @brief Gets the number of wires in the database.
+     * @brief Counts the number of objects stored in this instance.
+     *        Only the count of the type specified by the template parameter
+     *        is returned.
      * 
-     * This count does not exclude the uninitialized wires, and so the count
-     * may overestimate the number of valid wires in the database.
-     * 
-     * @return size_t The wire count.
+     * @tparam T Find the internal object count of this type
+     * @return size_t The number of T objects contained in this instance
      */
-    inline size_t wire_count() { return _wire_instances.size(); }
-
-    /**
-     * @brief Gets the number of transistors in the database.
-     * 
-     * This count does not exclude uninitialized transistors, and so the number
-     * of usable transistors will always be less than or equal to this number.
-     * 
-     * @return size_t The transistor count
-     */
-    inline size_t transistor_count() { return _transistor_instances.size(); }
+    template<class T>
+    size_t count() const;
 
 
     /**

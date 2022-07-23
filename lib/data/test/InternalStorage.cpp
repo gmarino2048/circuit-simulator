@@ -107,8 +107,8 @@ TEST_F(InternalDatabaseTest, ComponentConstructor)
 {
     ASSERT_NO_FATAL_FAILURE(_database = InternalStorage(_wires, _transistors));
 
-    ASSERT_EQ(_database.wire_count(), NORMAL_WIRE_COUNT);
-    ASSERT_EQ(_database.transistor_count(), NORMAL_TRANSISTOR_COUNT);
+    ASSERT_EQ(_database.count<Wire>(), NORMAL_WIRE_COUNT);
+    ASSERT_EQ(_database.count<Transistor>(), NORMAL_TRANSISTOR_COUNT);
 
     _verify_all_components();
 }
@@ -120,8 +120,8 @@ TEST_F(InternalDatabaseTest, CopyConstructor)
     _database = db_original;
 
     // Ensure copy
-    ASSERT_EQ(db_original.wire_count(), NORMAL_WIRE_COUNT);
-    ASSERT_EQ(db_original.transistor_count(), NORMAL_TRANSISTOR_COUNT);
+    ASSERT_EQ(db_original.count<Wire>(), NORMAL_WIRE_COUNT);
+    ASSERT_EQ(db_original.count<Transistor>(), NORMAL_TRANSISTOR_COUNT);
 
     _verify_all_components();
 }

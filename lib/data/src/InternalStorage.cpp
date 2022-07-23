@@ -193,6 +193,20 @@ InternalStorage& InternalStorage::operator=(InternalStorage &&other) noexcept
 }
 
 
+template<>
+size_t InternalStorage::count<Wire>() const
+{
+    return this->_wire_instances.size();
+}
+
+
+template<>
+size_t InternalStorage::count<Transistor>() const
+{
+    return this->_transistor_instances.size();
+}
+
+
 bool InternalStorage::contains(const Wire& wire) const
 {
     decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
@@ -265,7 +279,7 @@ void InternalStorage::add_component(const Wire& wire)
     else
     {
         // Note, index from instance list, NOT from supplied parameter
-        size_t index = wire_count() - 1;
+        size_t index = count<Wire>() - 1;
         _index_element(_wire_instances[index]);
     }
 }
@@ -296,7 +310,7 @@ void InternalStorage::add_component(const Transistor& transistor)
     else
     {
         // Note: need to index the element from the LIST, not the supplied element
-        size_t index = transistor_count() - 1;
+        size_t index = count<Transistor>() - 1;
         _index_element(_transistor_instances[index]);
     }
 }
