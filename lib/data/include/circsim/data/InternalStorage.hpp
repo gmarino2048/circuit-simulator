@@ -76,6 +76,15 @@ private:
     // Support functions
     //
 
+    template<class T>
+    std::vector<T>& _get_storage();
+
+    template<class T>
+    std::map<size_t, T*>& _get_index();
+
+    template<class T>
+    const std::string _get_typename() const;
+
     /**
      * @brief Index the desired element within the internal database.
      * 

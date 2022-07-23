@@ -34,76 +34,100 @@ using InternalStorage = circsim::data::InternalStorage;
 
 // Explicit template initialization
 
-// InternalStorage::_index_element
+// InternalStorage::_get_storage
 template<>
-void InternalStorage::_index_element<Wire>(const Wire& object);
+std::vector<Wire>& InternalStorage::_get_storage();
 
 template<>
-void InternalStorage::_index_element<Transistor>(const Transistor& object);
+std::vector<Transistor>& InternalStorage::_get_storage();
+
+
+// InternalStorage::_get_index
+template<>
+std::map<size_t, Wire*>& InternalStorage::_get_index();
+
+template<>
+std::map<size_t, Transistor*>& InternalStorage::_get_index();
+
+
+// InternalStorage::_get_typename
+template<>
+const std::string InternalStorage::_get_typename<Wire>() const;
+
+template<>
+const std::string InternalStorage::_get_typename<Transistor>() const;
+
+
+// InternalStorage::_index_element
+template void InternalStorage::_index_element<Wire>(const Wire& object);
+template void InternalStorage::_index_element<Transistor>(const Transistor& object);
 
 
 // InternalStorage::count
-template<>
-size_t InternalStorage::count<Wire>() const;
-
-template<>
-size_t InternalStorage::count<Transistor>() const;
+template size_t InternalStorage::count<Wire>() const;
+template size_t InternalStorage::count<Transistor>() const;
 
 
 // InternalStorage::contains
-template<>
-bool InternalStorage::contains<Wire>(const Wire& object) const;
-
-template<>
-bool InternalStorage::contains<Transistor>(const Transistor& object) const;
+template bool InternalStorage::contains<Wire>(const Wire& object) const;
+template bool InternalStorage::contains<Transistor>(const Transistor& object) const;
 
 
 // InternalStorage::contains_current
-template<>
-bool InternalStorage::contains_current(const Wire& object) const;
-
-template<>
-bool InternalStorage::contains_current(const Transistor& object) const;
+template bool InternalStorage::contains_current(const Wire& object) const;
+template bool InternalStorage::contains_current(const Transistor& object) const;
 
 
 // InternalStorage::add_component
-template<>
-void InternalStorage::add_component(const Wire& object);
-
-template<>
-void InternalStorage::add_component(const Transistor& object);
+template void InternalStorage::add_component(const Wire& object);
+template void InternalStorage::add_component(const Transistor& object);
 
 
 // Method declarations
 
 template<>
-void InternalStorage::_index_element(const Wire &object)
+std::vector<Wire>& InternalStorage::_get_storage()
 {
-    if( object.id() < 0 )
-    {
-        throw common::IndexError
-        (
-            "Expected nonnegative object ID for object:\n" +
-            static_cast<std::string>(object)
-        );
-    }
-
-    size_t id = static_cast<size_t>(object.id());
-    Wire *object_ptr = const_cast<Wire*>(&object);
-
-    // Ensure that ID is not duplicate
-    if( this->contains(object) )
-    {
-        throw common::IndexError("Duplicate Wire ID detected: " + std::to_string(object.id()));
-    }
-
-    // No need to do boundary checking since this is addition
-    _wire_index[id] = object_ptr;
+    return this->_wire_instances;
 }
 
 
 template<>
-void InternalStorage::_index_element(const Transistor &object)
+std::vector<Transistor>& InternalStorage::_get_storage()
+{
+    return this->_transistor_instances;
+}
+
+
+template<>
+std::map<size_t, Wire*>& InternalStorage::_get_index()
+{
+    return this->_wire_index;
+}
+
+
+template<>
+std::map<size_t, Transistor*>& InternalStorage::_get_index()
+{
+    return this->_transistor_index;
+}
+
+
+template<>
+const std::string InternalStorage::_get_typename<Wire>() const
+{
+    return "Wire";
+}
+
+template<>
+const std::string InternalStorage::_get_typename<Transistor>() const
+{
+    return "Transistor";
+}
+
+
+template<class T>
+void InternalStorage::_index_element(const T& object)
 {
     if( object.id() < 0 )
     {
@@ -115,19 +139,17 @@ void InternalStorage::_index_element(const Transistor &object)
     }
 
     size_t id = static_cast<size_t>(object.id());
-    Transistor *object_ptr = const_cast<Transistor*>(&object);
+    T* object_ptr = const_cast<T*>(&object);
 
     // Ensure that ID is not duplicate
     if( this->contains(object) )
     {
-        throw common::IndexError
-        (
-            "Duplicate Transistor ID detected: " + std::to_string(object.id())
-        );
+        std::string errmsg = "Duplicate " + _get_typename<T>() + " ID detected: ";
+        throw common::IndexError(errmsg + std::to_string(object.id()));
     }
 
-    // No need to do boundary checking for set insertion
-    _transistor_index[id] = object_ptr;
+    // No need to do boundary checking since this is addition
+    _get_index<T>()[id] = object_ptr;
 }
 
 
@@ -239,50 +261,35 @@ InternalStorage& InternalStorage::operator=(InternalStorage &&other) noexcept
 }
 
 
-template<>
-size_t InternalStorage::count<Wire>() const
+template<class T>
+size_t InternalStorage::count() const
 {
-    return this->_wire_instances.size();
+    // Override the const value because we're guaranteed not to change anything
+    std::vector<T>& storage_array = const_cast<InternalStorage*>(this)->_get_storage<T>();
+    return storage_array.size();
 }
 
 
-template<>
-size_t InternalStorage::count<Transistor>() const
+template<class T>
+bool InternalStorage::contains(const T& object) const
 {
-    return this->_transistor_instances.size();
-}
-
-
-template<>
-bool InternalStorage::contains(const Wire& object) const
-{
-    decltype(_wire_index)::const_iterator it = _wire_index.find(object.id());
+    std::map<size_t, T*>& index_map = const_cast<InternalStorage*>(this)->_get_index<T>();
+    typename std::map<size_t, T*>::const_iterator it = index_map.find(object.id());
 
     // Return true only if the key exists and has a non-null value
-    return it != _wire_index.end()
+    return it != index_map.end()
         ? it->second != nullptr
         : false;
 }
 
 
-template<>
-bool InternalStorage::contains(const Transistor& object) const
+template<class T>
+bool InternalStorage::contains_current(const T& object) const
 {
-    decltype(_transistor_index)::const_iterator it = _transistor_index.find(object.id());
+    std::map<size_t, T*>& index_map = const_cast<InternalStorage*>(this)->_get_index<T>();
+    typename std::map<size_t, T*>::const_iterator it = index_map.find(object.id());
 
-    // Return true only if the key exists and has a non-null value
-    return it != _transistor_index.end()
-        ? it->second != nullptr
-        : false;
-}
-
-
-template<>
-bool InternalStorage::contains_current(const Wire& object) const
-{
-    decltype(_wire_index)::const_iterator it = _wire_index.find(object.id());
-
-    if( (it != _wire_index.end()) && (it->second != nullptr) )
+    if( (it != index_map.end()) && (it->second != nullptr) )
     {
         return object == *(it->second);
     }
@@ -291,22 +298,8 @@ bool InternalStorage::contains_current(const Wire& object) const
 }
 
 
-template<>
-bool InternalStorage::contains_current(const Transistor& object) const
-{
-    decltype(_transistor_index)::const_iterator it = _transistor_index.find(object.id());
-
-    if( (it != _transistor_index.end()) && (it->second != nullptr) )
-    {
-        return object == *(it->second);
-    }
-
-    return false;
-}
-
-
-template<>
-void InternalStorage::add_component(const Wire& object)
+template<class T>
+void InternalStorage::add_component(const T& object)
 {
     if( contains(object) )
     {
@@ -317,11 +310,12 @@ void InternalStorage::add_component(const Wire& object)
     }
 
     // Check if the vector will reallocate
+    std::vector<T>& storage_array = _get_storage<T>();
     bool will_realloc =
-        _wire_instances.capacity() == _wire_instances.size();
+        storage_array.capacity() == storage_array.size();
 
     // Note: copy occurs here
-    _wire_instances.push_back(object);
+    storage_array.push_back(object);
 
     if( will_realloc )
     {
@@ -330,40 +324,8 @@ void InternalStorage::add_component(const Wire& object)
     else
     {
         // Note, index from instance list, NOT from supplied parameter
-        size_t index = count<Wire>() - 1;
-        _index_element(_wire_instances[index]);
-    }
-}
-
-
-template<>
-void InternalStorage::add_component(const Transistor& object)
-{
-    if( contains(object) )
-    {
-        throw common::IndexError
-        (
-            "Database already contains transistor with ID: " + std::to_string(object.id())
-        );
-    }
-
-    // Need to check for reallocation
-    bool will_realloc = 
-        _transistor_instances.capacity() == _transistor_instances.size();
-
-    // Note: copy occurs here
-    _transistor_instances.push_back(object);
-
-    // If the vector reallocates, we need to index everything again
-    if( will_realloc )
-    {
-        _index_all();
-    }
-    else
-    {
-        // Note: need to index the element from the LIST, not the supplied element
-        size_t index = count<Transistor>() - 1;
-        _index_element(_transistor_instances[index]);
+        size_t index = count<T>() - 1;
+        _index_element(storage_array[index]);
     }
 }
 
