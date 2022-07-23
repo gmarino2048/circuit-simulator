@@ -66,6 +66,14 @@ template<>
 bool InternalStorage::contains_current(const Transistor& object) const;
 
 
+// InternalStorage::add_component
+template<>
+void InternalStorage::add_component(const Wire& object);
+
+template<>
+void InternalStorage::add_component(const Transistor& object);
+
+
 // Method declarations
 
 template<>
@@ -297,13 +305,14 @@ bool InternalStorage::contains_current(const Transistor& object) const
 }
 
 
-void InternalStorage::add_component(const Wire& wire)
+template<>
+void InternalStorage::add_component(const Wire& object)
 {
-    if( contains(wire) )
+    if( contains(object) )
     {
         throw common::IndexError
         (
-            "Database already contains wire with ID: " + std::to_string(wire.id())
+            "Database already contains wire with ID: " + std::to_string(object.id())
         );
     }
 
@@ -312,7 +321,7 @@ void InternalStorage::add_component(const Wire& wire)
         _wire_instances.capacity() == _wire_instances.size();
 
     // Note: copy occurs here
-    _wire_instances.push_back(wire);
+    _wire_instances.push_back(object);
 
     if( will_realloc )
     {
@@ -327,13 +336,14 @@ void InternalStorage::add_component(const Wire& wire)
 }
 
 
-void InternalStorage::add_component(const Transistor& transistor)
+template<>
+void InternalStorage::add_component(const Transistor& object)
 {
-    if( contains(transistor) )
+    if( contains(object) )
     {
         throw common::IndexError
         (
-            "Database already contains transistor with ID: " + std::to_string(transistor.id())
+            "Database already contains transistor with ID: " + std::to_string(object.id())
         );
     }
 
@@ -342,7 +352,7 @@ void InternalStorage::add_component(const Transistor& transistor)
         _transistor_instances.capacity() == _transistor_instances.size();
 
     // Note: copy occurs here
-    _transistor_instances.push_back(transistor);
+    _transistor_instances.push_back(object);
 
     // If the vector reallocates, we need to index everything again
     if( will_realloc )

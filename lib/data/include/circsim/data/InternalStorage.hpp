@@ -210,20 +210,19 @@ public:
 
 
     /**
-     * @brief Add a new wire to the database and index the element
+     * @brief Add the component to the database if it does not already exist.
      * 
-     * @param wire The wire to add to the database
-     * @throw IndexError if the component with this ID already exists
-     */
-    void add_component(const Wire &wire);
-
-    /**
-     * @brief Add a new transistor to the database and index the element
+     *        This method will automatically update the index maps with the
+     *        component's ID. If the ID already exists, this method will exit
+     *        with an error.
      * 
-     * @param transistor The transistor to add to the database
-     * @throw IndexError if the component with the ID already exists
+     * @tparam T The type of element to add to the storage object
+     * @param object The element to add to the storage object
+     * @throw IndexError if an object with that ID already exists in the storage
+     *                   object
      */
-    void add_component(const Transistor &transistor);
+    template<class T>
+    void add_component(const T& object);
 
 
     /**
