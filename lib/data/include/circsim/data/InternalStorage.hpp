@@ -190,6 +190,9 @@ public:
      * @brief Checks to see if the internal storage object contains the given
      *        instance (or a matching instance).
      * 
+     *        Note that this method only checks the storage ID of the object,
+     *        and not the contents.
+     * 
      * @tparam T The type of object to search for
      * @param object The instance of the object used to find a match
      * @return true if a matching object was found
@@ -198,24 +201,21 @@ public:
     template<class T>
     bool contains(const T& object) const;
 
-
     /**
-     * @brief Checks to see if a wire exactly equal to this one exists in
-     *        the database.
+     * @brief Check to see if the object contained in this storage instance is
+     *        up to date.
      * 
-     * @param wire The wire to search for.
-     * @return bool Whether there is an equal wire in the database.
-     */
-    bool contains_current(const Wire& wire) const;
-
-    /**
-     * @brief Checks to see if a transistor exactly equal to this one exists in
-     *        the database.
+     *        This method finds the object using its unique ID, and if found compares
+     *        the provided instance with the one that was found. This method will
+     *        only return true if the two objects completely match each other.
      * 
-     * @param transistor The transistor to search for.
-     * @return bool Whether there is an equivalent transistor in the database.
+     * @tparam T The type of object to search for
+     * @param object The instance of the object used to find a match
+     * @return true if a matching object was found
+     * @return false if a matching object was not found
      */
-    bool contains_current(const Transistor& transistor) const;
+    template<class T>
+    bool contains_current(const T& object) const;
 
 
     /**

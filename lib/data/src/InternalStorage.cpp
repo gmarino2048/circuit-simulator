@@ -50,6 +50,14 @@ template<>
 bool InternalStorage::contains<Transistor>(const Transistor& object) const;
 
 
+// InternalStorage::contains_current
+template<>
+bool InternalStorage::contains_current(const Wire& object) const;
+
+template<>
+bool InternalStorage::contains_current(const Transistor& object) const;
+
+
 // Method declarations
 
 void InternalStorage::_index_element(const Wire &wire)
@@ -251,26 +259,28 @@ bool InternalStorage::contains(const Transistor& object) const
 }
 
 
-bool InternalStorage::contains_current(const Wire& wire) const
+template<>
+bool InternalStorage::contains_current(const Wire& object) const
 {
-    decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
+    decltype(_wire_index)::const_iterator it = _wire_index.find(object.id());
 
     if( (it != _wire_index.end()) && (it->second != nullptr) )
     {
-        return wire == *(it->second);
+        return object == *(it->second);
     }
 
     return false;
 }
 
 
-bool InternalStorage::contains_current(const Transistor& transistor) const
+template<>
+bool InternalStorage::contains_current(const Transistor& object) const
 {
-    decltype(_transistor_index)::const_iterator it = _transistor_index.find(transistor.id());
+    decltype(_transistor_index)::const_iterator it = _transistor_index.find(object.id());
 
     if( (it != _transistor_index.end()) && (it->second != nullptr) )
     {
-        return transistor == *(it->second);
+        return object == *(it->second);
     }
 
     return false;
