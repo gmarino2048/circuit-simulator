@@ -15,12 +15,12 @@
 // Project Includes
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalDatabase.hpp>
+#include <circsim/data/InternalStorage.hpp>
 
 using Wire = circsim::components::Wire;
 using Transistor = circsim::components::Transistor;
 
-circsim::data::InternalDatabase create_nor()
+circsim::data::InternalStorage create_nor()
 {
     
 
@@ -75,14 +75,14 @@ circsim::data::InternalDatabase create_nor()
         gnd.id()
     );
 
-    return circsim::data::InternalDatabase
+    return circsim::data::InternalStorage
     (
         { out, in_a, in_b, gnd },
         { trans_a, trans_b }
     );
 }
 
-circsim::data::InternalDatabase create_nand()
+circsim::data::InternalStorage create_nand()
 {
     using Wire = circsim::components::Wire;
     using Transistor = circsim::components::Transistor;
@@ -149,7 +149,7 @@ circsim::data::InternalDatabase create_nand()
         gnd.id()
     );
 
-    return circsim::data::InternalDatabase
+    return circsim::data::InternalStorage
     (
         { gnd, out, connector, in_a, in_b },
         { trans_a, trans_b }

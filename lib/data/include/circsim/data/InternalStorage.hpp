@@ -1,5 +1,5 @@
 /**
- * @file InternalDatabase.hpp
+ * @file InternalStorage.hpp
  * @author Guy Marino (gmarino2048@gmail.com)
  * @brief This file contains the template declaration for
  *        an internal database of components. Within the
@@ -12,8 +12,8 @@
  * 
  */
 
-#ifndef __CIRCSIM_DATA_INTERNALDATABASE_HPP
-#define __CIRCSIM_DATA_INTERNALDATABASE_HPP
+#ifndef __CIRCSIM_DATA_INTERNALSTORAGE_HPP
+#define __CIRCSIM_DATA_INTERNALSTORAGE_HPP
 
 // C++ Stdlib Includes
 #include <map>
@@ -35,7 +35,7 @@ namespace circsim::data
  *        maps of these components relative to their IDs.
  * 
  */
-class InternalDatabase final
+class InternalStorage final
 {
 
 private:
@@ -121,7 +121,7 @@ public:
      * @param wire_count The number of wires to initialize the database with
      * @param transistor_count The number of transistors to initialize the database with
      */
-    InternalDatabase();
+    InternalStorage();
 
     /**
      * @brief Construct a new Internal Database object with a predefined wire and
@@ -130,7 +130,7 @@ public:
      * @param wires The list of wires to insert
      * @param transistors The list of transistors to insert
      */
-    InternalDatabase
+    InternalStorage
     (
         const std::vector<Wire>& wires,
         const std::vector<Transistor>& transistors
@@ -142,35 +142,35 @@ public:
      * 
      * @param other The other object to copy from
      */
-    InternalDatabase(const InternalDatabase &other);
+    InternalStorage(const InternalStorage &other);
 
     /**
      * @brief Move constructor for the internal database object
      * 
      * @param other The other object to move from
      */
-    InternalDatabase(InternalDatabase &&other) noexcept;
+    InternalStorage(InternalStorage &&other) noexcept;
 
 
     /**
      * @brief Copy construction assignment operator
      * 
      * @param rhs The refrerence object to copy from
-     * @return InternalDatabase& The new copied instance
+     * @return InternalStorage& The new copied instance
      */
-    InternalDatabase& operator=(const InternalDatabase &rhs);
+    InternalStorage& operator=(const InternalStorage &rhs);
 
     /**
      * @brief Move construction assignment operator
      * 
      * @param rhs The reference object to move from
-     * @return InternalDatabase& The new moved object
+     * @return InternalStorage& The new moved object
      */
-    InternalDatabase& operator=(InternalDatabase &&rhs) noexcept;
+    InternalStorage& operator=(InternalStorage &&rhs) noexcept;
 
 
     /// Default destructor
-    ~InternalDatabase() = default;
+    ~InternalStorage() = default;
 
 
     /**
@@ -300,4 +300,4 @@ public:
 
 }
 
-#endif //__CIRCSIM_DATA_INTERNALDATABASE_HPP
+#endif //__CIRCSIM_DATA_INTERNALSTORAGE_HPP

@@ -70,7 +70,7 @@ Wire::State SimulatorTest::encode_input(const bool input)
 TEST_F(SimulatorTest, TestNOR)
 {
     // Set up simulator
-    InternalDatabase db = create_nor();
+    InternalStorage db = create_nor();
     _simulator = new Simulator(db);
 
     bool input_options[2] = { true, false };
@@ -109,7 +109,7 @@ TEST_F(SimulatorTest, TestNOR)
 TEST_F(SimulatorTest, TestNand)
 {
     // Set up simulator
-    InternalDatabase db = create_nand();
+    InternalStorage db = create_nand();
     _simulator = new Simulator(db);
 
     bool input_options[2] = { true, false };

@@ -15,12 +15,12 @@
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalDatabase.hpp>
+#include <circsim/data/InternalStorage.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 using Wire = circsim::components::Wire;
 using Transistor = circsim::components::Transistor;
-using Database = circsim::data::InternalDatabase;
+using Database = circsim::data::InternalStorage;
 using WireGroup = circsim::sim::WireGroup;
 
 TEST(WireGroup, NandTest)

@@ -17,7 +17,7 @@
 #include <vector>
 
 #include <circsim/components/Wire.hpp>
-#include <circsim/data/InternalDatabase.hpp>
+#include <circsim/data/InternalStorage.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 namespace circsim::sim
@@ -54,7 +54,7 @@ private:
     std::list<size_t> _wire_update_list;
 
     /// The internal component database for the simulator
-    data::InternalDatabase _internal_database;
+    data::InternalStorage _internal_database;
 
 
     /**
@@ -95,7 +95,7 @@ public:
      */
     Simulator
     (
-        const data::InternalDatabase &database,
+        const data::InternalStorage &database,
         const size_t iteration_limit = 2500
     );
 
@@ -103,9 +103,9 @@ public:
     /**
      * @brief Get the internal database of the simulator
      * 
-     * @return data::InternalDatabase& The internal component database
+     * @return data::InternalStorage& The internal component database
      */
-    inline data::InternalDatabase& database() { return _internal_database; }
+    inline data::InternalStorage& database() { return _internal_database; }
 
     /**
      * @brief Update the internal component database with a newer version.
@@ -115,7 +115,7 @@ public:
      * 
      * @param database The new database to use.
      */
-    inline void database(const data::InternalDatabase &database) 
+    inline void database(const data::InternalStorage &database) 
     {
         this->_internal_database = database;
     }

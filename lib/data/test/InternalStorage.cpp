@@ -1,5 +1,5 @@
 /**
- * @file InternalDatabase.cpp
+ * @file InternalStorage.cpp
  * @author Guy Marino (gmarino2048@gmail.com)
  * @brief Unit test file for the internal database object
  * @version 0.1
@@ -23,13 +23,13 @@
 // File Under Test
 #define private public
 #define protected public
-#include <circsim/data/InternalDatabase.hpp>
+#include <circsim/data/InternalStorage.hpp>
 #undef private
 #undef protected
 
 using Wire = circsim::components::Wire;
 using Transistor = circsim::components::Transistor;
-using InternalDatabase = circsim::data::InternalDatabase;
+using InternalStorage = circsim::data::InternalStorage;
 
 
 class InternalDatabaseTest : public ::testing::Test
@@ -42,7 +42,7 @@ protected:
     std::vector<Wire> _wires;
     std::vector<Transistor> _transistors;
 
-    InternalDatabase _database;
+    InternalStorage _database;
 
     InternalDatabaseTest() = default;
     ~InternalDatabaseTest() = default;
@@ -105,7 +105,7 @@ TEST_F(InternalDatabaseTest, DefaultConstructor)
 
 TEST_F(InternalDatabaseTest, ComponentConstructor)
 {
-    ASSERT_NO_FATAL_FAILURE(_database = InternalDatabase(_wires, _transistors));
+    ASSERT_NO_FATAL_FAILURE(_database = InternalStorage(_wires, _transistors));
 
     ASSERT_EQ(_database.wire_count(), NORMAL_WIRE_COUNT);
     ASSERT_EQ(_database.transistor_count(), NORMAL_TRANSISTOR_COUNT);
@@ -116,7 +116,7 @@ TEST_F(InternalDatabaseTest, ComponentConstructor)
 
 TEST_F(InternalDatabaseTest, CopyConstructor)
 {
-    InternalDatabase db_original(_wires, _transistors);
+    InternalStorage db_original(_wires, _transistors);
     _database = db_original;
 
     // Ensure copy
@@ -129,7 +129,7 @@ TEST_F(InternalDatabaseTest, CopyConstructor)
 
 TEST_F(InternalDatabaseTest, MoveConstructor)
 {
-    InternalDatabase db_original(_wires, _transistors);
+    InternalStorage db_original(_wires, _transistors);
     _database = std::move(db_original);
 
     _verify_all_components();
@@ -155,7 +155,7 @@ TEST_F(InternalDatabaseTest, AddComponentSimple)
 
 TEST_F(InternalDatabaseTest, FastUpdateComponent)
 {
-    _database = InternalDatabase(_wires, _transistors);
+    _database = InternalStorage(_wires, _transistors);
 
     const size_t index = 5;
     const Wire::State new_state = Wire::PULLED_HIGH;

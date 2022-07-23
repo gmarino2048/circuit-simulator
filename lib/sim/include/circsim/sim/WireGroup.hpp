@@ -22,7 +22,7 @@
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalDatabase.hpp>
+#include <circsim/data/InternalStorage.hpp>
 
 namespace circsim::sim
 {
@@ -45,7 +45,7 @@ public:
     using Transistor = ::circsim::components::Transistor;
 
     /// Import component database type
-    using Database = ::circsim::data::InternalDatabase;
+    using Database = ::circsim::data::InternalStorage;
 
 private:
 

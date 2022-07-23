@@ -136,7 +136,7 @@ Simulator::Simulator(const size_t iteration_limit) :
 
 Simulator::Simulator
 (
-    const data::InternalDatabase &database,
+    const data::InternalStorage &database,
     const size_t iteration_limit
 ) :
     _iteration_count(0),

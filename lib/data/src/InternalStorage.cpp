@@ -1,5 +1,5 @@
 /**
- * @file InternalDatabase.cpp
+ * @file InternalStorage.cpp
  * @author Guy Marino (gmarino2048@gmail.com)
  * @brief This contains the definition for the internal database
  *        instance which is responsible for organizing and indexing
@@ -20,7 +20,7 @@
 
 // Project Includes
 #include <circsim/common/IndexError.hpp>
-#include <circsim/data/InternalDatabase.hpp>
+#include <circsim/data/InternalStorage.hpp>
 
 /// Convenience typedef for the Wire class
 using Wire = circsim::components::Wire;
@@ -28,11 +28,11 @@ using Wire = circsim::components::Wire;
 /// Convenience typedef for the Transistor class
 using Transistor = circsim::components::Transistor;
 
-/// Convenience typedef for the InternalDatabase class
-using InternalDatabase = circsim::data::InternalDatabase;
+/// Convenience typedef for the InternalStorage class
+using InternalStorage = circsim::data::InternalStorage;
 
 
-void InternalDatabase::_index_element(const Wire &wire)
+void InternalStorage::_index_element(const Wire &wire)
 {
     if( wire.id() < 0 )
     {
@@ -57,7 +57,7 @@ void InternalDatabase::_index_element(const Wire &wire)
 }
 
 
-void InternalDatabase::_index_element(const Transistor &transistor)
+void InternalStorage::_index_element(const Transistor &transistor)
 {
     if( transistor.id() < 0 )
     {
@@ -85,7 +85,7 @@ void InternalDatabase::_index_element(const Transistor &transistor)
 }
 
 
-void InternalDatabase::_index_all()
+void InternalStorage::_index_all()
 {
     this->_clear_index();
 
@@ -103,14 +103,14 @@ void InternalDatabase::_index_all()
 }
 
 
-void InternalDatabase::_clear_index()
+void InternalStorage::_clear_index()
 {
     this->_transistor_index.clear();
     this->_wire_index.clear();
 }
 
 
-InternalDatabase::InternalDatabase(): 
+InternalStorage::InternalStorage(): 
     _wire_instances(0),
     _transistor_instances(0)
 {
@@ -118,7 +118,7 @@ InternalDatabase::InternalDatabase():
 }
 
 
-InternalDatabase::InternalDatabase
+InternalStorage::InternalStorage
 (
     const std::vector<Wire>& wires,
     const std::vector<Transistor>& transistors
@@ -129,7 +129,7 @@ InternalDatabase::InternalDatabase
 }
 
 
-InternalDatabase::InternalDatabase(const InternalDatabase &other)
+InternalStorage::InternalStorage(const InternalStorage &other)
 {
     // Accelerate by avoiding recalc for self-assignment
     if( this == &other )
@@ -144,7 +144,7 @@ InternalDatabase::InternalDatabase(const InternalDatabase &other)
 }
 
 
-InternalDatabase::InternalDatabase(InternalDatabase &&other) noexcept
+InternalStorage::InternalStorage(InternalStorage &&other) noexcept
 {
     // Avoid the self-assignment issue
     if( this == &other )
@@ -160,7 +160,7 @@ InternalDatabase::InternalDatabase(InternalDatabase &&other) noexcept
 }
 
 
-InternalDatabase& InternalDatabase::operator=(const InternalDatabase &other)
+InternalStorage& InternalStorage::operator=(const InternalStorage &other)
 {
     if( this == &other )
     {
@@ -175,7 +175,7 @@ InternalDatabase& InternalDatabase::operator=(const InternalDatabase &other)
 }
 
 
-InternalDatabase& InternalDatabase::operator=(InternalDatabase &&other) noexcept
+InternalStorage& InternalStorage::operator=(InternalStorage &&other) noexcept
 {
     if( this == &other )
     {
@@ -193,7 +193,7 @@ InternalDatabase& InternalDatabase::operator=(InternalDatabase &&other) noexcept
 }
 
 
-bool InternalDatabase::contains(const Wire& wire) const
+bool InternalStorage::contains(const Wire& wire) const
 {
     decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
 
@@ -204,7 +204,7 @@ bool InternalDatabase::contains(const Wire& wire) const
 }
 
 
-bool InternalDatabase::contains(const Transistor& transistor) const
+bool InternalStorage::contains(const Transistor& transistor) const
 {
     decltype(_transistor_index)::const_iterator it = _transistor_index.find(transistor.id());
 
@@ -215,7 +215,7 @@ bool InternalDatabase::contains(const Transistor& transistor) const
 }
 
 
-bool InternalDatabase::contains_current(const Wire& wire) const
+bool InternalStorage::contains_current(const Wire& wire) const
 {
     decltype(_wire_index)::const_iterator it = _wire_index.find(wire.id());
 
@@ -228,7 +228,7 @@ bool InternalDatabase::contains_current(const Wire& wire) const
 }
 
 
-bool InternalDatabase::contains_current(const Transistor& transistor) const
+bool InternalStorage::contains_current(const Transistor& transistor) const
 {
     decltype(_transistor_index)::const_iterator it = _transistor_index.find(transistor.id());
 
@@ -241,7 +241,7 @@ bool InternalDatabase::contains_current(const Transistor& transistor) const
 }
 
 
-void InternalDatabase::add_component(const Wire& wire)
+void InternalStorage::add_component(const Wire& wire)
 {
     if( contains(wire) )
     {
@@ -271,7 +271,7 @@ void InternalDatabase::add_component(const Wire& wire)
 }
 
 
-void InternalDatabase::add_component(const Transistor& transistor)
+void InternalStorage::add_component(const Transistor& transistor)
 {
     if( contains(transistor) )
     {
@@ -302,7 +302,7 @@ void InternalDatabase::add_component(const Transistor& transistor)
 }
 
 
-void InternalDatabase::update_component(const Wire& wire)
+void InternalStorage::update_component(const Wire& wire)
 {
     if( contains(wire) )
     {
@@ -316,7 +316,7 @@ void InternalDatabase::update_component(const Wire& wire)
 }
 
 
-void InternalDatabase::update_component(const Transistor& transistor)
+void InternalStorage::update_component(const Transistor& transistor)
 {
     if( contains(transistor) )
     {
@@ -329,7 +329,7 @@ void InternalDatabase::update_component(const Transistor& transistor)
 }
 
 
-Wire* InternalDatabase::get_wire(const size_t id) const try
+Wire* InternalStorage::get_wire(const size_t id) const try
 {
     return _wire_index.at(id);
 }
@@ -342,7 +342,7 @@ catch( const std::out_of_range& )
 }
 
 
-Transistor* InternalDatabase::get_transistor(const size_t id) const try
+Transistor* InternalStorage::get_transistor(const size_t id) const try
 {
     return _transistor_index.at(id);
 }
@@ -355,7 +355,7 @@ catch( const std::out_of_range& )
 }
 
 
-Wire* InternalDatabase::find_wire(const std::string &wire_name) const
+Wire* InternalStorage::find_wire(const std::string &wire_name) const
 {
     auto match_name = [&](const Wire &wire)
     {

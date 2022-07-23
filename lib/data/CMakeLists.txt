@@ -13,7 +13,7 @@ target_sources(circsim-data
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/DatabaseObject.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalDatabase.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/src/InternalDatabase.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/InternalStorage.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/src/objects/TransistorDatabaseObject.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/objects/WireDatabaseObject.cpp
@@ -34,7 +34,7 @@ add_executable(circsim-data-test)
 target_sources(circsim-data-test
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/test/DatabaseObject.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/test/InternalDatabase.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/test/InternalStorage.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/test/objects/TransistorDatabaseObject.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/objects/WireDatabaseObject.cpp
