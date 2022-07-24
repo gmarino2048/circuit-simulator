@@ -88,6 +88,15 @@ template void InternalStorage::update_component(const Wire& object);
 template void InternalStorage::update_component(const Transistor& object);
 
 
+// InternalStorage::get
+template Wire* InternalStorage::get(const size_t id) const;
+template Transistor* InternalStorage::get(const size_t id) const;
+
+
+// InternalStorage::find
+template<>
+Wire* InternalStorage::find(const std::string& name) const;
+
 // Method declarations
 
 template<>
@@ -351,37 +360,26 @@ void InternalStorage::update_component(const T& object)
 }
 
 
-Wire* InternalStorage::get_wire(const size_t id) const try
+template<class T>
+T* InternalStorage::get(const size_t id) const try
 {
-    return _wire_index.at(id);
+    std::map<size_t, T*>& index_map = const_cast<InternalStorage*>(this)->_get_index<T>();
+    return index_map.at(id);
 }
-catch( const std::out_of_range& )
-{
-    throw common::IndexError
-    (
-        "Database does not have wire with index " + std::to_string(id)
-    );
-}
-
-
-Transistor* InternalStorage::get_transistor(const size_t id) const try
-{
-    return _transistor_index.at(id);
-}
-catch( const std::out_of_range& )
+catch(const std::out_of_range& )
 {
     throw common::IndexError
     (
-        "Database does not have transistor with index " + std::to_string(id)
+        "Storage does not contain " + _get_typename<T>() + " with ID " + std::to_string(id)
     );
 }
 
-
-Wire* InternalStorage::find_wire(const std::string &wire_name) const
+template<>
+Wire* InternalStorage::find(const std::string &name) const
 {
     auto match_name = [&](const Wire &wire)
     {
-        return wire.primary_name() == wire_name;
+        return wire.primary_name() == name;
     };
 
     std::vector<Wire>::const_iterator wire_found;
@@ -401,7 +399,7 @@ Wire* InternalStorage::find_wire(const std::string &wire_name) const
     {
         for( const std::string &other_name : wire.other_names() )
         {
-            if( wire_name == other_name )
+            if( name == other_name )
             {
                 return true;
             }
@@ -425,7 +423,7 @@ Wire* InternalStorage::find_wire(const std::string &wire_name) const
     {
         throw common::IndexError
         (
-            "Wire not found matching name \"" + wire_name + "\""
+            "Wire not found matching name \"" + name + "\""
         );
     }
 }

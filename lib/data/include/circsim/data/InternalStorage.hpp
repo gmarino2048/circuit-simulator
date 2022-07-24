@@ -249,34 +249,21 @@ public:
 
 
     /**
-     * @brief Get the wire object pointer associated with a given ID
+     * @brief Get an object from the internal storage object.
      * 
-     * @param id The ID number of the wire
-     * @return Wire* The pointer to the object associated with this ID
-     * @throw IndexError if the ID is not in the indexed database
+     * @tparam T The type of the object to be retrieved
+     * @param id The ID of the object to fetch
+     * @return T* A pointer to the instance that exists in storage
+     * 
+     * @throw circsim::common::IndexError when no object with the corresponding
+     *        ID exists in the storage object
      */
-    Wire* get_wire(const size_t id) const;
+    template<class T>
+    T* get(const size_t id) const;
 
-    /**
-     * @brief Get the transistor object pointer associated with a given ID
-     * 
-     * @param id The ID number of the transistor
-     * @return Transistor* The pointer to the object associated with this ID
-     * @throw IndexError if the ID is not in the indexed database
-     */
-    Transistor* get_transistor(const size_t id) const;
 
-    /**
-     * @brief Find the first wire associated with the given name. Note that
-     *        the name must exactly match the name of the wire or its aliases.
-     * 
-     * @param wire_name The name of the wire
-     * @return Wire* The first wire with this name
-     * 
-     * @throw circsim::common::IndexError if the wire with the specified name
-     *        cannot be found
-     */
-    Wire* find_wire(const std::string &wire_name) const;
+    template<class T>
+    T* find(const std::string& object_name) const;
 
 };
 

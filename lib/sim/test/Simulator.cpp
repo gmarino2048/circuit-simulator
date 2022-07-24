@@ -98,7 +98,7 @@ TEST_F(SimulatorTest, TestNOR)
             _simulator->update_all();
 
             // Get output of wire
-            Wire *out_wire = _simulator->database().find_wire("OUT");
+            Wire *out_wire = _simulator->database().find<Wire>("OUT");
             bool out = decode_output(out_wire);
 
             EXPECT_EQ( !(in_a || in_b), out );
@@ -137,7 +137,7 @@ TEST_F(SimulatorTest, TestNand)
             _simulator->update_all();
 
             // Get output of wire
-            Wire *out_wire = _simulator->database().find_wire("OUT");
+            Wire *out_wire = _simulator->database().find<Wire>("OUT");
             bool out = decode_output(out_wire);
 
             EXPECT_EQ( !(in_a && in_b), out );

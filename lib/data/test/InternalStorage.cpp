@@ -78,7 +78,7 @@ void InternalDatabaseTest::_verify_all_components()
     for( size_t i = 0; i < NORMAL_WIRE_COUNT; i++ )
     {
         Wire* wire = nullptr;
-        EXPECT_NO_FATAL_FAILURE(wire = _database.get_wire(i));
+        EXPECT_NO_FATAL_FAILURE(wire = _database.get<Wire>(i));
 
         ASSERT_NE(wire, nullptr);
         EXPECT_EQ(*wire, _wires[i]);
@@ -87,7 +87,7 @@ void InternalDatabaseTest::_verify_all_components()
     for( size_t i = 0; i < NORMAL_TRANSISTOR_COUNT; i++ )
     {
         Transistor* transistor;
-        EXPECT_NO_FATAL_FAILURE(transistor = _database.get_transistor(i));
+        EXPECT_NO_FATAL_FAILURE(transistor = _database.get<Transistor>(i));
 
         ASSERT_NE(transistor, nullptr);
         EXPECT_EQ(*transistor, _transistors[i]);
@@ -161,10 +161,10 @@ TEST_F(InternalDatabaseTest, FastUpdateComponent)
     const Wire::State new_state = Wire::PULLED_HIGH;
 
     {
-        _database.get_wire(index)->state(new_state);
+        _database.get<Wire>(index)->state(new_state);
     }
 
-    EXPECT_EQ(_database.get_wire(index)->state(), new_state);
+    EXPECT_EQ(_database.get<Wire>(index)->state(), new_state);
 }
 
 
@@ -186,7 +186,7 @@ TEST_F(InternalDatabaseTest, UpdateComponent)
 
     EXPECT_NO_THROW(_database.update_component(new_wire));
 
-    Wire* wire_ptr = _database.get_wire(index);
+    Wire* wire_ptr = _database.get<Wire>(index);
     ASSERT_NE(wire_ptr, nullptr);
 
     EXPECT_EQ(wire_ptr->primary_name(), new_name);
@@ -207,7 +207,7 @@ TEST_F(InternalDatabaseTest, UpdateComponent)
 
     _database.update_component(new_transistor);
 
-    Transistor* trans_ptr = _database.get_transistor(index);
+    Transistor* trans_ptr = _database.get<Transistor>(index);
     ASSERT_NE(trans_ptr, nullptr);
 
     EXPECT_EQ(trans_ptr->source(), new_source);

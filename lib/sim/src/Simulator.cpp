@@ -66,7 +66,7 @@ void Simulator::_update_transistors(const WireGroup &group)
     for( const size_t id : transistors_to_update )
     {
         components::Transistor *transistor_object =
-            _internal_database.get_transistor(id);
+            _internal_database.get<components::Transistor>(id);
 
         bool state_changed = transistor_object->update_state(group.group_state());
 
@@ -192,7 +192,7 @@ void Simulator::update_by_id
 )
 {
     components::Wire *wire_object =
-        _internal_database.get_wire(id);
+        _internal_database.get<components::Wire>(id);
 
     // Preserve the internal order of the update list
     wire_object->state(state);
@@ -213,7 +213,7 @@ void Simulator::update_by_name
 )
 {
     components::Wire *wire_object =
-        _internal_database.find_wire(name);
+        _internal_database.find<components::Wire>(name);
 
     // Preserve the internal order of the update list
     wire_object->state(state);
