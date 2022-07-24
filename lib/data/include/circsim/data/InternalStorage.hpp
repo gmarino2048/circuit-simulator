@@ -76,14 +76,33 @@ private:
     // Support functions
     //
 
+    /**
+     * @brief Get the storage instance of the specified type.
+     * 
+     * @tparam T The type contained within the storage object
+     * @return std::vector<T>& The object where instances are stored
+     */
     template<class T>
     std::vector<T>& _get_storage();
 
+    /**
+     * @brief Get the index map of the specified type.
+     * 
+     * @tparam T The type contained within the index map
+     * @return std::map<size_t, T*>& The index map to get handles easily
+     */
     template<class T>
     std::map<size_t, T*>& _get_index();
 
+    /**
+     * @brief Get the name of the given type.
+     * 
+     * @tparam T The type to get the name for
+     * @return const std::string The name of the given type
+     */
     template<class T>
     const std::string _get_typename() const;
+
 
     /**
      * @brief Index the desired element within the internal database.
@@ -262,6 +281,17 @@ public:
     T* get(const size_t id) const;
 
 
+    /**
+     * @brief Search the storage object for an instance with the
+     *        given name.
+     * 
+     * @tparam T The type of the instance to search for
+     * @param object_name The name of the instance
+     * @return T* A handle to the instance if found
+     * 
+     * @throws circsim::common::IndexError if an instance with the given name
+     *         could not be found
+     */
     template<class T>
     T* find(const std::string& object_name) const;
 
