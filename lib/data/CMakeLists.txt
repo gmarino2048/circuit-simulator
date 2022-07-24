@@ -13,7 +13,11 @@ target_sources(circsim-data
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/DatabaseObject.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalDatabase.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/InternalStorage.cpp
+
+        ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/Transistor.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/Wire.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/src/objects/TransistorDatabaseObject.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/objects/WireDatabaseObject.cpp
