@@ -53,10 +53,10 @@ private:
     static T _from_sql_type(const SqlValue& value);
 
     template<class T>
-    void _create_column();
+    void _create_table();
 
     template<class T>
-    void _store(const T &value);
+    void _store(const T& value);
 
     template<class T>
     void _store_all(const std::vector<T>& values);
@@ -79,7 +79,7 @@ public:
     ExternalStorage& operator=(const ExternalStorage& copy) = delete;
     ExternalStorage& operator=(ExternalStorage&& move) noexcept = delete;
 
-    ~ExternalStorage() = default;
+    ~ExternalStorage();
 
     template<class T>
     size_t count() const;
