@@ -83,6 +83,11 @@ template void InternalStorage::add_component(const Wire& object);
 template void InternalStorage::add_component(const Transistor& object);
 
 
+// InternalStorage::update_component
+template void InternalStorage::update_component(const Wire& object);
+template void InternalStorage::update_component(const Transistor& object);
+
+
 // Method declarations
 
 template<>
@@ -330,29 +335,18 @@ void InternalStorage::add_component(const T& object)
 }
 
 
-void InternalStorage::update_component(const Wire& wire)
+template<class T>
+void InternalStorage::update_component(const T& object)
 {
-    if( contains(wire) )
+    if( contains(object) )
     {
         // Replace the array instance
-        *( _wire_index[wire.id()] ) = wire;
+        std::map<size_t, T*>& index_map = _get_index<T>();
+        *( index_map[object.id()] ) = object;
     }
     else
     {
-        add_component(wire);
-    }
-}
-
-
-void InternalStorage::update_component(const Transistor& transistor)
-{
-    if( contains(transistor) )
-    {
-        *( _transistor_index[transistor.id()] ) = transistor;
-    }
-    else
-    {
-        add_component(transistor);
+        add_component(object);
     }
 }
 

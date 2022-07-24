@@ -235,20 +235,17 @@ public:
 
 
     /**
-     * @brief Update a component in the database with the new object. If the
-     *        ID does not exist, it will be added to the database.
+     * @brief Update the internal storage object with the given object.
      * 
-     * @param wire The new wire instance
-     */
-    void update_component(const Wire &wire);
-
-    /**
-     * @brief Update a component in the database with the new object. If the
-     *        ID does not exist, it will be added to the database.
+     *        If the object already exists in storage, then the existing one
+     *        will be replaced with the provided value. Otherwise, the new
+     *        component will be added to the storage object and indexed.
      * 
-     * @param transistor The new Transistor instance
+     * @tparam T The type of object to add to the storage instance
+     * @param object The instance to be added to the storage instance
      */
-    void update_component(const Transistor &transistor);
+    template<class T>
+    void update_component(const T& object);
 
 
     /**
