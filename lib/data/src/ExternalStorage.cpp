@@ -17,6 +17,7 @@
 #include <limits>
 
 #include <circsim/common/EndianOperations.hpp>
+#include <circsim/common/IndexError.hpp>
 #include <circsim/common/ValueError.hpp>
 #include <circsim/data/ExternalStorage.hpp>
 
@@ -96,7 +97,8 @@ SqlValue ExternalStorage::_to_sql_type(const size_t value)
         else
         {
             // Do a bitwise conversion to avoid overflow issues
-            const size_t* value_ptr = &value;
+            const uint64_t value_long = static_cast<uint64_t>(value);
+            const uint64_t* value_ptr = &value_long;
             int64_t converted_value = *(reinterpret_cast<const int64_t*>(value_ptr));
 
             return SqlValue(converted_value);
@@ -107,6 +109,7 @@ SqlValue ExternalStorage::_to_sql_type(const size_t value)
 template<>
 SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t>& value)
 {
+    // NOTE: This method assumes that size_t is always the same size
     // Convert the internal vector buffer to a void pointer
     std::vector<size_t> be_values;
     be_values.reserve(value.size());
@@ -155,7 +158,7 @@ SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string>& value)
 
     // Copy the values to the byte vector object
     std::vector<uint8_t> byte_array;
-    byte_array.resize(byte_count);
+    byte_array.reserve(byte_count);
 
     for(const std::string& str : value)
     {
@@ -169,4 +172,87 @@ SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string>& value)
     }
 
     return SqlValue(byte_array);
+}
+
+
+// Implementation of ExternalStorage::_from_sql_type
+template<>
+uint8_t ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    int32_t num_value = std::get<int32_t>(value);
+    if( num_value < 0 || num_value > std::numeric_limits<uint8_t>::max() )
+    {
+        throw circsim::common::ValueError
+        (
+            "SQL Value \"" + std::to_string(num_value) + "\" is not within uint8_t bounds."
+        );
+    }
+    else
+    {
+        return static_cast<uint8_t>(num_value);
+    }
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain int32, required for conversion to uint8."
+    );
+}
+
+template<>
+size_t ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    const int64_t num_value = std::get<int64_t>(value);
+
+    if constexpr( sizeof(size_t) == sizeof(int64_t) )
+    {
+        // Direct pointer-cast to size_t so we don't lose resolution
+        size_t converted_value = *(reinterpret_cast<const size_t*>(&num_value));
+        return converted_value;
+    }
+    else if( sizeof(size_t) < sizeof(int64_t) )
+    {
+        // Need to check for overflow errors here
+        if( num_value > std::numeric_limits<uint64_t>::max() )
+        {
+            // This means that the value itself takes up more than size_t can handle
+            throw circsim::common::ValueError
+            (
+                "Provided value \"" + std::to_string(num_value) + "\" exceeds SIZE storage capacity."
+            );
+        }
+        else
+        {
+            // Do a bitwise conversion to avoid overflow issues
+            const int64_t* value_ptr = &num_value;
+            uint64_t converted_value = *(reinterpret_cast<const uint64_t*>(value_ptr));
+
+            return static_cast<size_t>(converted_value);
+        }
+    }
+    else
+    {
+        return static_cast<size_t>(num_value);
+    }
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain int64, required for conversion to size."
+    );
+}
+
+template<>
+std::vector<size_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain blob, required for conversion to vector<size>."
+    );
 }
