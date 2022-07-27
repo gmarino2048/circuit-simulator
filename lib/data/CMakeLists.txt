@@ -38,6 +38,7 @@ add_executable(circsim-data-test)
 target_sources(circsim-data-test
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/test/DatabaseObject.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/InternalStorage.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/test/objects/TransistorDatabaseObject.cpp
