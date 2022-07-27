@@ -12,10 +12,12 @@
  * 
  */
 
+// C++ Stdlib Includes
 #include <algorithm>
 #include <cstring>
 #include <limits>
 
+// Project Includes
 #include <circsim/common/EndianOperations.hpp>
 #include <circsim/common/IndexError.hpp>
 #include <circsim/common/ValueError.hpp>
@@ -35,13 +37,13 @@ template<>
 SqlValue ExternalStorage::_to_sql_type(const size_t value);
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t>& value);
+SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t> value);
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::string& value);
+SqlValue ExternalStorage::_to_sql_type(const std::string value);
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string>& value);
+SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string> value);
 
 
 // Template Initialization of ExternalStorage::_from_sql_type
@@ -110,7 +112,7 @@ SqlValue ExternalStorage::_to_sql_type(const size_t value)
 }
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t>& value)
+SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t> value)
 {
     // NOTE: This method assumes that size_t is always the same size
     // Convert the internal vector buffer to a void pointer
@@ -142,14 +144,14 @@ SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t>& value)
 }
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::string& value)
+SqlValue ExternalStorage::_to_sql_type(const std::string value)
 {
     // No need to do type conversion
     return SqlValue(value);
 }
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string>& value)
+SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string> value)
 {
     size_t byte_count = 0;
     for(const std::string& str : value)
