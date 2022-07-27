@@ -24,6 +24,9 @@
 using namespace circsim::data;
 using SqlValue = ExternalStorage::SqlValue;
 
+// File constants
+const char NULL_TERMINATOR = '\0';
+
 // Template Initialization of ExternalStorage::_to_sql_type
 template<>
 SqlValue ExternalStorage::_to_sql_type(const uint8_t value);
@@ -168,7 +171,7 @@ SqlValue ExternalStorage::_to_sql_type(const std::vector<std::string>& value)
             str.end(),
             std::back_inserter(byte_array)
         );
-        byte_array.push_back('\0');
+        byte_array.push_back(NULL_TERMINATOR);
     }
 
     return SqlValue(byte_array);
@@ -247,7 +250,40 @@ catch( const std::bad_variant_access& )
 template<>
 std::vector<size_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
 {
-    
+    const std::vector<uint8_t>& buffer = std::get<std::vector<uint8_t>>(value);
+    size_t buffer_byte_count = buffer.size();
+
+    if( buffer_byte_count % sizeof(size_t) != 0 )
+    {
+        throw circsim::common::ValueError
+        (
+            "Size of buffer (" + std::to_string(buffer_byte_count) + 
+            ") does not align with size of size_t (" + std::to_string(sizeof(size_t)) + ")."
+        );
+    }
+
+    size_t value_count = buffer_byte_count / sizeof(size_t);
+    std::vector<size_t> values(value_count);
+
+    std::memcpy
+    (
+        (void*)values.data(),
+        (void*)buffer.data(),
+        buffer_byte_count
+    );
+
+    std::transform
+    (
+        values.begin(),
+        values.end(),
+        values.begin(),
+        [](const size_t value)
+        {
+            return circsim::common::EndianOperations::big_endian_to_host(value);
+        }
+    );
+
+    return values;
 }
 catch( const std::bad_variant_access& )
 {
@@ -256,3 +292,62 @@ catch( const std::bad_variant_access& )
         "SQL type does not contain blob, required for conversion to vector<size>."
     );
 }
+
+template<>
+std::string ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    return std::get<std::string>(value);
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain string, required for conversion to string."
+    );
+}
+
+template<>
+std::vector<std::string> ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    const std::vector<uint8_t>& buffer = std::get<std::vector<uint8_t>>(value);
+    std::vector<std::string> values;
+
+    std::vector<uint8_t>::const_iterator string_start, string_end;
+    string_start = buffer.begin();
+    string_end = string_start;
+
+    while( string_end != buffer.end() )
+    {
+        if( *string_end == NULL_TERMINATOR )
+        {
+            size_t string_char_count = std::distance(string_start, string_end);
+
+            std::string value(string_char_count, NULL_TERMINATOR);
+            std::memcpy
+            (
+                (void*) value.data(),
+                reinterpret_cast<const void*>(*string_start),
+                string_char_count * sizeof(value[0])
+            );
+
+            values.push_back(value);
+
+            // Update the pointer to the beginning character of the next string
+            string_start = ++string_end;
+        }
+        else
+        {
+            string_end++;
+        }
+    }
+
+    return values;
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain blob, required for conversion to vector<string>."
+    );
+}
+
