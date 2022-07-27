@@ -328,7 +328,7 @@ std::vector<std::string> ExternalStorage::_from_sql_type(const SqlValue& value) 
             std::memcpy
             (
                 (void*) value.data(),
-                reinterpret_cast<const void*>(*string_start),
+                (void*) &(*string_start),
                 string_char_count * sizeof(value[0])
             );
 
