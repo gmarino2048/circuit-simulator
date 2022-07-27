@@ -13,12 +13,14 @@
 #include <gtest/gtest.h>
 
 // C++ Stdlib Includes
-#include<cstdint>
-#include<limits>
+#include <cstdint>
+#include <functional>
+#include <limits>
 
 // Project Includes
 #define private public
 #define protected public
+#include <circsim/common/IndexError.hpp>
 #include <circsim/data/ExternalStorage.hpp>
 #undef private
 #undef protected
@@ -102,4 +104,24 @@ TEST(ExternalStorageTypes, STRING_LIST)
 
     ASSERT_NO_THROW(decoded_value = ExternalStorage::_from_sql_type<std::vector<std::string>>(value));
     EXPECT_EQ(string_values, decoded_value);
+}
+
+
+TEST(ExternalStorageTypes, BadConversion)
+{
+    std::vector<ExternalStorage::SqlValue> values = 
+    {
+        ExternalStorage::_to_sql_type<uint8_t>(0xFE),
+        ExternalStorage::_to_sql_type<size_t>(0xCAFEBABE),
+        ExternalStorage::_to_sql_type<std::vector<size_t>>({ 0xDADA, 0xFACE }),
+        ExternalStorage::_to_sql_type<std::string>("Hello, World!"),
+        ExternalStorage::_to_sql_type<std::vector<std::string>>({"Hello", ", ", "World", "!"})
+    };
+
+    // Try UINT8 conversion on all of them
+    EXPECT_NO_THROW(ExternalStorage::_from_sql_type<uint8_t>(values[0]));
+    EXPECT_THROW(ExternalStorage::_from_sql_type<uint8_t>(values[1]), circsim::common::IndexError);
+    EXPECT_THROW(ExternalStorage::_from_sql_type<uint8_t>(values[2]), circsim::common::IndexError);
+    EXPECT_THROW(ExternalStorage::_from_sql_type<uint8_t>(values[3]), circsim::common::IndexError);
+    EXPECT_THROW(ExternalStorage::_from_sql_type<uint8_t>(values[4]), circsim::common::IndexError);
 }
