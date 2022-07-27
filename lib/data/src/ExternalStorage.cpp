@@ -329,7 +329,7 @@ std::vector<std::string> ExternalStorage::_from_sql_type(const SqlValue& value) 
             (
                 (void*) value.data(),
                 (void*) &(*string_start),
-                string_char_count * sizeof(value[0])
+                string_char_count * sizeof(std::string::value_type)
             );
 
             values.push_back(value);
