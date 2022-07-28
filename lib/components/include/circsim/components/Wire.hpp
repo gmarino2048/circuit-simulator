@@ -26,7 +26,7 @@
 // (none)
 
 // Project Includes
-// (none)
+#include <circsim/common/ValueError.hpp>
 
 namespace circsim::components
 {
@@ -91,10 +91,10 @@ private:
 
 
     /// The ID of the VCC rail
-    static ssize_t _VCC_ID;
+    static std::optional<uint64_t> _VCC_ID;
 
     /// The ID of the GND rail
-    static ssize_t _GND_ID;
+    static std::optional<uint64_t> _GND_ID;
 
 
     /// The VCC rail state function
@@ -105,7 +105,7 @@ private:
 
 
     /// The ID of the wire. This will be -1 if it has not been initialized yet
-    ssize_t _id;
+    std::optional<uint64_t> _id;
 
     /// The name of the wire. This will be empty if the wire has not been initialized
     std::string _primary_name;
@@ -200,16 +200,30 @@ public:
     /**
      * @brief Get the ID for the VCC Rail
      * 
-     * @return size_t The VCC Rail ID
+     * @return uint64_t The VCC Rail ID
      */
-    static inline size_t VCC_ID() { return _VCC_ID; }
+    static inline uint64_t VCC_ID() try
+    {
+        return _VCC_ID.value();
+    }
+    catch( const std::bad_optional_access& )
+    {
+        throw circsim::common::ValueError("VCC_ID is not currently set.");
+    }
 
     /**
      * @brief Get the ID for the GND Rail
      * 
-     * @return size_t The GND rail ID
+     * @return uint64_t The GND rail ID
      */
-    static inline size_t GND_ID() { return _GND_ID; }
+    static inline uint64_t GND_ID() try
+    {
+        return _GND_ID.value();
+    }
+    catch( const std::bad_optional_access& )
+    {
+        throw circsim::common::ValueError("GND_ID is not currently set.");
+    }
 
     /**
      * @brief Reset the class instance to its original state.
@@ -222,9 +236,16 @@ public:
      * @brief Get this wire's ID. This will be negative if the wire
      *        is not initialized.
      * 
-     * @return ssize_t The wire ID
+     * @return uint64_t The wire ID
      */
-    inline ssize_t id() const noexcept { return _id; }
+    inline uint64_t id() const try
+    { 
+        return _id.value();
+    }
+    catch( const std::bad_optional_access& )
+    {
+        throw circsim::common::ValueError("Wire object currently has no ID");
+    }
 
     /**
      * @brief Return the primary name of this wire. The primary name is

@@ -35,16 +35,16 @@ void Simulator::_create_wire_group(const size_t wire_id, WireGroup &group)
     group = WireGroup(wire_id, this->_internal_database);
 
     // Remove the wires in the group from the simulator's list for efficiency
-    std::set<size_t> group_wire_ids = group.wire_ids();
+    std::set<uint64_t> group_wire_ids = group.wire_ids();
     for
     (
-        std::list<size_t>::const_iterator it = _wire_update_list.begin();
+        std::list<uint64_t>::const_iterator it = _wire_update_list.begin();
         it != _wire_update_list.end();
         it++
     )
     {
-        size_t wire_id = *it;
-        std::set<size_t>::const_iterator group_iterator = group_wire_ids.find(wire_id);
+        uint64_t wire_id = *it;
+        std::set<uint64_t>::const_iterator group_iterator = group_wire_ids.find(wire_id);
 
         if( group_iterator != group_wire_ids.end() )
         {
@@ -77,7 +77,7 @@ void Simulator::_update_transistors(const WireGroup &group)
         }
 
         // Don't add if they're already in the update list
-        std::list<size_t>::const_iterator source_update, drain_update;
+        std::list<uint64_t>::const_iterator source_update, drain_update;
 
         source_update = std::find
         (

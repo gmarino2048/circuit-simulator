@@ -21,6 +21,7 @@
 // (none)
 
 // Project Includes
+#include <circsim/common/ValueError.hpp>
 #include <circsim/components/Wire.hpp>
 
 namespace circsim::components
@@ -55,7 +56,7 @@ public:
 private:
 
     /// The ID of this transistor
-    ssize_t _id;
+    std::optional<uint64_t> _id;
 
     /// The name of this transistor, which can be empty if it is unnamed
     std::string _name;
@@ -65,13 +66,13 @@ private:
 
 
     /// The ID of the gate wire for the transistor
-    size_t _gate_id;
+    uint64_t _gate_id;
 
     /// The ID of the source wire for the transistor
-    size_t _source_id;
+    uint64_t _source_id;
 
     /// The ID of the drain wire for the transistor
-    size_t _drain_id;
+    uint64_t _drain_id;
 
 
     /// The current state of the transistor
@@ -118,10 +119,10 @@ public:
      * @param type          The type of the transistor
      */
     Transistor(
-        const size_t id,
-        const size_t gate_id,
-        const size_t source_id,
-        const size_t drain_id,
+        const uint64_t id,
+        const uint64_t gate_id,
+        const uint64_t source_id,
+        const uint64_t drain_id,
         const Type type = Type::NMOS
     );
 
@@ -136,11 +137,11 @@ public:
      * @param type          The type of transistor
      */
     Transistor(
-        const size_t id,
+        const uint64_t id,
         const std::string &name,
-        const size_t gate_id,
-        const size_t source_id,
-        const size_t drain_id,
+        const uint64_t gate_id,
+        const uint64_t source_id,
+        const uint64_t drain_id,
         const Type type = Type::NMOS
     );
 
@@ -148,9 +149,16 @@ public:
     /**
      * @brief Return the ID of this transistor
      * 
-     * @return ssize_t The ID of the transistor
+     * @return uint64_t The ID of the transistor
      */
-    inline ssize_t id() const noexcept { return _id; }
+    inline uint64_t id() const try
+    { 
+        return _id.value();
+    }
+    catch( const std::bad_optional_access& )
+    {
+        throw circsim::common::ValueError("Transistor currently has no ID");
+    }
 
     /**
      * @brief Return the name of this transistor

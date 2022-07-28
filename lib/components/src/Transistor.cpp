@@ -63,10 +63,10 @@ Transistor::Transistor(): _id(-1),
 
 Transistor::Transistor
 (
-    const size_t id,
-    const size_t gate_id,
-    const size_t source_id,
-    const size_t drain_id,
+    const uint64_t id,
+    const uint64_t gate_id,
+    const uint64_t source_id,
+    const uint64_t drain_id,
     const Type type
 ):  _id(id),
     _gate_id(gate_id),
@@ -81,11 +81,11 @@ Transistor::Transistor
 
 Transistor::Transistor
 (
-    const size_t id,
+    const uint64_t id,
     const std::string &name,
-    const size_t gate_id,
-    const size_t source_id,
-    const size_t drain_id,
+    const uint64_t gate_id,
+    const uint64_t source_id,
+    const uint64_t drain_id,
     const Type type
 ):  _id(id),
     _name(name),
@@ -136,12 +136,25 @@ Transistor::operator std::string() const
     std::stringstream ss;
 
     ss << "Transistor \"" << this->_name << "\":\n";
-    ss << "\tId:\t\t0x" << std::uppercase << std::setfill('0') << std::setw(16)
-        << this->_id << "\n";
+
+    ss << "\tId:\t\t";
+    if( this->_id.has_value() )
+    {
+        ss << "0x" << std::uppercase << std::setfill('0') << std::setw(16)
+            << this->_id.value();
+    }
+    else
+    {
+        ss << "None";
+    }
+    ss << "\n";
+
     ss << "\tGate:\t\t" << std::uppercase << std::setfill('0') << std::setw(16)
         << this->_gate_id << "\n";
+
     ss << "\tSource:\t\t" << std::uppercase << std::setfill('0') << std::setw(16)
         << this->_source_id << "\n";
+
     ss << "\tDrain:\t\t" << std::uppercase << std::setfill('0') << std::setw(16)
         << this->_drain_id << "\n";
 

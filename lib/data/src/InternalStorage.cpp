@@ -152,7 +152,7 @@ void InternalStorage::_index_element(const T& object)
         );
     }
 
-    size_t id = static_cast<size_t>(object.id());
+    uint64_t id = object.id();
     T* object_ptr = const_cast<T*>(&object);
 
     // Ensure that ID is not duplicate

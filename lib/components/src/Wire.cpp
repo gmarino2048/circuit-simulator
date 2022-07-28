@@ -39,10 +39,10 @@ const char *WIRE_GND = "GND";
 
 
 /// Initialize to -1 until it is set
-ssize_t Wire::_VCC_ID = -1;
+std::optional<uint64_t> Wire::_VCC_ID = std::nullopt;
 
 /// Initialize to -1 until it is set
-ssize_t Wire::_GND_ID = -1;
+std::optional<uint64_t> Wire::_GND_ID = std::nullopt;
 
 
 // Initialize special wire functions
@@ -244,8 +244,19 @@ Wire::operator std::string() const
     std::stringstream ss;
 
     ss << "Wire \"" << this->_primary_name << "\":\n";
-    ss << "\tId:\t\t0x" << std::uppercase << std::setfill('0') << std::setw(16)
-        << this->_id << "\n";
+
+    ss << "\tId:\t\t"; 
+    if( this->_id.has_value() )
+    {
+        ss << "0x" << std::uppercase << std::setfill('0') << std::setw(16)
+            << this->_id.value();
+    }
+    else
+    {
+        ss << "None";
+    }
+    ss << "\n";
+
     ss << "\tState:\t\t" << state_to_string(this->_state) << "\n";
 
     return ss.str();
@@ -277,16 +288,16 @@ const char *ERR_UNK_SPECIAL_WIRE = "Unknown special wire type specified: ";
 
 void Wire::set_special_wire_id(const SpecialWireType type)
 {
-    ssize_t *ID = nullptr;
+    std::optional<uint64_t> id = std::nullopt;
 
     switch( type )
     {
         case VCC:
-            ID = &this->_VCC_ID;
+            id = this->_VCC_ID;
             break;
 
         case GND:
-            ID = &this->_GND_ID;
+            id = this->_GND_ID;
             break;
 
         default:
@@ -297,9 +308,9 @@ void Wire::set_special_wire_id(const SpecialWireType type)
             );
     }
 
-    if( *ID == -1 )
+    if( !id.has_value() )
     {
-        *ID = this->_id;
+        id = this->_id;
     }
     else
     {
