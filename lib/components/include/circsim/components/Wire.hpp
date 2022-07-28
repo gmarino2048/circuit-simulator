@@ -198,6 +198,14 @@ public:
 
 
     /**
+     * @brief Returns whether the VCC wire currently has an assigned value.
+     * 
+     * @return true There is a VCC wire in the circuit
+     * @return false There is no VCC wire in the circuit
+     */
+    static inline bool VCC_ID_EXISTS() { return _VCC_ID.has_value(); }
+
+    /**
      * @brief Get the ID for the VCC Rail
      * 
      * @return uint64_t The VCC Rail ID
@@ -210,6 +218,15 @@ public:
     {
         throw circsim::common::ValueError("VCC_ID is not currently set.");
     }
+
+
+    /**
+     * @brief Returns whether the GND wire currently has an assigned value.
+     * 
+     * @return true There is a GND wire in the circuit
+     * @return false There is no GND wire in the circuit
+     */
+    static inline bool GND_ID_EXISTS() { return _GND_ID.has_value(); }
 
     /**
      * @brief Get the ID for the GND Rail

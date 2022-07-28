@@ -288,16 +288,17 @@ const char *ERR_UNK_SPECIAL_WIRE = "Unknown special wire type specified: ";
 
 void Wire::set_special_wire_id(const SpecialWireType type)
 {
-    std::optional<uint64_t> id = std::nullopt;
+    // Use a pointer to select between the different special wire types
+    std::optional<uint64_t>* id = nullptr;
 
     switch( type )
     {
         case VCC:
-            id = this->_VCC_ID;
+            id = &this->_VCC_ID;
             break;
 
         case GND:
-            id = this->_GND_ID;
+            id = &this->_GND_ID;
             break;
 
         default:
@@ -308,9 +309,9 @@ void Wire::set_special_wire_id(const SpecialWireType type)
             );
     }
 
-    if( !id.has_value() )
+    if( !id->has_value() )
     {
-        id = this->_id;
+        *id = this->_id;
     }
     else
     {
