@@ -10,7 +10,3 @@ using namespace circsim::data;
 // Template Instantiation of ExternalStorage::_create_platform
 template<>
 void ExternalStorage::_create_table<Wire>();
-
-// Template instantiation of ExternalStorage::_store
-template<>
-void ExternalStorage::_store(const Wire& value);
