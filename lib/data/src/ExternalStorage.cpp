@@ -34,10 +34,10 @@ template<>
 SqlValue ExternalStorage::_to_sql_type(const uint8_t value);
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const size_t value);
+SqlValue ExternalStorage::_to_sql_type(const uint64_t value);
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t> value);
+SqlValue ExternalStorage::_to_sql_type(const std::vector<uint64_t> value);
 
 template<>
 SqlValue ExternalStorage::_to_sql_type(const std::string value);
@@ -51,10 +51,10 @@ template<>
 uint8_t ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
-size_t ExternalStorage::_from_sql_type(const SqlValue& value);
+uint64_t ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
-std::vector<size_t> ExternalStorage::_from_sql_type(const SqlValue& value);
+std::vector<uint64_t> ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
 std::string ExternalStorage::_from_sql_type(const SqlValue& value);
@@ -72,51 +72,20 @@ SqlValue ExternalStorage::_to_sql_type(const uint8_t value)
 }
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const size_t value)
+SqlValue ExternalStorage::_to_sql_type(const uint64_t value)
 {
-    if constexpr( sizeof(size_t) == sizeof(int64_t) )
-    {
-        // Do a bitwise conversion to avoid overflow issues
-        const size_t* value_ptr = &value;
-        int64_t converted_value = *(reinterpret_cast<const int64_t*>(value_ptr));
+    // Do a bitwise conversion to avoid overflow issues
+    const uint64_t* value_ptr = &value;
+    int64_t converted_value = *(reinterpret_cast<const int64_t*>(value_ptr));
 
-        return SqlValue(converted_value);
-    }
-    else if( sizeof(size_t) < sizeof(int64_t) )
-    {
-        // We don't need to worry about overflow in this case
-        return SqlValue(static_cast<int64_t>(value));
-    }
-    else
-    {
-        // size_t exceeds 64 bits
-        // This should theoretically never happen on current systems
-        if( value > std::numeric_limits<uint64_t>::max() )
-        {
-            // This means that the value itself takes up more than 8 bytes
-            throw circsim::common::ValueError
-            (
-                "Provided value \"" + std::to_string(value) + "\" exceeds INT64 storage capacity."
-            );
-        }
-        else
-        {
-            // Do a bitwise conversion to avoid overflow issues
-            const uint64_t value_long = static_cast<uint64_t>(value);
-            const uint64_t* value_ptr = &value_long;
-            int64_t converted_value = *(reinterpret_cast<const int64_t*>(value_ptr));
-
-            return SqlValue(converted_value);
-        }
-    }
+    return SqlValue(converted_value);
 }
 
 template<>
-SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t> value)
+SqlValue ExternalStorage::_to_sql_type(const std::vector<uint64_t> value)
 {
-    // NOTE: This method assumes that size_t is always the same size
     // Convert the internal vector buffer to a void pointer
-    std::vector<size_t> be_values;
+    std::vector<uint64_t> be_values;
     be_values.reserve(value.size());
 
     std::transform
@@ -124,13 +93,13 @@ SqlValue ExternalStorage::_to_sql_type(const std::vector<size_t> value)
         value.begin(),
         value.end(),
         std::back_inserter(be_values),
-        [](size_t number_value)
+        []( const uint64_t number_value )
         {
             return circsim::common::EndianOperations::host_to_big_endian(number_value);
         }
     );
 
-    size_t byte_count = sizeof(size_t) * be_values.size();
+    uint64_t byte_count = sizeof(uint64_t) * be_values.size();
     std::vector<uint8_t> bytes_vector(byte_count);
 
     std::memcpy
@@ -206,40 +175,13 @@ catch( const std::bad_variant_access& )
 }
 
 template<>
-size_t ExternalStorage::_from_sql_type(const SqlValue& value) try
+uint64_t ExternalStorage::_from_sql_type(const SqlValue& value) try
 {
     const int64_t num_value = std::get<int64_t>(value);
 
-    if constexpr( sizeof(size_t) == sizeof(int64_t) )
-    {
-        // Direct pointer-cast to size_t so we don't lose resolution
-        size_t converted_value = *(reinterpret_cast<const size_t*>(&num_value));
-        return converted_value;
-    }
-    else if( sizeof(size_t) < sizeof(int64_t) )
-    {
-        // Need to check for overflow errors here
-        if( num_value > std::numeric_limits<uint64_t>::max() )
-        {
-            // This means that the value itself takes up more than size_t can handle
-            throw circsim::common::ValueError
-            (
-                "Provided value \"" + std::to_string(num_value) + "\" exceeds SIZE storage capacity."
-            );
-        }
-        else
-        {
-            // Do a bitwise conversion to avoid overflow issues
-            const int64_t* value_ptr = &num_value;
-            uint64_t converted_value = *(reinterpret_cast<const uint64_t*>(value_ptr));
-
-            return static_cast<size_t>(converted_value);
-        }
-    }
-    else
-    {
-        return static_cast<size_t>(num_value);
-    }
+    // Direct pointer-cast to uint64_t so we don't lose resolution
+    uint64_t converted_value = *(reinterpret_cast<const uint64_t*>(&num_value));
+    return converted_value;
 }
 catch( const std::bad_variant_access& )
 {
@@ -250,22 +192,22 @@ catch( const std::bad_variant_access& )
 }
 
 template<>
-std::vector<size_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
+std::vector<uint64_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
 {
     const std::vector<uint8_t>& buffer = std::get<std::vector<uint8_t>>(value);
-    size_t buffer_byte_count = buffer.size();
+    uint64_t buffer_byte_count = buffer.size();
 
-    if( buffer_byte_count % sizeof(size_t) != 0 )
+    if( buffer_byte_count % sizeof(uint64_t) != 0 )
     {
         throw circsim::common::ValueError
         (
             "Size of buffer (" + std::to_string(buffer_byte_count) + 
-            ") does not align with size of size_t (" + std::to_string(sizeof(size_t)) + ")."
+            ") does not align with size of uint64_t (" + std::to_string(sizeof(uint64_t)) + ")."
         );
     }
 
-    size_t value_count = buffer_byte_count / sizeof(size_t);
-    std::vector<size_t> values(value_count);
+    size_t value_count = buffer_byte_count / sizeof(uint64_t);
+    std::vector<uint64_t> values(value_count);
 
     std::memcpy
     (
@@ -279,7 +221,7 @@ std::vector<size_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
         values.begin(),
         values.end(),
         values.begin(),
-        [](const size_t value)
+        []( const uint64_t value )
         {
             return circsim::common::EndianOperations::big_endian_to_host(value);
         }
