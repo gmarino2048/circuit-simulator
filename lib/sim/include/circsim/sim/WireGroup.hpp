@@ -54,7 +54,7 @@ private:
     Wire::State _state;
 
     /// The set of all wires in this group. Wires must not be duplicated.
-    std::set<size_t> _wires;
+    std::set<uint64_t> _wires;
 
 
     /**
@@ -131,7 +131,7 @@ public:
      * 
      * @return std::set<size_t> The IDs of the wire in the set.
      */
-    inline std::set<size_t> wire_ids() const { return _wires; }
+    inline std::set<uint64_t> wire_ids() const { return _wires; }
 
 
     /**

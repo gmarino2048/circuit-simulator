@@ -41,7 +41,7 @@ TEST(ExternalStorageTypes, UINT8)
 }
 
 
-const std::vector<size_t> size_values =
+const std::vector<uint64_t> size_values =
 {
     0x00,
     0xDADA,
@@ -50,29 +50,27 @@ const std::vector<size_t> size_values =
     0xBABE,
     0xDADAFACE,
     0xCAFEBABE,
-    std::numeric_limits<size_t>::max()
+    std::numeric_limits<uint64_t>::max()
 };
 
-TEST(ExternalStorageTypes, SIZE)
+TEST(ExternalStorageTypes, UINT64)
 {
-    
-
-    for( const size_t number : size_values )
+    for( const uint64_t number : size_values )
     {
-        size_t decoded_value;
+        uint64_t decoded_value;
         ExternalStorage::SqlValue value = ExternalStorage::_to_sql_type(number);
 
-        ASSERT_NO_THROW(decoded_value = ExternalStorage::_from_sql_type<size_t>(value));
+        ASSERT_NO_THROW(decoded_value = ExternalStorage::_from_sql_type<uint64_t>(value));
         EXPECT_EQ(number, decoded_value);
     }
 }
 
-TEST(ExternalStorageTypes, SIZE_LIST)
+TEST(ExternalStorageTypes, UINT64_LIST)
 {
-    std::vector<size_t> decoded_value;
+    std::vector<uint64_t> decoded_value;
     ExternalStorage::SqlValue value = ExternalStorage::_to_sql_type(size_values);
 
-    ASSERT_NO_THROW(decoded_value = ExternalStorage::_from_sql_type<std::vector<size_t>>(value));
+    ASSERT_NO_THROW(decoded_value = ExternalStorage::_from_sql_type<std::vector<uint64_t>>(value));
     EXPECT_EQ(size_values, decoded_value);
 }
 
@@ -112,8 +110,8 @@ TEST(ExternalStorageTypes, BadConversion)
     std::vector<ExternalStorage::SqlValue> values = 
     {
         ExternalStorage::_to_sql_type<uint8_t>(0xFE),
-        ExternalStorage::_to_sql_type<size_t>(0xCAFEBABE),
-        ExternalStorage::_to_sql_type<std::vector<size_t>>({ 0xDADA, 0xFACE }),
+        ExternalStorage::_to_sql_type<uint64_t>(0xCAFEBABE),
+        ExternalStorage::_to_sql_type<std::vector<uint64_t>>({ 0xDADA, 0xFACE }),
         ExternalStorage::_to_sql_type<std::string>("Hello, World!"),
         ExternalStorage::_to_sql_type<std::vector<std::string>>({"Hello", ", ", "World", "!"})
     };

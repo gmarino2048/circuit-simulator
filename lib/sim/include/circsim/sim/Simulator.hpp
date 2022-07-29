@@ -51,7 +51,7 @@ private:
     size_t _iteration_limit;
 
     /// The list of wires which need to be updated
-    std::list<size_t> _wire_update_list;
+    std::list<uint64_t> _wire_update_list;
 
     /// The internal component database for the simulator
     data::InternalStorage _internal_database;

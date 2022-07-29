@@ -100,14 +100,14 @@ void WireGroup::_build_wire_group(const size_t initial, const Database& database
 void WireGroup::_recalculate_group_state(const Database& database)
 {
     // Check for GND wire
-    if( _wires.find(Wire::GND_ID()) != _wires.end() )
+    if( Wire::GND_ID_EXISTS() && _wires.find(Wire::GND_ID()) != _wires.end() )
     {
         _state = Wire::GROUNDED;
         return;
     }
 
     // Check for VCC wire
-    if( _wires.find(Wire::VCC_ID()) != _wires.end() )
+    if( Wire::VCC_ID_EXISTS() && _wires.find(Wire::VCC_ID()) != _wires.end() )
     {
         _state = Wire::HIGH;
         return;
@@ -163,7 +163,10 @@ void WireGroup::_update_wire_states(const Database& database) const
     {
         Wire* wire = database.get<Wire>(wire_id);
 
-        if( (wire->id() == Wire::VCC_ID()) || (wire->id() == Wire::GND_ID()) )
+        bool is_vcc = Wire::VCC_ID_EXISTS() ? wire->id() == Wire::VCC_ID() : false;
+        bool is_gnd = Wire::GND_ID_EXISTS() ? wire->id() == Wire::GND_ID() : false;
+
+        if( is_vcc || is_gnd )
         {
             continue;
         }
