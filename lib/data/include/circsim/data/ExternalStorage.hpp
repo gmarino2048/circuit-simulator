@@ -83,6 +83,42 @@ private:
     template<class T>
     static T _from_sql_type(const SqlValue& value);
 
+
+    /**
+     * @brief Create a sqlite3 statement and bind all the given
+     *        values to it. Return the handle for the statement
+     *        once it's ready to be used.
+     * 
+     * @param stmt The statement to be compiled
+     * @param values The values to bind to the statement
+     * @return sqlite3_stmt* The handle for the compiled statement
+     */
+    sqlite3_stmt* _bind_values
+    (
+        const std::string& query,
+        const std::vector<SqlValue>& values
+    );
+
+    /**
+     * @brief Get the object name for working with database tables.
+     * 
+     * @tparam T The type of object
+     * @return std::string The table name of the object
+     */
+    template<class T>
+    static const std::string _table_name();
+
+    /**
+     * @brief Check to see if the table exists in the database, otherwise
+     *        create it.
+     * 
+     * @tparam T The type of object to be stored in the table
+     * @return true The database contains the requested table
+     * @return false The database does not contain the requested table
+     */
+    template<class T>
+    bool _table_exists();
+
     /**
      * @brief Creates a table to contain the specified object type
      * 
