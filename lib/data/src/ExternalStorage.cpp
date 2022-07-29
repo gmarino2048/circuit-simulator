@@ -321,20 +321,21 @@ sqlite3_stmt* ExternalStorage::_bind_values
 
     for( int i = 0; i < values.size() && i < std::numeric_limits<int>::max(); i++ )
     {
+        int idx = i+1;
         int result = SQLITE_OK;
         SqlValue value = values[i];
 
         if( std::holds_alternative<int32_t>(value) )
         {
-            result = sqlite3_bind_int(statement, i, std::get<int32_t>(value));
+            result = sqlite3_bind_int(statement, idx, std::get<int32_t>(value));
         }
         else if( std::holds_alternative<int64_t>(value) )
         {
-            result = sqlite3_bind_int64(statement, i, std::get<int64_t>(value));
+            result = sqlite3_bind_int64(statement, idx, std::get<int64_t>(value));
         }
         else if( std::holds_alternative<double>(value) )
         {
-            result = sqlite3_bind_double(statement, i, std::get<double>(value));
+            result = sqlite3_bind_double(statement, idx, std::get<double>(value));
         }
         else if( std::holds_alternative<std::string>(value) )
         {
@@ -342,7 +343,7 @@ sqlite3_stmt* ExternalStorage::_bind_values
             result = sqlite3_bind_text
             (
                 statement,
-                i,
+                idx,
                 value_str.c_str(),
                 value_str.size() * sizeof(std::string::value_type),
                 SQLITE_TRANSIENT
@@ -354,7 +355,7 @@ sqlite3_stmt* ExternalStorage::_bind_values
             result = sqlite3_bind_blob
             (
                 statement,
-                i,
+                idx,
                 reinterpret_cast<const void*>(value_data.data()),
                 value_data.size(),
                 SQLITE_TRANSIENT
@@ -362,7 +363,7 @@ sqlite3_stmt* ExternalStorage::_bind_values
         }
         else
         {
-            result = sqlite3_bind_null(statement, i);
+            result = sqlite3_bind_null(statement, idx);
         }
 
         if( result != SQLITE_OK )
