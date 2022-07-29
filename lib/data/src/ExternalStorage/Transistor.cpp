@@ -42,9 +42,36 @@ void ExternalStorage::_create_table<Transistor>()
     int result = sqlite3_step(statement);
     if( result != SQLITE_DONE )
     {
-        throw circsim::common::StateError(sqlite3_errstr(result));
+        throw circsim::common::StateError(sqlite3_errmsg(_db_connection_obj));
     }
 
     sqlite3_finalize(statement);
 }
 
+
+template<>
+bool ExternalStorage::contains<Transistor>(const Transistor& object) const
+{
+    uint64_t id = object.id();
+
+    const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
+    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type(id) });
+
+    bool contains = false;
+    int result = sqlite3_step(statement);
+
+    if( result == SQLITE_ROW )
+    {
+        contains = true;
+    }
+    else if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    sqlite3_finalize(statement);
+    return contains;
+}

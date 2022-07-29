@@ -307,12 +307,12 @@ sqlite3_stmt* ExternalStorage::_bind_values
 (
     const std::string& query,
     const std::vector<SqlValue>& values
-)
+) const
 {
     sqlite3_stmt* statement = nullptr;
     sqlite3_prepare_v2
     (
-        this->_db_connection_obj,
+        const_cast<sqlite3*>(_db_connection_obj),
         query.c_str(),
         query.size(),
         &statement,

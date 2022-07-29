@@ -97,7 +97,7 @@ private:
     (
         const std::string& query,
         const std::vector<SqlValue>& values
-    );
+    ) const;
 
     /**
      * @brief Get the object name for working with database tables.
