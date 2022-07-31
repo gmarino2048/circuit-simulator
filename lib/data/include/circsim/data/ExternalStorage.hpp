@@ -127,6 +127,29 @@ private:
     template<class T>
     void _create_table();
 
+
+    /**
+     * @brief Encode the provided object as a sequence of SQL
+     *        column values.
+     * 
+     * @tparam T The type of the object to incode
+     * @param object The object instance to encode
+     * @return std::vector<SqlValue> The sequence of encoded values
+     */
+    template<class T>
+    std::vector<SqlValue> _encode(const T& object) const;
+
+    /**
+     * @brief Turn a retrieved set of values back into an object
+     *        instance.
+     * 
+     * @tparam T The type of object to convert back to
+     * @param values The set of SQL column values
+     * @return T The object instance converted from the raw SQL values
+     */
+    template<class T>
+    T _decode(const std::vector<SqlValue>& values) const;
+
 public:
 
     /**
@@ -223,6 +246,7 @@ public:
     template<class T>
     void update_component(const T& object);
 
+
     /**
      * @brief Fetch an object from the database.
      * 
@@ -231,6 +255,15 @@ public:
      */
     template<class T>
     T get(const size_t id) const;
+
+    /**
+     * @brief Get all objects of the specified type
+     * 
+     * @tparam T The type of object to fetch
+     * @return std::vector<T> A list of all objects stored in the database
+     */
+    template<class T>
+    std::vector<T> get_all() const;
 };
 
 }
