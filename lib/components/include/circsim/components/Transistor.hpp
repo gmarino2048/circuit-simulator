@@ -47,7 +47,7 @@ public:
     };
 
     /// The current state of this transistor
-    enum State
+    enum State : uint8_t
     {
         ON,         //!< The transistor is currently a closed circuit
         OFF         //!< The transistor is currently an open circuit

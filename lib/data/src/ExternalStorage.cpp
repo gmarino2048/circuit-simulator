@@ -408,3 +408,27 @@ bool ExternalStorage::_table_exists()
     return table_count > 0;
 }
 
+
+template<class T>
+size_t ExternalStorage::count() const
+{
+    std::string query = "SELECT COUNT(*) FROM " + _table_name<T>() + ";";
+
+    sqlite3_stmt* statement = const_cast<const ExternalStorage*>(this)->_bind_values(query, {});
+
+    size_t count = 0;
+    int result = sqlite3_step(statement);
+    if( result == SQLITE_ROW )
+    {
+        count = static_cast<size_t>(sqlite3_column_int64(statement, 0));
+    }
+    else
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return count;
+}
