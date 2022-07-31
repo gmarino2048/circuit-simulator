@@ -409,6 +409,9 @@ bool ExternalStorage::_table_exists()
 }
 
 
+// Explicitly initialize count for transistor
+template size_t ExternalStorage::count<circsim::components::Transistor>() const;
+
 template<class T>
 size_t ExternalStorage::count() const
 {
