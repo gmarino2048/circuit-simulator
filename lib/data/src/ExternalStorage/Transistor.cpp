@@ -25,7 +25,7 @@ void ExternalStorage::_create_table<Transistor>()
 {
     const std::string query = (std::string)
         "CREATE TABLE IF NOT EXISTS " + _table_name<Transistor>() + " (" +
-            "id INTEGER PRIMARY_KEY," +
+            "id INTEGER PRIMARY KEY," +
             "name TEXT NOT NULL," +
             "type INTEGER NOT NULL," +
             "gate INTEGER NOT NULL," +

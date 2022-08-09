@@ -85,3 +85,14 @@ TEST_F(TransistorStorage, GetAll)
 
     EXPECT_EQ(_transistors, result);
 }
+
+
+TEST_F(TransistorStorage, DoubleInsertion)
+{
+    Transistor t1 = _transistors[0];
+
+    ASSERT_NO_THROW(_storage->add_component(t1));
+    EXPECT_THROW(_storage->add_component(t1), StateError);
+
+    auto ts = _storage->get_all<Transistor>();
+}
