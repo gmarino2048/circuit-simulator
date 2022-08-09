@@ -310,7 +310,7 @@ sqlite3_stmt* ExternalStorage::_bind_values
 ) const
 {
     sqlite3_stmt* statement = nullptr;
-    sqlite3_prepare_v2
+    int result = sqlite3_prepare_v2
     (
         const_cast<sqlite3*>(_db_connection_obj),
         query.c_str(),
@@ -318,6 +318,14 @@ sqlite3_stmt* ExternalStorage::_bind_values
         &statement,
         nullptr
     );
+
+    if( result != SQLITE_OK )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
 
     for( int i = 0; i < values.size() && i < std::numeric_limits<int>::max(); i++ )
     {
@@ -409,6 +417,12 @@ bool ExternalStorage::_table_exists()
 }
 
 
+void ExternalStorage::_create_tables()
+{
+    _create_table<circsim::components::Transistor>();
+}
+
+
 // Handle constructor and destructor
 ExternalStorage::ExternalStorage()
 {
@@ -433,6 +447,8 @@ ExternalStorage::ExternalStorage()
             sqlite3_errmsg(_db_connection_obj)
         );
     }
+
+    _create_tables();
 }
 
 
@@ -457,6 +473,8 @@ ExternalStorage::ExternalStorage(const std::filesystem::path& db_path)
             sqlite3_errmsg(_db_connection_obj)
         );
     }
+
+    _create_tables();
 }
 
 

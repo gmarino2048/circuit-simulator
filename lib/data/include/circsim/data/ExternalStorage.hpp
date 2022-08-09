@@ -127,6 +127,13 @@ private:
     template<class T>
     void _create_table();
 
+    /**
+     * @brief Creates all the tables of the database if they don't already
+     *        exist.
+     * 
+     */
+    void _create_tables();
+
 
     /**
      * @brief Encode the provided object as a sequence of SQL
