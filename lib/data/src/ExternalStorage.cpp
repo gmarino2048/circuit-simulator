@@ -17,10 +17,17 @@
 #include <cstring>
 #include <limits>
 
+// Library includes
+#include <sqlite3.h>
+
 // Project Includes
 #include <circsim/common/EndianOperations.hpp>
 #include <circsim/common/IndexError.hpp>
+#include <circsim/common/StateError.hpp>
 #include <circsim/common/ValueError.hpp>
+
+#include <circsim/components/Transistor.hpp>
+
 #include <circsim/data/ExternalStorage.hpp>
 
 using namespace circsim::data;
@@ -295,3 +302,136 @@ catch( const std::bad_variant_access& )
     );
 }
 
+
+sqlite3_stmt* ExternalStorage::_bind_values
+(
+    const std::string& query,
+    const std::vector<SqlValue>& values
+) const
+{
+    sqlite3_stmt* statement = nullptr;
+    sqlite3_prepare_v2
+    (
+        const_cast<sqlite3*>(_db_connection_obj),
+        query.c_str(),
+        query.size(),
+        &statement,
+        nullptr
+    );
+
+    for( int i = 0; i < values.size() && i < std::numeric_limits<int>::max(); i++ )
+    {
+        int idx = i+1;
+        int result = SQLITE_OK;
+        SqlValue value = values[i];
+
+        if( std::holds_alternative<int32_t>(value) )
+        {
+            result = sqlite3_bind_int(statement, idx, std::get<int32_t>(value));
+        }
+        else if( std::holds_alternative<int64_t>(value) )
+        {
+            result = sqlite3_bind_int64(statement, idx, std::get<int64_t>(value));
+        }
+        else if( std::holds_alternative<double>(value) )
+        {
+            result = sqlite3_bind_double(statement, idx, std::get<double>(value));
+        }
+        else if( std::holds_alternative<std::string>(value) )
+        {
+            std::string value_str = std::get<std::string>(value);
+            result = sqlite3_bind_text
+            (
+                statement,
+                idx,
+                value_str.c_str(),
+                value_str.size() * sizeof(std::string::value_type),
+                SQLITE_TRANSIENT
+            );
+        }
+        else if( std::holds_alternative<std::vector<uint8_t>>(value) )
+        {
+            std::vector<uint8_t> value_data = std::get<std::vector<uint8_t>>(value);
+            result = sqlite3_bind_blob
+            (
+                statement,
+                idx,
+                reinterpret_cast<const void*>(value_data.data()),
+                value_data.size(),
+                SQLITE_TRANSIENT
+            );
+        }
+        else
+        {
+            result = sqlite3_bind_null(statement, idx);
+        }
+
+        if( result != SQLITE_OK )
+        {
+            throw circsim::common::StateError(sqlite3_errstr(result));
+        }
+    }
+
+    return statement;
+}
+
+
+// Explicit instantiation of objects
+template bool ExternalStorage::_table_exists<circsim::components::Transistor>();
+
+template<class T>
+bool ExternalStorage::_table_exists()
+{
+    // Compile the query
+    const std::string query =
+        "SELECT count(type) FROM sqlite_master WHERE type='table' AND name=?;";
+
+    sqlite3_stmt* statement = _bind_values(query, { _table_name<T>() });
+
+    // Run the query
+    int table_count = 0;
+    for( int result = sqlite3_step(statement); result != SQLITE_DONE; result = sqlite3_step(statement) )
+    {
+        if( result == SQLITE_ROW )
+        {
+            table_count = sqlite3_column_int(statement, 0);
+            break;
+        }
+        else
+        {
+            sqlite3_finalize(statement);
+            throw circsim::common::StateError(sqlite3_errstr(result));
+        }
+    }
+
+    sqlite3_finalize(statement);
+    return table_count > 0;
+}
+
+
+// Explicitly initialize count for transistor
+template size_t ExternalStorage::count<circsim::components::Transistor>() const;
+
+template<class T>
+size_t ExternalStorage::count() const
+{
+    std::string query = "SELECT COUNT(*) FROM " + _table_name<T>() + ";";
+
+    sqlite3_stmt* statement = const_cast<const ExternalStorage*>(this)->_bind_values(query, {});
+
+    size_t count = 0;
+    int result = sqlite3_step(statement);
+    if( result == SQLITE_ROW )
+    {
+        count = static_cast<size_t>(sqlite3_column_int64(statement, 0));
+    }
+    else
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return count;
+}

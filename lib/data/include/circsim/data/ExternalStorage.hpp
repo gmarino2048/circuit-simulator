@@ -83,6 +83,42 @@ private:
     template<class T>
     static T _from_sql_type(const SqlValue& value);
 
+
+    /**
+     * @brief Create a sqlite3 statement and bind all the given
+     *        values to it. Return the handle for the statement
+     *        once it's ready to be used.
+     * 
+     * @param query The statement to be compiled
+     * @param values The values to bind to the statement
+     * @return sqlite3_stmt* The handle for the compiled statement
+     */
+    sqlite3_stmt* _bind_values
+    (
+        const std::string& query,
+        const std::vector<SqlValue>& values
+    ) const;
+
+    /**
+     * @brief Get the object name for working with database tables.
+     * 
+     * @tparam T The type of object
+     * @return std::string The table name of the object
+     */
+    template<class T>
+    static const std::string _table_name();
+
+    /**
+     * @brief Check to see if the table exists in the database, otherwise
+     *        create it.
+     * 
+     * @tparam T The type of object to be stored in the table
+     * @return true The database contains the requested table
+     * @return false The database does not contain the requested table
+     */
+    template<class T>
+    bool _table_exists();
+
     /**
      * @brief Creates a table to contain the specified object type
      * 
@@ -90,6 +126,29 @@ private:
      */
     template<class T>
     void _create_table();
+
+
+    /**
+     * @brief Encode the provided object as a sequence of SQL
+     *        column values.
+     * 
+     * @tparam T The type of the object to incode
+     * @param object The object instance to encode
+     * @return std::vector<SqlValue> The sequence of encoded values
+     */
+    template<class T>
+    std::vector<SqlValue> _encode(const T& object) const;
+
+    /**
+     * @brief Turn a retrieved set of values back into an object
+     *        instance.
+     * 
+     * @tparam T The type of object to convert back to
+     * @param values The set of SQL column values
+     * @return T The object instance converted from the raw SQL values
+     */
+    template<class T>
+    T _decode(const std::vector<SqlValue>& values) const;
 
 public:
 
@@ -187,6 +246,7 @@ public:
     template<class T>
     void update_component(const T& object);
 
+
     /**
      * @brief Fetch an object from the database.
      * 
@@ -195,6 +255,15 @@ public:
      */
     template<class T>
     T get(const size_t id) const;
+
+    /**
+     * @brief Get all objects of the specified type
+     * 
+     * @tparam T The type of object to fetch
+     * @return std::vector<T> A list of all objects stored in the database
+     */
+    template<class T>
+    std::vector<T> get_all() const;
 };
 
 }
