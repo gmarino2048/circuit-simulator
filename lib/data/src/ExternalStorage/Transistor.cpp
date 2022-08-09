@@ -172,3 +172,32 @@ bool ExternalStorage::contains_current<Transistor>(const Transistor& object) con
     sqlite3_finalize(statement);
     return contains_current;
 }
+
+
+template<>
+void ExternalStorage::add_component(const Transistor& object)
+{
+    if( contains(object) )
+    {
+        throw circsim::common::StateError
+        (
+            "Object already exists in database and cannot be added"
+        );
+    }
+
+    std::string query = "INSERT INTO " + _table_name<Transistor>() +" VALUES (?,?,?,?,?,?);";
+
+    sqlite3_stmt* statement = _bind_values(query, _encode(object));
+    int result = sqlite3_step(statement);
+
+    if( result != SQLITE_DONE )
+    {
+        sqlite3_finalize(statement);
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    sqlite3_finalize(statement);
+}
