@@ -276,3 +276,45 @@ Transistor ExternalStorage::get(const size_t id) const
     sqlite3_finalize(statement);
     return value;
 }
+
+
+template<>
+std::vector<Transistor> ExternalStorage::get_all() const
+{
+    size_t item_count = count<Transistor>();
+
+    std::vector<Transistor> transistor_list;
+    transistor_list.reserve(item_count);
+
+    const std::string query = "SELECT * FROM " + _table_name<Transistor>() + ";";
+    sqlite3_stmt* statement = _bind_values(query, {});
+
+    int result = 0;
+    for(result = sqlite3_step(statement); result == SQLITE_ROW; result = sqlite3_step(statement))
+    {
+        std::vector<SqlValue> incoming =
+        {
+            (int64_t) sqlite3_column_int64(statement, 0),       // id
+            (const char *) sqlite3_column_text(statement, 1),   // name
+            (int32_t) sqlite3_column_int(statement, 2),         // type
+            (int64_t) sqlite3_column_int64(statement, 3),       // gate
+            (int64_t) sqlite3_column_int64(statement, 4),       // source
+            (int64_t) sqlite3_column_int64(statement, 5)        // drain
+        };
+
+        Transistor value = _decode<Transistor>(incoming);
+        transistor_list.push_back(value);
+    }
+
+    sqlite3_finalize(statement);
+
+    if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return transistor_list;
+}
