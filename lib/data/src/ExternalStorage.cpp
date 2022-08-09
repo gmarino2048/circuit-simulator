@@ -409,6 +409,66 @@ bool ExternalStorage::_table_exists()
 }
 
 
+// Handle constructor and destructor
+ExternalStorage::ExternalStorage()
+{
+    int flags =
+        SQLITE_OPEN_READWRITE |
+        SQLITE_OPEN_MEMORY |
+        SQLITE_OPEN_NOMUTEX |
+        SQLITE_OPEN_PRIVATECACHE;
+
+    int result = sqlite3_open_v2
+    (
+        ":memory:", // This is overkill, but it doesn't matter
+        &_db_connection_obj,
+        flags,
+        NULL        // Use default VFS
+    );
+
+    if( result != SQLITE_OK )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
+}
+
+
+ExternalStorage::ExternalStorage(const std::filesystem::path& db_path)
+{
+    int flags =
+        SQLITE_OPEN_READWRITE |
+        SQLITE_OPEN_NOMUTEX;
+
+    int result = sqlite3_open_v2
+    (
+        db_path.c_str(),
+        &_db_connection_obj,
+        flags,
+        NULL        // Use default VFS
+    );
+
+    if( result != SQLITE_OK )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
+}
+
+
+ExternalStorage::~ExternalStorage()
+{
+    if( _db_connection_obj != nullptr )
+    {
+        sqlite3_close_v2(_db_connection_obj);
+    }
+}
+
+
 // Explicitly initialize count for transistor
 template size_t ExternalStorage::count<circsim::components::Transistor>() const;
 
