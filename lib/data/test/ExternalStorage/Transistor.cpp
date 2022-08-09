@@ -37,7 +37,8 @@ protected:
 
         _transistors =
         {
-            Transistor(0xDADA, "test", 0xFACE, 0xCAFE, 0xBABE)
+            Transistor(13, 0xCAFE, 0xBABE, 0xFACE, Transistor::Type::PMOS),
+            Transistor(45, "test", 0xFACE, 0xCAFE, 0xBABE, Transistor::Type::NMOS)
         };
     }
 
@@ -49,7 +50,19 @@ protected:
 };
 
 
-TEST_F(TransistorStorage, FidelityTest)
+TEST_F(TransistorStorage, Fidelity)
+{
+    Transistor t1 = _transistors[1];
+    Transistor t2;
+
+    ASSERT_NO_THROW(_storage->add_component(t1));
+    ASSERT_NO_THROW(t2 = _storage->get<Transistor>(t1.id()));
+
+    EXPECT_EQ(t1, t2);
+}
+
+
+TEST_F(TransistorStorage, FidelityNoName)
 {
     Transistor t1 = _transistors[0];
     Transistor t2;
@@ -58,4 +71,17 @@ TEST_F(TransistorStorage, FidelityTest)
     ASSERT_NO_THROW(t2 = _storage->get<Transistor>(t1.id()));
 
     EXPECT_EQ(t1, t2);
+}
+
+TEST_F(TransistorStorage, GetAll)
+{
+    for( const Transistor& t : _transistors )
+    {
+        ASSERT_NO_THROW(_storage->add_component(t));
+    }
+
+    std::vector<Transistor> result;
+    ASSERT_NO_THROW(result = _storage->get_all<Transistor>());
+
+    EXPECT_EQ(_transistors, result);
 }
