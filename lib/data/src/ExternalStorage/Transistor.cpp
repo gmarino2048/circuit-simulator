@@ -220,3 +220,59 @@ void ExternalStorage::update_component(const Transistor& object)
 
     sqlite3_finalize(statement);
 }
+
+
+template<>
+Transistor ExternalStorage::get(const size_t id) const
+{
+    Transistor value;
+    const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
+
+    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
+    int result = sqlite3_step(statement);
+
+    if( result == SQLITE_ROW )
+    {
+        std::vector<SqlValue> incoming =
+        {
+            (int64_t) sqlite3_column_int64(statement, 0),       // id
+            (const char *) sqlite3_column_text(statement, 1),   // name
+            (int32_t) sqlite3_column_int(statement, 2),         // type
+            (int64_t) sqlite3_column_int64(statement, 3),       // gate
+            (int64_t) sqlite3_column_int64(statement, 4),       // source
+            (int64_t) sqlite3_column_int64(statement, 5)        // drain
+        };
+
+        value = _decode<Transistor>(incoming);
+    }
+    else
+    {
+        throw circsim::common::StateError
+        (
+            "No value found with ID " + std::to_string(id)
+        );
+    }
+
+    result = sqlite3_step(statement);
+    if( result != SQLITE_DONE )
+    {
+        if(result == SQLITE_ROW )
+        {
+            throw circsim::common::StateError
+            (
+                "Multiple values found with same ID. This should not be possible."
+            );
+        }
+        else
+        {
+            sqlite3_finalize(statement);
+            throw circsim::common::StateError
+            (
+                sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+            );
+        }
+    }
+
+    sqlite3_finalize(statement);
+    return value;
+}
