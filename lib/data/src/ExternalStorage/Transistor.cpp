@@ -67,7 +67,6 @@ template<>
 Transistor ExternalStorage::_decode(const std::vector<SqlValue>& values) const
 {
     using TransType = circsim::components::Transistor::Type;
-    using TransState = circsim::components::Transistor::State;
 
     if( values.size() != TRANSISTOR_FIELD_COUNT )
     {
@@ -88,8 +87,6 @@ Transistor ExternalStorage::_decode(const std::vector<SqlValue>& values) const
     uint64_t gate = _from_sql_type<uint64_t>(values[3]);
     uint64_t source = _from_sql_type<uint64_t>(values[4]);
     uint64_t drain = _from_sql_type<uint64_t>(values[5]);
-
-    TransState state = static_cast<TransState>(_from_sql_type<uint8_t>(values[6]));
 
     circsim::components::Transistor transistor
     (
