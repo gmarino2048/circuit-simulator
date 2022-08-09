@@ -127,6 +127,13 @@ private:
     template<class T>
     void _create_table();
 
+    /**
+     * @brief Creates all the tables of the database if they don't already
+     *        exist.
+     * 
+     */
+    void _create_tables();
+
 
     /**
      * @brief Encode the provided object as a sequence of SQL
@@ -155,6 +162,10 @@ public:
     /**
      * @brief Default constructor
      * 
+     * This will automatically create the database in-memory as opposed to
+     * on the disk. This method is not persistent, but is extremely useful
+     * when testing different commands in automation.
+     * 
      */
     ExternalStorage();
 
@@ -162,6 +173,9 @@ public:
      * @brief Constructs a new database handle using the file at
      *        the provided path. If the file does not exist, it
      *        will be created.
+     * 
+     * This method will create the database on disk. If this behavior is
+     * not desired, then you will need to use the default constructor instead.
      * 
      * @param db_path The path to the database file
      */

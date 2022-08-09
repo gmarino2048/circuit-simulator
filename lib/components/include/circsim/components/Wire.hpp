@@ -118,7 +118,7 @@ private:
     PulledStatus _pulled;
 
     /// The current state of the wire, given as one of the above Wire States
-    State _state;
+    State _state = State::FLOATING;
 
 
     /// Tells whether this wire is potentially externally driven

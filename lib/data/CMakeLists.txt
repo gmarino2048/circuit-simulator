@@ -34,6 +34,8 @@ target_sources(circsim-data-test
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/InternalStorage.cpp
+
+        ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage/Transistor.cpp
 )
 
 target_link_libraries(circsim-data-test

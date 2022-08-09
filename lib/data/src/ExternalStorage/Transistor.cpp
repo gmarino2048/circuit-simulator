@@ -25,7 +25,7 @@ void ExternalStorage::_create_table<Transistor>()
 {
     const std::string query = (std::string)
         "CREATE TABLE IF NOT EXISTS " + _table_name<Transistor>() + " (" +
-            "id INTEGER PRIMARY_KEY," +
+            "id INTEGER PRIMARY KEY," +
             "name TEXT NOT NULL," +
             "type INTEGER NOT NULL," +
             "gate INTEGER NOT NULL," +
@@ -67,7 +67,6 @@ template<>
 Transistor ExternalStorage::_decode(const std::vector<SqlValue>& values) const
 {
     using TransType = circsim::components::Transistor::Type;
-    using TransState = circsim::components::Transistor::State;
 
     if( values.size() != TRANSISTOR_FIELD_COUNT )
     {
@@ -88,8 +87,6 @@ Transistor ExternalStorage::_decode(const std::vector<SqlValue>& values) const
     uint64_t gate = _from_sql_type<uint64_t>(values[3]);
     uint64_t source = _from_sql_type<uint64_t>(values[4]);
     uint64_t drain = _from_sql_type<uint64_t>(values[5]);
-
-    TransState state = static_cast<TransState>(_from_sql_type<uint8_t>(values[6]));
 
     circsim::components::Transistor transistor
     (
@@ -198,6 +195,11 @@ void ExternalStorage::add_component(const Transistor& object)
 template<>
 void ExternalStorage::update_component(const Transistor& object)
 {
+    if( !contains<Transistor>(object) )
+    {
+        add_component(object);
+    }
+
     const std::string query = "UPDATE " + _table_name<Transistor>() + " SET " +
         "name=?002," +
         "type=?003," +
