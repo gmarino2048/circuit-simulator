@@ -62,6 +62,40 @@ TEST_F(TransistorStorage, Fidelity)
 }
 
 
+TEST_F(TransistorStorage, Count)
+{
+    for(size_t i = 0; i < _transistors.size(); i++)
+    {
+        EXPECT_EQ(i, _storage->count<Transistor>());
+
+        ASSERT_NO_THROW(_storage->add_component(_transistors[i]));
+        EXPECT_EQ(i+1, _storage->count<Transistor>());
+    }
+}
+
+
+TEST_F(TransistorStorage, Contains)
+{
+    Transistor t1 = _transistors[1];
+
+    EXPECT_FALSE(_storage->contains(t1));
+    ASSERT_NO_THROW(_storage->add_component(t1));
+    EXPECT_TRUE(_storage->contains(t1));
+}
+
+
+TEST_F(TransistorStorage, ContainsCurrent)
+{
+    Transistor t1 = _transistors[1];
+
+    ASSERT_NO_THROW(_storage->add_component(t1));
+    EXPECT_TRUE(_storage->contains_current(t1));
+
+    t1 = Transistor(45, "newname", 0xFACE, 0xCAFE, 0xBABE, Transistor::Type::NMOS);
+    EXPECT_FALSE(_storage->contains_current(t1));
+}
+
+
 TEST_F(TransistorStorage, FidelityNoName)
 {
     Transistor t1 = _transistors[0];
@@ -95,4 +129,31 @@ TEST_F(TransistorStorage, DoubleInsertion)
     EXPECT_THROW(_storage->add_component(t1), StateError);
 
     auto ts = _storage->get_all<Transistor>();
+}
+
+
+TEST_F(TransistorStorage, UpdateInsertion)
+{
+    Transistor t1 = _transistors[0];
+    Transistor t2;
+
+    ASSERT_NO_THROW(_storage->update_component(t1));
+    ASSERT_NO_THROW(t2 = _storage->get<Transistor>(t1.id()));
+
+    EXPECT_EQ(t1, t2);
+}
+
+
+TEST_F(TransistorStorage, TestUpdate)
+{
+    Transistor t1 = _transistors[1];
+
+    ASSERT_NO_THROW(_storage->add_component(t1));
+    EXPECT_TRUE(_storage->contains_current(t1));
+
+    t1 = Transistor(45, "newname", 0xFACE, 0xCAFE, 0xBABE, Transistor::Type::NMOS);
+    EXPECT_FALSE(_storage->contains_current(t1));
+
+    ASSERT_NO_THROW(_storage->update_component(t1));
+    EXPECT_TRUE(_storage->contains_current(t1));
 }

@@ -195,6 +195,11 @@ void ExternalStorage::add_component(const Transistor& object)
 template<>
 void ExternalStorage::update_component(const Transistor& object)
 {
+    if( !contains<Transistor>(object) )
+    {
+        add_component(object);
+    }
+
     const std::string query = "UPDATE " + _table_name<Transistor>() + " SET " +
         "name=?002," +
         "type=?003," +
