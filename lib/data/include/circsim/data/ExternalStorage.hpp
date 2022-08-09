@@ -89,7 +89,7 @@ private:
      *        values to it. Return the handle for the statement
      *        once it's ready to be used.
      * 
-     * @param stmt The statement to be compiled
+     * @param query The statement to be compiled
      * @param values The values to bind to the statement
      * @return sqlite3_stmt* The handle for the compiled statement
      */
