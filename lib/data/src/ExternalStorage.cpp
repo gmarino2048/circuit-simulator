@@ -482,7 +482,11 @@ ExternalStorage::~ExternalStorage()
 {
     if( _db_connection_obj != nullptr )
     {
-        sqlite3_close_v2(_db_connection_obj);
+        int result = SQLITE_BUSY;
+        while( result == SQLITE_BUSY )
+        {
+            result = sqlite3_close_v2(_db_connection_obj);
+        }
     }
 }
 
