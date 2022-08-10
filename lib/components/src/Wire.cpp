@@ -76,10 +76,10 @@ Wire::Wire(): _id(-1),
  */
 Wire::Wire
 (
-    const size_t id,
+    const uint64_t id,
     const SpecialWireType special_type,
-    const std::vector<size_t> &control_transistors,
-    const std::vector<size_t> &gate_transistors
+    const std::vector<uint64_t> &control_transistors,
+    const std::vector<uint64_t> &gate_transistors
 ):  _id(id),
     _pulled(PS_NONE),
     _externally_driven(true),
@@ -100,11 +100,11 @@ Wire::Wire
  */
 Wire::Wire
 (
-    const size_t id,
+    const uint64_t id,
     const std::string &name,
     const std::function<State(State)> driver_func,
-    const std::vector<size_t> &control_transistors,
-    const std::vector<size_t> &gate_transistors
+    const std::vector<uint64_t> &control_transistors,
+    const std::vector<uint64_t> &gate_transistors
 ):  _id(id),
     _primary_name(name),
     _pulled(PS_NONE),
@@ -125,11 +125,11 @@ Wire::Wire
  */
 Wire::Wire
 (
-    const size_t id,
+    const uint64_t id,
     const std::string &name,
     const PulledStatus pulled,
-    const std::vector<size_t> &control_transistors,
-    const std::vector<size_t> &gate_transistors
+    const std::vector<uint64_t> &control_transistors,
+    const std::vector<uint64_t> &gate_transistors
 ):  _id(id),
     _primary_name(name),
     _pulled(pulled),

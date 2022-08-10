@@ -64,7 +64,7 @@ private:
      * @param initial The wire used to build the group.
      * @param database The database of components used for reference.
      */
-    void _build_wire_group(const size_t initial, const Database& database);
+    void _build_wire_group(const uint64_t initial, const Database& database);
 
     /**
      * @brief Recalculate the wire group state given all of the wires in
@@ -96,7 +96,7 @@ public:
      * @param wire The initial wire used to construct the group.
      * @param database The database from which the components are gathered.
      */
-    WireGroup(const size_t wire, const Database& database);
+    WireGroup(const uint64_t wire, const Database& database);
 
 
     /**
@@ -113,7 +113,7 @@ public:
      * @param wire The initial wire used to create the group.
      * @param database The database used for component information.
      */
-    void initialize(const size_t wire, const Database& database);
+    void initialize(const uint64_t wire, const Database& database);
 
 
     /**
@@ -129,7 +129,7 @@ public:
      * @brief Get the set of wire IDs in the wire group, so that they
      *        can be iterated over if needed.
      * 
-     * @return std::set<size_t> The IDs of the wire in the set.
+     * @return std::set<uint64_t> The IDs of the wire in the set.
      */
     inline std::set<uint64_t> wire_ids() const { return _wires; }
 
@@ -148,9 +148,9 @@ public:
      *          gate nodes are connected to this wire group. This will allow us to
      *          easily determine which transistors are going to switch.
      * P
-     * @return std::vector<size_t> The IDs of the gate transistors for the group.
+     * @return std::vector<uint64_t> The IDs of the gate transistors for the group.
      */
-    std::vector<size_t> gate_transistors(const Database &database) const;
+    std::vector<uint64_t> gate_transistors(const Database &database) const;
 
 };
 

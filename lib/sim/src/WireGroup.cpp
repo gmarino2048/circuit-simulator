@@ -32,7 +32,7 @@ using Wire = WireGroup::Wire;
  * whether they are on, and then processing any wires which have not already
  * been added to the wire group.
  */
-void WireGroup::_build_wire_group(const size_t initial, const Database& database)
+void WireGroup::_build_wire_group(const uint64_t initial, const Database& database)
 {
     _wires.insert(initial);
     std::queue<Wire*> unprocessed_wires
@@ -45,15 +45,15 @@ void WireGroup::_build_wire_group(const size_t initial, const Database& database
         Wire* next_wire = unprocessed_wires.front();
         unprocessed_wires.pop();
 
-        const std::vector<size_t> ctrl_transistors = next_wire->ctrl_transistors();
-        for( const size_t transistor_id : ctrl_transistors )
+        const std::vector<uint64_t> ctrl_transistors = next_wire->ctrl_transistors();
+        for( const uint64_t transistor_id : ctrl_transistors )
         {
             Transistor* transistor = database.get<components::Transistor>(transistor_id);
 
             // If the transistor is on, add the other wire to the unprocessed list
             if( transistor->current_state() == Transistor::ON )
             {
-                size_t unprocessed_wire_id = 0;
+                uint64_t unprocessed_wire_id = 0;
 
                 if( next_wire->id() == transistor->drain() )
                 {
@@ -116,7 +116,7 @@ void WireGroup::_recalculate_group_state(const Database& database)
     uint8_t value = 0;
     size_t fl_count = 0;
     size_t fh_count = 0;
-    for( const size_t wire_id : _wires )
+    for( const uint64_t wire_id : _wires )
     {
         Wire* wire = database.get<Wire>(wire_id);
         wire->set_floating();
@@ -159,7 +159,7 @@ void WireGroup::_recalculate_group_state(const Database& database)
 
 void WireGroup::_update_wire_states(const Database& database) const
 {
-    for( const size_t wire_id : _wires )
+    for( const uint64_t wire_id : _wires )
     {
         Wire* wire = database.get<Wire>(wire_id);
 
@@ -202,7 +202,7 @@ WireGroup::WireGroup() :
 }
 
 
-WireGroup::WireGroup(const size_t wire, const Database& database) : WireGroup()
+WireGroup::WireGroup(const uint64_t wire, const Database& database) : WireGroup()
 {
     initialize(wire, database);
 }
@@ -215,7 +215,7 @@ void WireGroup::reset()
 }
 
 
-void WireGroup::initialize(const size_t wire, const Database& database)
+void WireGroup::initialize(const uint64_t wire, const Database& database)
 {
     reset();
 
@@ -225,16 +225,16 @@ void WireGroup::initialize(const size_t wire, const Database& database)
 }
 
 
-std::vector<size_t> WireGroup::gate_transistors(const Database &database) const
+std::vector<uint64_t> WireGroup::gate_transistors(const Database &database) const
 {
-    std::vector<size_t> transistor_ids;
+    std::vector<uint64_t> transistor_ids;
 
-    for ( const size_t wire_id : _wires )
+    for ( const uint64_t wire_id : _wires )
     {
         const Wire *wire_object = database.get<Wire>(wire_id);
 
-        std::vector<size_t> gate_ids = wire_object->gate_transistors();
-        for( const size_t trans_id : gate_ids )
+        std::vector<uint64_t> gate_ids = wire_object->gate_transistors();
+        for( const uint64_t trans_id : gate_ids )
         {
             transistor_ids.push_back(trans_id);
         }
