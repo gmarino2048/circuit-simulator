@@ -135,5 +135,53 @@ Wire ExternalStorage::_decode(sqlite3_stmt* statement) const
 template<>
 bool ExternalStorage::contains(const Wire& object) const
 {
+    const std::string query = "SELECT * FROM " + _table_name<Wire>() + " WHERE id=?;";
+    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type<uint64_t>(object.id()) });
 
+    bool contains = false;
+    int result = sqlite3_step(statement);
+    if( result == SQLITE_ROW )
+    {
+        contains = true;
+    }
+    else if( result != SQLITE_DONE )
+    {
+        sqlite3_finalize(statement);
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
+
+    sqlite3_finalize(statement);
+    return contains;
+}
+
+
+template<>
+bool ExternalStorage::contains_current(const Wire& object) const
+{
+    const std::string query = "SELECT * FROM " + _table_name<Wire>() + " WHERE id=?;";
+    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type<uint64_t>(object.id())});
+
+    bool contains_current = false;
+    int result = sqlite3_step(statement);
+
+    if( result == SQLITE_ROW )
+    {
+        Wire incoming = _decode<Wire>(statement);
+        incoming.state(object.state());
+
+        contains_current = incoming == object;
+    }
+    else if( result != SQLITE_DONE )
+    {
+        sqlite3_finalize(statement);
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        ); 
+    }
+
+    return contains_current;
 }
