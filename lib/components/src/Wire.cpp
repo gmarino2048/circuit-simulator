@@ -63,9 +63,7 @@ const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
  */
 Wire::Wire(): _id(-1),
               _state(FLOATING),
-              _pulled(PS_NONE),
-              _externally_driven(false),
-              _driver_function(std::nullopt)
+              _pulled(PS_NONE)
 {
     // All other fields get default constructor calls
 }
@@ -82,41 +80,12 @@ Wire::Wire
     const std::vector<uint64_t> &gate_transistors
 ):  _id(id),
     _pulled(PS_NONE),
-    _externally_driven(true),
     _trans_ctl_ids(control_transistors),
     _trans_gate_ids(gate_transistors)
 {
     _primary_name = special_wire_name(special_type);
-    _driver_function = special_wire_func(special_type);
     
     set_special_wire_id(special_type);
-
-    _state = _driver_function.value()(_state);
-}
-
-
-/**
- * Create an externally-driven transistor with a custom driver function.
- */
-Wire::Wire
-(
-    const uint64_t id,
-    const std::string &name,
-    const std::function<State(State)> driver_func,
-    const std::vector<uint64_t> &control_transistors,
-    const std::vector<uint64_t> &gate_transistors
-):  _id(id),
-    _primary_name(name),
-    _pulled(PS_NONE),
-    _externally_driven(true),
-    _driver_function(driver_func),
-    _trans_ctl_ids(control_transistors),
-    _trans_gate_ids(gate_transistors)
-{
-    // Use default constructors for other members
-    // Get the first state value
-    set_floating();
-    _state = _driver_function.value()(_state);
 }
 
 
@@ -133,8 +102,6 @@ Wire::Wire
 ):  _id(id),
     _primary_name(name),
     _pulled(pulled),
-    _externally_driven(false),
-    _driver_function(std::nullopt),
     _trans_ctl_ids(control_transistors),
     _trans_gate_ids(gate_transistors)
 {
@@ -146,6 +113,22 @@ void Wire::RESET_CLASS()
 {
     _VCC_ID = -1;
     _GND_ID = -1;
+}
+
+
+bool Wire::special() const
+{
+    if( GND_ID_EXISTS() && id() == GND_ID() )
+    {
+        return true;
+    }
+
+    if( VCC_ID_EXISTS() && id() == VCC_ID() )
+    {
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -186,7 +169,7 @@ bool Wire::high() const noexcept
 void Wire::set_floating()
 {
     // If the wire is VCC or GND, DON'T update the state
-    if ( externally_driven() )
+    if ( special() )
     {
         return;
     }
@@ -272,7 +255,6 @@ bool Wire::operator==(const Wire &rhs) const
 
     equivalent &= _pulled == rhs._pulled;
     equivalent &= _state == rhs._state;
-    equivalent &= _externally_driven == rhs._externally_driven;
 
     // Don't check function equality, it's not worth it
 
