@@ -80,15 +80,32 @@ std::vector<ExternalStorage::SqlValue> ExternalStorage::_encode(const Wire& obje
 
 
 template<>
-Wire ExternalStorage::_decode(const std::vector<SqlValue>& values) const
+Wire ExternalStorage::_decode(sqlite3_stmt* statement) const
 {
-    if( values.size() != WIRE_FIELD_COUNT )
+    int name_size = sqlite3_column_bytes(statement, 1);
+    int other_name_size = sqlite3_column_bytes(statement, 2);
+    int ctrl_id_size = sqlite3_column_bytes(statement, 4);
+    int gate_id_size = sqlite3_column_bytes(statement, 5);
+
+    std::string wire_name_text(name_size, '\0');
+    std::vector<uint8_t> other_name_data(other_name_size);
+    std::vector<uint8_t> ctrl_id_data(ctrl_id_size);
+    std::vector<uint8_t> gate_id_data(gate_id_size);
+
+    std::memcpy(wire_name_text.data(), sqlite3_column_text(statement, 1), name_size);
+    std::memcpy(other_name_data.data(), sqlite3_column_blob(statement, 2), other_name_size);
+    std::memcpy(ctrl_id_data.data(), sqlite3_column_blob(statement, 4), ctrl_id_size);
+    std::memcpy(gate_id_data.data(), sqlite3_column_blob(statement, 5), gate_id_size);
+
+    std::vector<SqlValue> values =
     {
-        throw circsim::common::ValueError
-        (
-            "Field count mismatch when attempting to decode wire"
-        );
-    }
+        (int64_t) sqlite3_column_int64(statement, 0),       // id
+        wire_name_text,                                     // primary_name
+        other_name_data,                                    // other_names
+        (int32_t) sqlite3_column_int(statement, 3),         // pulled
+        ctrl_id_data,                                       // control_transistors
+        gate_id_data                                        // gate_transistors
+    };
 
     uint64_t id = _from_sql_type<uint64_t>(values[0]);
     std::string name = _from_sql_type<std::string>(values[1]);

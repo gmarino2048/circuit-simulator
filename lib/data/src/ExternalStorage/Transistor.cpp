@@ -1,9 +1,23 @@
+/**
+ * @file Transistor.cpp
+ * @author Guy Marino (gmarino2048@gmail.com)
+ * @brief Contains implementation of Transistor objects in external storage.
+ * @version 0.1
+ * @date 2022-08-10
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
+// C++ Stdlib Includes
+#include <cstring>
 #include <vector>
 #include <sstream>
 
+// Library Includes
 #include <sqlite3.h>
 
+// Project Includes
 #include <circsim/common/StateError.hpp>
 #include <circsim/common/ValueError.hpp>
 #include <circsim/components/Transistor.hpp>
@@ -64,21 +78,25 @@ std::vector<ExternalStorage::SqlValue> ExternalStorage::_encode(const Transistor
 
 
 template<>
-Transistor ExternalStorage::_decode(const std::vector<SqlValue>& values) const
+Transistor ExternalStorage::_decode(sqlite3_stmt* statement) const
 {
     using TransType = circsim::components::Transistor::Type;
 
-    if( values.size() != TRANSISTOR_FIELD_COUNT )
-    {
-        std::stringstream ss;
-        ss << "Cannot convert to transistor. Expected " << std::to_string(TRANSISTOR_FIELD_COUNT);
-        ss << " fields but got " << std::to_string(values.size()) << ".";
+    int name_size = sqlite3_column_bytes(statement, 1);
+    std::string transistor_name(name_size, '\0');
 
-        throw circsim::common::ValueError
-        (
-            ss.str()
-        );
-    }
+    const unsigned char* sql_name = sqlite3_column_text(statement, 1);
+    std::memcpy(transistor_name.data(), sql_name, name_size);
+
+    std::vector<SqlValue> values =
+    {
+        (int64_t) sqlite3_column_int64(statement, 0),       // id
+        transistor_name,                                    // name
+        (int32_t) sqlite3_column_int(statement, 2),         // type
+        (int64_t) sqlite3_column_int64(statement, 3),       // gate
+        (int64_t) sqlite3_column_int64(statement, 4),       // source
+        (int64_t) sqlite3_column_int64(statement, 5)        // drain
+    };
 
     uint64_t id = _from_sql_type<uint64_t>(values[0]);
     std::string name = _from_sql_type<std::string>(values[1]);
@@ -144,17 +162,7 @@ bool ExternalStorage::contains_current<Transistor>(const Transistor& object) con
 
     if( result == SQLITE_ROW )
     {
-        std::vector<SqlValue> incoming =
-        {
-            (int64_t) sqlite3_column_int64(statement, 0),       // id
-            (const char *) sqlite3_column_text(statement, 1),   // name
-            (int32_t) sqlite3_column_int(statement, 2),         // type
-            (int64_t) sqlite3_column_int64(statement, 3),       // gate
-            (int64_t) sqlite3_column_int64(statement, 4),       // source
-            (int64_t) sqlite3_column_int64(statement, 5)        // drain
-        };
-
-        Transistor compare_to = _decode<Transistor>(incoming);
+        Transistor compare_to = _decode<Transistor>(statement);
         contains_current = object == compare_to;
     }
     else if( result != SQLITE_DONE )
@@ -235,17 +243,7 @@ Transistor ExternalStorage::get(const size_t id) const
 
     if( result == SQLITE_ROW )
     {
-        std::vector<SqlValue> incoming =
-        {
-            (int64_t) sqlite3_column_int64(statement, 0),       // id
-            (const char *) sqlite3_column_text(statement, 1),   // name
-            (int32_t) sqlite3_column_int(statement, 2),         // type
-            (int64_t) sqlite3_column_int64(statement, 3),       // gate
-            (int64_t) sqlite3_column_int64(statement, 4),       // source
-            (int64_t) sqlite3_column_int64(statement, 5)        // drain
-        };
-
-        value = _decode<Transistor>(incoming);
+        value = _decode<Transistor>(statement);
     }
     else
     {
@@ -294,17 +292,7 @@ std::vector<Transistor> ExternalStorage::get_all() const
     int result = 0;
     for(result = sqlite3_step(statement); result == SQLITE_ROW; result = sqlite3_step(statement))
     {
-        std::vector<SqlValue> incoming =
-        {
-            (int64_t) sqlite3_column_int64(statement, 0),       // id
-            (const char *) sqlite3_column_text(statement, 1),   // name
-            (int32_t) sqlite3_column_int(statement, 2),         // type
-            (int64_t) sqlite3_column_int64(statement, 3),       // gate
-            (int64_t) sqlite3_column_int64(statement, 4),       // source
-            (int64_t) sqlite3_column_int64(statement, 5)        // drain
-        };
-
-        Transistor value = _decode<Transistor>(incoming);
+        Transistor value = _decode<Transistor>(statement);
         transistor_list.push_back(value);
     }
 
