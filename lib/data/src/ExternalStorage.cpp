@@ -420,6 +420,7 @@ bool ExternalStorage::_table_exists()
 void ExternalStorage::_create_tables()
 {
     _create_table<circsim::components::Transistor>();
+    _create_table<circsim::components::Wire>();
 }
 
 
