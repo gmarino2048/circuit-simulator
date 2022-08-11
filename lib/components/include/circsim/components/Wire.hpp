@@ -50,8 +50,7 @@ public:
     enum SpecialWireType
     {
         VCC,        //!< This is the high voltage rail
-        GND,        //!< This is the grounding rail
-        CLK         //!< This is the clock signal
+        GND         //!< This is the grounding rail
     };
 
     /**
@@ -121,17 +120,11 @@ private:
     State _state = State::FLOATING;
 
 
-    /// Tells whether this wire is potentially externally driven
-    bool _externally_driven;
-
-    /// The external function used to drive the wire (if any)
-    extern_func_t _driver_function;
-
     /// The set of transistors which control this wire
-    std::vector<size_t> _trans_ctl_ids;
+    std::vector<uint64_t> _trans_ctl_ids;
 
     /// The set of transistors controlled in turn by this wire
-    std::vector<size_t> _trans_gate_ids;
+    std::vector<uint64_t> _trans_gate_ids;
 
 public:
 
@@ -154,28 +147,10 @@ public:
      */
     Wire
     (
-        const size_t id,
+        const uint64_t id,
         const SpecialWireType special_type,
-        const std::vector<size_t> &control_transistors,
-        const std::vector<size_t> &gate_transistors
-    );
-
-    /**
-     * @brief Create a custom special wire with a specified driver function.
-     * 
-     * @param id                    The ID of the wire
-     * @param name                  The name of the new special wire
-     * @param driver_func           The function used to drive the special wire
-     * @param control_transistors   The transistors which control this wire
-     * @param gate_transistors      The transistors controlled by this wire
-     */
-    Wire
-    (
-        const size_t id,
-        const std::string &name,
-        const std::function<State(State)> driver_func,
-        const std::vector<size_t> &control_transistors,
-        const std::vector<size_t> &gate_transistors
+        const std::vector<uint64_t> &control_transistors,
+        const std::vector<uint64_t> &gate_transistors
     );
 
     /**
@@ -189,11 +164,11 @@ public:
      */
     Wire
     (
-        const size_t id,
+        const uint64_t id,
         const std::string &name,
         const PulledStatus pulled,
-        const std::vector<size_t> &control_transistors,
-        const std::vector<size_t> &gate_transistors
+        const std::vector<uint64_t> &control_transistors,
+        const std::vector<uint64_t> &gate_transistors
     );
 
 
@@ -275,24 +250,24 @@ public:
     /**
      * @brief Return the list of control transistors for this object.
      * 
-     * @return std::vector<size_t> The IDs of the control transistors.
+     * @return std::vector<uint64_t> The IDs of the control transistors.
      */
-    inline std::vector<size_t> ctrl_transistors() const noexcept { return _trans_ctl_ids; }
+    inline std::vector<uint64_t> ctrl_transistors() const noexcept { return _trans_ctl_ids; }
 
     /**
      * @brief Return the list of gate transistors for this wire.
      * 
-     * @return std::vector<size_t> The IDs of the gate transistor.
+     * @return std::vector<uint64_t> The IDs of the gate transistor.
      */
-    inline std::vector<size_t> gate_transistors() const noexcept { return _trans_gate_ids; }
+    inline std::vector<uint64_t> gate_transistors() const noexcept { return _trans_gate_ids; }
+
 
     /**
-     * @brief Is this wire driven externally, or by other transistors in the circuit.
+     * @brief Returns whether this wire is a special wire.
      * 
-     * @return true     The wire is externally driven
-     * @return false    The wire relies on other transistors
+     * @return true if the wire is VCC or GND, false otherwise.
      */
-    inline bool externally_driven() const noexcept { return _externally_driven; }
+    bool special() const;
 
 
     /**

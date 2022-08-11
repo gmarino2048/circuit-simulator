@@ -151,11 +151,11 @@ private:
      *        instance.
      * 
      * @tparam T The type of object to convert back to
-     * @param values The set of SQL column values
+     * @param statement The prepared SQL row to decode
      * @return T The object instance converted from the raw SQL values
      */
     template<class T>
-    T _decode(const std::vector<SqlValue>& values) const;
+    T _decode(sqlite3_stmt* statement) const;
 
 public:
 
@@ -268,7 +268,7 @@ public:
      * @return T The object returned from the database
      */
     template<class T>
-    T get(const size_t id) const;
+    T get(const uint64_t id) const;
 
     /**
      * @brief Get all objects of the specified type

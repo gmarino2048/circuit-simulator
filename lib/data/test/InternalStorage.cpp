@@ -173,8 +173,8 @@ TEST_F(InternalDatabaseTest, UpdateComponent)
     // Update Wire
     const size_t index = 5;
     const std::string new_name = "NewName";
-    const std::vector<size_t> ctrl_trans = { 2, 3 };
-    const std::vector<size_t> gate_trans = { 4, 5 };
+    const std::vector<uint64_t> ctrl_trans = { 2, 3 };
+    const std::vector<uint64_t> gate_trans = { 4, 5 };
 
     Wire new_wire(
         index,
@@ -194,9 +194,9 @@ TEST_F(InternalDatabaseTest, UpdateComponent)
     EXPECT_EQ(wire_ptr->gate_transistors(), gate_trans);
 
     // Update Transistor
-    size_t new_source = 5;
-    size_t new_gate = 6;
-    size_t new_drain = 7;
+    uint64_t new_source = 5;
+    uint64_t new_gate = 6;
+    uint64_t new_drain = 7;
 
     Transistor new_transistor(
         index,

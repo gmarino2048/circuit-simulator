@@ -66,7 +66,7 @@ private:
      * @param wire_id The ID of the initial wire used to create the group.
      * @param group The receiving reference for the wire group.
      */
-    void _create_wire_group(const size_t wire_id, WireGroup &group);
+    void _create_wire_group(const uint64_t wire_id, WireGroup &group);
 
 
     /**
@@ -201,7 +201,7 @@ public:
      */
     void update_by_id
     (
-        const size_t id,
+        const uint64_t id,
         const WireState state,
         const bool update_all = true
     );
@@ -244,7 +244,7 @@ public:
      */
     void update_all_by_id
     (
-        const std::vector<size_t> &id_list,
+        const std::vector<uint64_t> &id_list,
         const std::vector<WireState> &state_list,
         const bool update_all = true
     );

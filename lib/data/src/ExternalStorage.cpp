@@ -386,6 +386,7 @@ sqlite3_stmt* ExternalStorage::_bind_values
 
 // Explicit instantiation of objects
 template bool ExternalStorage::_table_exists<circsim::components::Transistor>();
+template bool ExternalStorage::_table_exists<circsim::components::Wire>();
 
 template<class T>
 bool ExternalStorage::_table_exists()
@@ -420,6 +421,7 @@ bool ExternalStorage::_table_exists()
 void ExternalStorage::_create_tables()
 {
     _create_table<circsim::components::Transistor>();
+    _create_table<circsim::components::Wire>();
 }
 
 
@@ -493,6 +495,7 @@ ExternalStorage::~ExternalStorage()
 
 // Explicitly initialize count for transistor
 template size_t ExternalStorage::count<circsim::components::Transistor>() const;
+template size_t ExternalStorage::count<circsim::components::Wire>() const;
 
 template<class T>
 size_t ExternalStorage::count() const

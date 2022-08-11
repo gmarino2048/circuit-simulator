@@ -10,6 +10,9 @@
  */
 
 // C++ Stdlib Includes
+#include <algorithm>
+#include <cstdint>
+#include <limits>
 #include <vector>
 
 // Test Framework Includes
@@ -37,8 +40,8 @@ protected:
 
         _transistors =
         {
-            Transistor(13, 0xCAFE, 0xBABE, 0xFACE, Transistor::Type::PMOS),
-            Transistor(45, "test", 0xFACE, 0xCAFE, 0xBABE, Transistor::Type::NMOS)
+            Transistor(0, 0xCAFE, 0xBABE, 0xFACE, Transistor::Type::PMOS),
+            Transistor(std::numeric_limits<uint64_t>::max(), "test", 0xFACE, 0xCAFE, 0xBABE, Transistor::Type::NMOS)
         };
     }
 
@@ -117,6 +120,15 @@ TEST_F(TransistorStorage, GetAll)
     std::vector<Transistor> result;
     ASSERT_NO_THROW(result = _storage->get_all<Transistor>());
 
+    std::sort
+    (
+        result.begin(),
+        result.end(),
+        [](const Transistor& a, const Transistor& b)
+        {
+            return a.id() < b.id();
+        }
+    );
     EXPECT_EQ(_transistors, result);
 }
 

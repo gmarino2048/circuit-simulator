@@ -30,7 +30,7 @@ using namespace circsim;
 using namespace circsim::sim;
 
 
-void Simulator::_create_wire_group(const size_t wire_id, WireGroup &group)
+void Simulator::_create_wire_group(const uint64_t wire_id, WireGroup &group)
 {
     group = WireGroup(wire_id, this->_internal_database);
 
@@ -57,13 +57,13 @@ void Simulator::_create_wire_group(const size_t wire_id, WireGroup &group)
 void Simulator::_update_transistors(const WireGroup &group)
 {
     // Forward Declare Type
-    using ControlWirePair = std::pair<size_t, size_t>;
+    using ControlWirePair = std::pair<uint64_t, uint64_t>;
 
     // Convert transistor Ids to objects
-    std::vector<size_t> transistors_to_update =
+    std::vector<uint64_t> transistors_to_update =
         group.gate_transistors(_internal_database);
 
-    for( const size_t id : transistors_to_update )
+    for( const uint64_t id : transistors_to_update )
     {
         components::Transistor *transistor_object =
             _internal_database.get<components::Transistor>(id);
@@ -155,7 +155,7 @@ bool Simulator::update_next()
         return true;
     }
 
-    size_t next_wire = _wire_update_list.front();
+    uint64_t next_wire = _wire_update_list.front();
     _wire_update_list.pop_front();
 
     WireGroup wire_group;
@@ -186,7 +186,7 @@ void Simulator::update_all()
 
 void Simulator::update_by_id
 (
-    const size_t id,
+    const uint64_t id,
     const WireState state,
     const bool update_all
 )
@@ -228,7 +228,7 @@ void Simulator::update_by_name
 
 void Simulator::update_all_by_id
 (
-    const std::vector<size_t> &id_list,
+    const std::vector<uint64_t> &id_list,
     const std::vector<WireState> &state_list,
     const bool update_all
 )
@@ -248,7 +248,7 @@ void Simulator::update_all_by_id
 
     for ( size_t i = 0; i < id_list.size(); i++ )
     {
-        size_t wire_id = id_list[i];
+        uint64_t wire_id = id_list[i];
         WireState wire_state = state_list[i];
 
         update_by_id(wire_id, wire_state, false);
