@@ -131,30 +131,6 @@ Wire ExternalStorage::_decode(SqliteStatement& statement) const
 
 
 template<>
-bool ExternalStorage::contains(const Wire& object) const
-{
-    const std::string query = "SELECT * FROM " + _table_name<Wire>() + " WHERE id=?;";
-    SqliteStatement statement = _bind_values(query, { _to_sql_type<uint64_t>(object.id()) });
-
-    bool contains = false;
-    int result = sqlite3_step(statement);
-    if( result == SQLITE_ROW )
-    {
-        contains = true;
-    }
-    else if( result != SQLITE_DONE )
-    {
-        throw circsim::common::StateError
-        (
-            sqlite3_errmsg(_db_connection_obj)
-        );
-    }
-
-    return contains;
-}
-
-
-template<>
 bool ExternalStorage::contains_current(const Wire& object) const
 {
     const std::string query = "SELECT * FROM " + _table_name<Wire>() + " WHERE id=?;";

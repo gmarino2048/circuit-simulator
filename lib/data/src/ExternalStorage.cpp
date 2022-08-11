@@ -557,3 +557,33 @@ size_t ExternalStorage::count() const
 
     return count;
 }
+
+
+template bool ExternalStorage::contains(const circsim::components::Transistor& object) const;
+template bool ExternalStorage::contains(const circsim::components::Wire& object) const;
+
+template<class T>
+bool ExternalStorage::contains(const T& object) const
+{
+    uint64_t id = object.id();
+
+    const std::string query = "SELECT * FROM " + _table_name<T>() + " WHERE id=?;";
+    SqliteStatement statement = _bind_values(query, { _to_sql_type(id) });
+
+    bool contains = false;
+    int result = sqlite3_step(statement);
+
+    if( result == SQLITE_ROW )
+    {
+        contains = true;
+    }
+    else if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return contains;
+}
