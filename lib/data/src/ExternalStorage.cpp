@@ -587,3 +587,34 @@ bool ExternalStorage::contains(const T& object) const
 
     return contains;
 }
+
+
+template bool ExternalStorage::contains_current(const circsim::components::Transistor& object) const;
+template bool ExternalStorage::contains_current(const circsim::components::Wire& object) const;
+
+template<class T>
+bool ExternalStorage::contains_current(const T& object) const
+{
+    uint64_t id = object.id();
+
+    const std::string query = "SELECT * FROM " + _table_name<T>() + " WHERE id=?;";
+    SqliteStatement statement = _bind_values(query, { _to_sql_type(id) });
+
+    bool contains_current = false;
+    int result = sqlite3_step(statement);
+
+    if( result == SQLITE_ROW )
+    {
+        T compare_to = _decode<T>(statement);
+        contains_current = object == compare_to;
+    }
+    else if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return contains_current;
+}

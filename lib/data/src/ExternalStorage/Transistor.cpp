@@ -119,34 +119,6 @@ Transistor ExternalStorage::_decode(SqliteStatement& statement) const
 
 
 template<>
-bool ExternalStorage::contains_current<Transistor>(const Transistor& object) const
-{
-    uint64_t id = object.id();
-
-    const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
-    SqliteStatement statement = _bind_values(query, { _to_sql_type(id) });
-
-    bool contains_current = false;
-    int result = sqlite3_step(statement);
-
-    if( result == SQLITE_ROW )
-    {
-        Transistor compare_to = _decode<Transistor>(statement);
-        contains_current = object == compare_to;
-    }
-    else if( result != SQLITE_DONE )
-    {
-        throw circsim::common::StateError
-        (
-            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
-        );
-    }
-
-    return contains_current;
-}
-
-
-template<>
 void ExternalStorage::add_component(const Transistor& object)
 {
     const std::string query = "INSERT INTO " + _table_name<Transistor>() +" VALUES (?,?,?,?,?,?);";
