@@ -618,3 +618,51 @@ bool ExternalStorage::contains_current(const T& object) const
 
     return contains_current;
 }
+
+
+template circsim::components::Transistor ExternalStorage::get(const uint64_t id) const;
+template circsim::components::Wire ExternalStorage::get(const uint64_t id) const;
+
+template<class T>
+T ExternalStorage::get(const uint64_t id) const
+{
+    T value;
+    const std::string query = "SELECT * FROM " + _table_name<T>() + " WHERE id=?;";
+
+    SqliteStatement statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
+    int result = sqlite3_step(statement);
+
+    if( result == SQLITE_ROW )
+    {
+        value = _decode<T>(statement);
+    }
+    else
+    {
+        throw circsim::common::StateError
+        (
+            "No value found with ID " + std::to_string(id)
+        );
+    }
+
+    result = sqlite3_step(statement);
+    if( result != SQLITE_DONE )
+    {
+        if(result == SQLITE_ROW )
+        {
+            throw circsim::common::StateError
+            (
+                "Multiple values found with same ID. This should not be possible."
+            );
+        }
+        else
+        {
+            throw circsim::common::StateError
+            (
+                sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+            );
+        }
+    }
+
+    return value;
+}
+

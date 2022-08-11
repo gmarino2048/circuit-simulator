@@ -167,50 +167,6 @@ void ExternalStorage::update_component(const Transistor& object)
 
 
 template<>
-Transistor ExternalStorage::get(const uint64_t id) const
-{
-    Transistor value;
-    const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
-
-    SqliteStatement statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
-    int result = sqlite3_step(statement);
-
-    if( result == SQLITE_ROW )
-    {
-        value = _decode<Transistor>(statement);
-    }
-    else
-    {
-        throw circsim::common::StateError
-        (
-            "No value found with ID " + std::to_string(id)
-        );
-    }
-
-    result = sqlite3_step(statement);
-    if( result != SQLITE_DONE )
-    {
-        if(result == SQLITE_ROW )
-        {
-            throw circsim::common::StateError
-            (
-                "Multiple values found with same ID. This should not be possible."
-            );
-        }
-        else
-        {
-            throw circsim::common::StateError
-            (
-                sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
-            );
-        }
-    }
-
-    return value;
-}
-
-
-template<>
 std::vector<Transistor> ExternalStorage::get_all() const
 {
     size_t item_count = count<Transistor>();

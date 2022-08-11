@@ -180,35 +180,6 @@ void ExternalStorage::update_component(const Wire& object)
 
 
 template<>
-Wire ExternalStorage::get(const uint64_t id) const
-{
-    const std::string query = "SELECT * FROM " + _table_name<Wire>() + " WHERE id=?;";
-    SqliteStatement statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
-
-    int result = sqlite3_step(statement);
-    if( result == SQLITE_ROW )
-    {
-        Wire wire = _decode<Wire>(statement);
-        return wire;
-    }
-    else if( result == SQLITE_DONE )
-    {
-        throw circsim::common::ValueError
-        (
-            "No wire instance found for id " + std::to_string(id)
-        );
-    }
-    else
-    {
-        throw circsim::common::StateError
-        (
-            sqlite3_errmsg(_db_connection_obj)
-        );
-    }
-}
-
-
-template<>
 std::vector<Wire> ExternalStorage::get_all() const
 {
     size_t wire_count = count<Wire>();
