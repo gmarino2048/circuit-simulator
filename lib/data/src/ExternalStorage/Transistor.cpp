@@ -164,33 +164,3 @@ void ExternalStorage::update_component(const Transistor& object)
         );
     }
 }
-
-
-template<>
-std::vector<Transistor> ExternalStorage::get_all() const
-{
-    size_t item_count = count<Transistor>();
-
-    std::vector<Transistor> transistor_list;
-    transistor_list.reserve(item_count);
-
-    const std::string query = "SELECT * FROM " + _table_name<Transistor>() + ";";
-    SqliteStatement statement = _bind_values(query, {});
-
-    int result = 0;
-    for(result = sqlite3_step(statement); result == SQLITE_ROW; result = sqlite3_step(statement))
-    {
-        Transistor value = _decode<Transistor>(statement);
-        transistor_list.push_back(value);
-    }
-
-    if( result != SQLITE_DONE )
-    {
-        throw circsim::common::StateError
-        (
-            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
-        );
-    }
-
-    return transistor_list;
-}

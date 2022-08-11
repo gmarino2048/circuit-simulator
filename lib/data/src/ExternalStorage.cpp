@@ -666,3 +666,35 @@ T ExternalStorage::get(const uint64_t id) const
     return value;
 }
 
+
+template std::vector<circsim::components::Transistor> ExternalStorage::get_all() const;
+template std::vector<circsim::components::Wire> ExternalStorage::get_all() const;
+
+template<class T>
+std::vector<T> ExternalStorage::get_all() const
+{
+    size_t wire_count = count<T>();
+
+    std::vector<T> wires;
+    wires.reserve(wire_count);
+
+    const std::string query = "SELECT * FROM " + _table_name<T>() + ";";
+    SqliteStatement statement = _bind_values(query, {});
+
+    int result;
+    for(result = sqlite3_step(statement); result == SQLITE_ROW; result = sqlite3_step(statement))
+    {
+        T wire = _decode<T>(statement);
+        wires.push_back(wire);
+    }
+
+    if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return wires;
+}
