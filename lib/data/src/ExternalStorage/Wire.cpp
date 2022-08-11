@@ -275,3 +275,35 @@ Wire ExternalStorage::get(const uint64_t id) const
         );
     }
 }
+
+
+template<>
+std::vector<Wire> ExternalStorage::get_all() const
+{
+    size_t wire_count = count<Wire>();
+
+    std::vector<Wire> wires;
+    wires.reserve(wire_count);
+
+    const std::string query = "SELECT * FROM " + _table_name<Wire>() + ";";
+    sqlite3_stmt* statement = _bind_values(query, {});
+
+    int result;
+    for(result = sqlite3_step(statement); result == SQLITE_ROW; result = sqlite3_step(statement))
+    {
+        Wire wire = _decode<Wire>(statement);
+        wires.push_back(wire);
+    }
+
+    sqlite3_finalize(statement);
+
+    if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
+        );
+    }
+
+    return wires;
+}
