@@ -70,6 +70,45 @@ template<>
 std::vector<std::string> ExternalStorage::_from_sql_type(const SqlValue& value);
 
 
+// Implementation of SqliteStatement wrapper
+ExternalStorage::SqliteStatement::SqliteStatement(sqlite3_stmt* statement) : _statement(statement) {}
+
+
+ExternalStorage::SqliteStatement::SqliteStatement(SqliteStatement&& other) noexcept :
+    _statement(other._statement)
+{
+    other._statement = nullptr;
+}
+
+
+ExternalStorage::SqliteStatement::~SqliteStatement()
+{
+    if( _statement != nullptr )
+    {
+        sqlite3_finalize(_statement);
+        _statement = nullptr;
+    }
+}
+
+
+ExternalStorage::SqliteStatement& ExternalStorage::SqliteStatement::operator=
+(
+    SqliteStatement&& other
+) noexcept
+{
+    this->_statement = other._statement;
+    other._statement = nullptr;
+
+    return *this;
+}
+
+
+ExternalStorage::SqliteStatement::operator sqlite3_stmt*()
+{
+    return _statement;
+}
+
+
 // Implementation of ExternalStorage::_to_sql_type
 template<>
 SqlValue ExternalStorage::_to_sql_type(const uint8_t value)
@@ -303,7 +342,7 @@ catch( const std::bad_variant_access& )
 }
 
 
-sqlite3_stmt* ExternalStorage::_bind_values
+ExternalStorage::SqliteStatement ExternalStorage::_bind_values
 (
     const std::string& query,
     const std::vector<SqlValue>& values
@@ -395,7 +434,7 @@ bool ExternalStorage::_table_exists()
     const std::string query =
         "SELECT count(type) FROM sqlite_master WHERE type='table' AND name=?;";
 
-    sqlite3_stmt* statement = _bind_values(query, { _table_name<T>() });
+    SqliteStatement statement = _bind_values(query, { _table_name<T>() });
 
     // Run the query
     int table_count = 0;
@@ -408,12 +447,10 @@ bool ExternalStorage::_table_exists()
         }
         else
         {
-            sqlite3_finalize(statement);
             throw circsim::common::StateError(sqlite3_errstr(result));
         }
     }
 
-    sqlite3_finalize(statement);
     return table_count > 0;
 }
 
@@ -502,7 +539,7 @@ size_t ExternalStorage::count() const
 {
     std::string query = "SELECT COUNT(*) FROM " + _table_name<T>() + ";";
 
-    sqlite3_stmt* statement = const_cast<const ExternalStorage*>(this)->_bind_values(query, {});
+    SqliteStatement statement = const_cast<const ExternalStorage*>(this)->_bind_values(query, {});
 
     size_t count = 0;
     int result = sqlite3_step(statement);

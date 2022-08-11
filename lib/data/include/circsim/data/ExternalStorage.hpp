@@ -51,6 +51,79 @@ public:
 
 private:
 
+    /**
+     * @brief This class acts as a handle for a SQLite Statement which
+     *        will automatically finalize the enclosed statement once it
+     *        goes out of scope.
+     * 
+     */
+    class SqliteStatement final
+    {
+    private:
+
+        /// The Sqlite Statement object retained by this object
+        sqlite3_stmt* _statement = nullptr;
+
+        /**
+         * @brief Delete the default constructor.
+         * 
+         */
+        SqliteStatement() = delete;
+
+        /**
+         * @brief Delete the copy constructor.
+         * 
+         * @param other The other instance to copy from
+         */
+        SqliteStatement(const SqliteStatement& other) = delete;
+
+        /**
+         * @brief Delete the copy assignment operator.
+         * 
+         * @param other The other instance to copy from.
+         * @return SqliteStatement& A reference to this instance
+         */
+        SqliteStatement& operator=(const SqliteStatement& other) = delete;
+
+    public:
+
+        /**
+         * @brief Automatic conversion constructor from sqlite3_stmt.
+         * 
+         */
+        SqliteStatement(sqlite3_stmt* statement);
+
+        /**
+         * @brief Move constructor.
+         * 
+         * @param other The object to move the information from
+         */
+        SqliteStatement(SqliteStatement&& other) noexcept;
+
+        /**
+         * @brief Call sqlite3_finalize on the object's pointer when it goes
+         *        out of scope.
+         * 
+         */
+        ~SqliteStatement();
+
+
+        /**
+         * @brief Move assignment operator.
+         * 
+         * @param other The other reference to move from
+         * @return SqliteStatement& A reference to this object
+         */
+        SqliteStatement& operator=(SqliteStatement&& other) noexcept;
+
+        /**
+         * @brief Automatic conversion pointer to a sqlite3_stmt pointer.
+         * 
+         * @return sqlite3_stmt* The raw pointer to the sqlite3 statement
+         */
+        operator sqlite3_stmt*();
+    };
+
     /// The database connection handle
     sqlite3* _db_connection_obj;
 
@@ -91,9 +164,9 @@ private:
      * 
      * @param query The statement to be compiled
      * @param values The values to bind to the statement
-     * @return sqlite3_stmt* The handle for the compiled statement
+     * @return SqliteStatement The handle for the compiled statement
      */
-    sqlite3_stmt* _bind_values
+    SqliteStatement _bind_values
     (
         const std::string& query,
         const std::vector<SqlValue>& values
@@ -155,7 +228,7 @@ private:
      * @return T The object instance converted from the raw SQL values
      */
     template<class T>
-    T _decode(sqlite3_stmt* statement) const;
+    T _decode(SqliteStatement& statement) const;
 
 public:
 

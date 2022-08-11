@@ -47,15 +47,13 @@ void ExternalStorage::_create_table<Transistor>()
             "drain INTEGER NOT NULL"
         ");";
 
-    sqlite3_stmt* statement = _bind_values(query, {});
+    SqliteStatement statement = _bind_values(query, {});
 
     int result = sqlite3_step(statement);
     if( result != SQLITE_DONE )
     {
         throw circsim::common::StateError(sqlite3_errmsg(_db_connection_obj));
     }
-
-    sqlite3_finalize(statement);
 }
 
 
@@ -78,7 +76,7 @@ std::vector<ExternalStorage::SqlValue> ExternalStorage::_encode(const Transistor
 
 
 template<>
-Transistor ExternalStorage::_decode(sqlite3_stmt* statement) const
+Transistor ExternalStorage::_decode(SqliteStatement& statement) const
 {
     using TransType = circsim::components::Transistor::Type;
 
@@ -126,7 +124,7 @@ bool ExternalStorage::contains<Transistor>(const Transistor& object) const
     uint64_t id = object.id();
 
     const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
-    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type(id) });
+    SqliteStatement statement = _bind_values(query, { _to_sql_type(id) });
 
     bool contains = false;
     int result = sqlite3_step(statement);
@@ -137,14 +135,12 @@ bool ExternalStorage::contains<Transistor>(const Transistor& object) const
     }
     else if( result != SQLITE_DONE )
     {
-        sqlite3_finalize(statement);
         throw circsim::common::StateError
         (
             sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
         );
     }
 
-    sqlite3_finalize(statement);
     return contains;
 }
 
@@ -155,7 +151,7 @@ bool ExternalStorage::contains_current<Transistor>(const Transistor& object) con
     uint64_t id = object.id();
 
     const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
-    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type(id) });
+    SqliteStatement statement = _bind_values(query, { _to_sql_type(id) });
 
     bool contains_current = false;
     int result = sqlite3_step(statement);
@@ -167,14 +163,12 @@ bool ExternalStorage::contains_current<Transistor>(const Transistor& object) con
     }
     else if( result != SQLITE_DONE )
     {
-        sqlite3_finalize(statement);
         throw circsim::common::StateError
         (
             sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
         );
     }
 
-    sqlite3_finalize(statement);
     return contains_current;
 }
 
@@ -184,19 +178,16 @@ void ExternalStorage::add_component(const Transistor& object)
 {
     const std::string query = "INSERT INTO " + _table_name<Transistor>() +" VALUES (?,?,?,?,?,?);";
 
-    sqlite3_stmt* statement = _bind_values(query, _encode(object));
+    SqliteStatement statement = _bind_values(query, _encode(object));
     int result = sqlite3_step(statement);
 
     if( result != SQLITE_DONE )
     {
-        sqlite3_finalize(statement);
         throw circsim::common::StateError
         (
             sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
         );
     }
-
-    sqlite3_finalize(statement);
 }
 
 
@@ -217,19 +208,16 @@ void ExternalStorage::update_component(const Transistor& object)
         "drain=?006" +
         " WHERE id=?001;";
 
-    sqlite3_stmt* statement = _bind_values(query, _encode(object));
+    SqliteStatement statement = _bind_values(query, _encode(object));
     int result = sqlite3_step(statement);
 
     if( result != SQLITE_DONE )
     {
-        sqlite3_finalize(statement);
         throw circsim::common::StateError
         (
             sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
         );
     }
-
-    sqlite3_finalize(statement);
 }
 
 
@@ -239,7 +227,7 @@ Transistor ExternalStorage::get(const uint64_t id) const
     Transistor value;
     const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";
 
-    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
+    SqliteStatement statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
     int result = sqlite3_step(statement);
 
     if( result == SQLITE_ROW )
@@ -266,7 +254,6 @@ Transistor ExternalStorage::get(const uint64_t id) const
         }
         else
         {
-            sqlite3_finalize(statement);
             throw circsim::common::StateError
             (
                 sqlite3_errmsg(const_cast<sqlite3*>(_db_connection_obj))
@@ -274,7 +261,6 @@ Transistor ExternalStorage::get(const uint64_t id) const
         }
     }
 
-    sqlite3_finalize(statement);
     return value;
 }
 
@@ -288,7 +274,7 @@ std::vector<Transistor> ExternalStorage::get_all() const
     transistor_list.reserve(item_count);
 
     const std::string query = "SELECT * FROM " + _table_name<Transistor>() + ";";
-    sqlite3_stmt* statement = _bind_values(query, {});
+    SqliteStatement statement = _bind_values(query, {});
 
     int result = 0;
     for(result = sqlite3_step(statement); result == SQLITE_ROW; result = sqlite3_step(statement))
@@ -296,8 +282,6 @@ std::vector<Transistor> ExternalStorage::get_all() const
         Transistor value = _decode<Transistor>(statement);
         transistor_list.push_back(value);
     }
-
-    sqlite3_finalize(statement);
 
     if( result != SQLITE_DONE )
     {
