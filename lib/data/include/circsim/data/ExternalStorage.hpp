@@ -268,7 +268,7 @@ public:
      * @return T The object returned from the database
      */
     template<class T>
-    T get(const size_t id) const;
+    T get(const uint64_t id) const;
 
     /**
      * @brief Get all objects of the specified type

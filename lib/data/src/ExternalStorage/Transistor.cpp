@@ -203,9 +203,10 @@ void ExternalStorage::add_component(const Transistor& object)
 template<>
 void ExternalStorage::update_component(const Transistor& object)
 {
-    if( !contains<Transistor>(object) )
+    if( !contains(object) )
     {
         add_component(object);
+        return;
     }
 
     const std::string query = "UPDATE " + _table_name<Transistor>() + " SET " +
@@ -233,7 +234,7 @@ void ExternalStorage::update_component(const Transistor& object)
 
 
 template<>
-Transistor ExternalStorage::get(const size_t id) const
+Transistor ExternalStorage::get(const uint64_t id) const
 {
     Transistor value;
     const std::string query = "SELECT * FROM " + _table_name<Transistor>() + " WHERE id=?;";

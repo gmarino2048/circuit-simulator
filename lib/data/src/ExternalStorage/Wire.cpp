@@ -170,6 +170,10 @@ bool ExternalStorage::contains_current(const Wire& object) const
     if( result == SQLITE_ROW )
     {
         Wire incoming = _decode<Wire>(statement);
+
+        // Don't forget to set the state of the new wire, since
+        // it's used as part of the equality comparison but doesn't
+        // matter much here
         incoming.state(object.state());
 
         contains_current = incoming == object;
@@ -184,4 +188,90 @@ bool ExternalStorage::contains_current(const Wire& object) const
     }
 
     return contains_current;
+}
+
+
+template<>
+void ExternalStorage::add_component(const Wire& object)
+{
+    const std::string query = "INSERT INTO " + _table_name<Wire>() + " VALUES " +
+        "(?,?,?,?,?,?);";
+
+    sqlite3_stmt* statement = _bind_values(query, _encode(object));
+    int result = sqlite3_step(statement);
+
+    sqlite3_finalize(statement);
+
+    if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
+}
+
+
+template<>
+void ExternalStorage::update_component(const Wire& object)
+{
+    if( !contains(object) )
+    {
+        add_component(object);
+        return;
+    }
+
+    const std::string query = "UPDATE " + _table_name<Wire>() + " SET " +
+        "primary_name=?002," +
+        "other_names=?003," +
+        "pulled=?004," +
+        "control_transistors=?005," +
+        "gate_transistors=?006" +
+        " WHERE id=?001;";
+
+    sqlite3_stmt* statement = _bind_values(query, _encode(object));
+    int result = sqlite3_step(statement);
+
+    sqlite3_finalize(statement);
+
+    if( result != SQLITE_DONE )
+    {
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
+}
+
+
+template<>
+Wire ExternalStorage::get(const uint64_t id) const
+{
+    const std::string query = "SELECT * FROM " + _table_name<Wire>() + " WHERE id=?;";
+    sqlite3_stmt* statement = _bind_values(query, { _to_sql_type<uint64_t>(id) });
+
+    int result = sqlite3_step(statement);
+    if( result == SQLITE_ROW )
+    {
+        Wire wire = _decode<Wire>(statement);
+        sqlite3_finalize(statement);
+
+        return wire;
+    }
+    else if( result == SQLITE_DONE )
+    {
+        sqlite3_finalize(statement);
+        throw circsim::common::ValueError
+        (
+            "No wire instance found for id " + std::to_string(id)
+        );
+    }
+    else
+    {
+        sqlite3_finalize(statement);
+        throw circsim::common::StateError
+        (
+            sqlite3_errmsg(_db_connection_obj)
+        );
+    }
 }
