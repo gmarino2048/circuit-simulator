@@ -41,10 +41,10 @@ void ExternalStorage::_create_table<Wire>()
     const std::string query = "CREATE TABLE IF NOT EXISTS " + _table_name<Wire>() + " (" +
         "id INTEGER PRIMARY KEY," +
         "primary_name TEXT NOT NULL," +
-        "other_names BLOB NOT NULL," +
+        "other_names BLOB," +
         "pulled INTEGER NOT NULL," +
-        "control_transistors BLOB NOT NULL," +
-        "gate_transistors BLOB NOT NULL" +
+        "control_transistors BLOB," +
+        "gate_transistors BLOB" +
     ");";
 
     sqlite3_stmt* statement = _bind_values(query, {});
