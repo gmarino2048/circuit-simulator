@@ -48,7 +48,7 @@ public:
      * @tparam T The object type
      */
     template<class T>
-    using ObjectState = std::pair<uint64_t, T>;
+    using ObjectState = std::pair<uint64_t, typename T::State>;
 
 private:
 
@@ -56,10 +56,21 @@ private:
     std::optional<uint64_t> _id;
 
     /// A list of the states of all transistors registered in this object.
-    std::vector<ObjectState<Transistor::State>> _transistor_states;
+    std::vector<ObjectState<Transistor>> _transistor_states;
 
     /// A list of the states of all wires registered in this object.
-    std::vector<ObjectState<Wire::State>> _wire_states;
+    std::vector<ObjectState<Wire>> _wire_states;
+
+
+    /**
+     * @brief Get the state of an individual object.
+     * 
+     * @tparam T The type of the object
+     * @param object The object instance
+     * @return T::State The object's state value
+     */
+    template<class T>
+    typename T::State _get_object_state(const T& object) const;
 
 
     /**
@@ -85,20 +96,6 @@ public:
      * @param id The ID of the newly created object
      */
     CircuitState(const uint64_t id);
-
-    /**
-     * @brief Create a new CircuitState object and populate with provided values.
-     * 
-     * @param id The ID of the newly created object
-     * @param transistor_list A list of transistors to take a snapshot with
-     * @param wire_list A list of wires to take a snapshot with
-     */
-    CircuitState
-    (
-        const uint64_t id,
-        const std::vector<Transistor>& transistor_list,
-        const std::vector<Wire>& wire_list
-    );
 
 
     /**
