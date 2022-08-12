@@ -17,6 +17,7 @@
 // C++ Stdlib Includes
 #include <cinttypes>
 #include <optional>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -56,10 +57,10 @@ private:
     std::optional<uint64_t> _id;
 
     /// A list of the states of all transistors registered in this object.
-    std::vector<ObjectState<Transistor>> _transistor_states;
+    std::unordered_map<uint64_t, Transistor::State> _transistor_states;
 
     /// A list of the states of all wires registered in this object.
-    std::vector<ObjectState<Wire>> _wire_states;
+    std::unordered_map<uint64_t, Wire::State> _wire_states;
 
 
     /**
@@ -74,13 +75,13 @@ private:
 
 
     /**
-     * @brief Gets the state list for the associated object.
+     * @brief Gets the state map for the associated object.
      * 
      * @tparam T The type of the object
-     * @return std::vector<ObjectState<T>>& A reference to the state list
+     * @return std::vector<ObjectState<T>>& A reference to the state map
      */
     template<class T>
-    std::vector<ObjectState<T>>& _get_state_list();
+    std::unordered_map<uint64_t, typename T::State>& _get_state_map();
 
 public:
 

@@ -44,13 +44,13 @@ Wire::State CircuitState::_get_object_state<Wire>(const Wire& object) const
 
 
 template<>
-std::vector<ObjectState<Transistor>>& CircuitState::_get_state_list<Transistor>()
+std::unordered_map<uint64_t, Transistor::State>& CircuitState::_get_state_map<Transistor>()
 {
     return _transistor_states;
 }
 
 template<>
-std::vector<ObjectState<Wire>>& CircuitState::_get_state_list<Wire>()
+std::unordered_map<uint64_t, Wire::State>& CircuitState::_get_state_map<Wire>()
 {
     return _wire_states;
 }
@@ -72,26 +72,20 @@ template ObjectState<Wire> CircuitState::get_state<Wire>(const uint64_t id) cons
 template<class T>
 ObjectState<T> CircuitState::get_state(const uint64_t id) const
 {
-    std::vector<ObjectState<T>>& state_list = const_cast<CircuitState*>(this)->_get_state_list<T>();
-    typename std::vector<ObjectState<T>>::const_iterator it;
+    std::unordered_map<uint64_t, typename T::State>& map =
+        const_cast<CircuitState*>(this)->_get_state_map<T>();
 
-    it = std::find_if
-    (
-        state_list.begin(),
-        state_list.end(),
-        [id](const ObjectState<T> &state)
-        {
-            return state.first == id;
-        }
-    );
-
-    if( it != state_list.end() )
+    using iterator_t = typename std::unordered_map<uint64_t, typename T::State>::const_iterator;
+    if( iterator_t it = map.find(id); it != map.end() )
     {
-        return *it;
+        return ObjectState<T>(it->first, it->second);
     }
     else
     {
-        throw circsim::common::ValueError("No state with matching ID found.");
+        throw circsim::common::ValueError
+        (
+            "Object with ID " + std::to_string(id) + " not found."
+        );
     }
 }
 
@@ -117,7 +111,20 @@ template std::vector<ObjectState<Wire>> CircuitState::get_all_states<Wire>() con
 template<class T>
 std::vector<ObjectState<T>> CircuitState::get_all_states() const
 {
-    return const_cast<CircuitState*>(this)->_get_state_list<T>();
+    std::vector<ObjectState<T>> values;
+    std::unordered_map<uint64_t, typename T::State> map =
+        const_cast<CircuitState*>(this)->_get_state_map<T>();
+
+    values.reserve(map.size());
+
+    std::copy
+    (
+        map.begin(),
+        map.end(),
+        std::back_inserter(values)
+    );
+
+    return values;
 }
 
 
@@ -127,5 +134,18 @@ template void CircuitState::update_state<Wire>(const Wire& object);
 template<class T>
 void CircuitState::update_state(const T& object)
 {
-    
+    _get_state_map<T>()[object.id()] = _get_object_state<T>(object);
+}
+
+
+template void CircuitState::update_all_states<Transistor>(const std::vector<Transistor>& objects);
+template void CircuitState::update_all_states<Wire>(const std::vector<Wire>& objects);
+
+template<class T>
+void CircuitState::update_all_states(const std::vector<T>& objects)
+{
+    for( const T& object : objects )
+    {
+        update_state<T>(object);
+    }
 }
