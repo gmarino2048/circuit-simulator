@@ -137,6 +137,8 @@ public:
     /**
      * @brief Get all the states of the given object type contained in this object.
      * 
+     *        Note: The objects are not guaranteed to be in any form of order.
+     * 
      * @tparam T The type of object to get state for
      * @return std::vector<T::State> A list of all states, in order by ID
      */
