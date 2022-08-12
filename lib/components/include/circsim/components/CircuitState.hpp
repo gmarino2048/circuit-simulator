@@ -15,6 +15,7 @@
 #define __CIRCSIM_COMPONENTS_CIRCUITSTATE_HPP
 
 // C++ Stdlib Includes
+#include <cinttypes>
 #include <optional>
 #include <utility>
 #include <vector>
@@ -26,7 +27,6 @@
 #include <circsim/common/ValueError.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
-#include <circsim/data/InternalStorage.hpp>
 
 
 namespace circsim::components
@@ -48,7 +48,7 @@ public:
      * @tparam T The object type
      */
     template<class T>
-    using ObjectState = std::pair<uint64_t, T::State>;
+    using ObjectState = std::pair<uint64_t, T>;
 
 private:
 
@@ -56,10 +56,10 @@ private:
     std::optional<uint64_t> _id;
 
     /// A list of the states of all transistors registered in this object.
-    std::vector<ObjectState<Transistor>> _transistor_states;
+    std::vector<ObjectState<Transistor::State>> _transistor_states;
 
     /// A list of the states of all wires registered in this object.
-    std::vector<ObjectState<Wire>> _wire_state;
+    std::vector<ObjectState<Wire::State>> _wire_states;
 
 
     /**
@@ -69,7 +69,7 @@ private:
      * @return std::vector<ObjectState<T>>& A reference to the state list
      */
     template<class T>
-    std::vector<ObjectState<T>>& _get_state_list() const;
+    std::vector<ObjectState<T>>& _get_state_list();
 
 public:
 
