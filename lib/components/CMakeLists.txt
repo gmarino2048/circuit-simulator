@@ -11,6 +11,7 @@ target_include_directories(circsim-components
 
 target_sources(circsim-components
     PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/src/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Transistor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Wire.cpp
 )
