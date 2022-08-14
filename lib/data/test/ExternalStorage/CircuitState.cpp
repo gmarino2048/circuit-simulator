@@ -54,8 +54,8 @@ protected:
         };
 
         CircuitState snapshot1(0xCAFE);
-        snapshot1.update_all_states<Transistor>(t_ids, t_states);
-        snapshot1.update_all_states<Wire>(w_ids, w_states);
+        snapshot1.update_multiple_states_manual<Transistor>(t_ids, t_states);
+        snapshot1.update_multiple_states_manual<Wire>(w_ids, w_states);
 
         _snapshots.push_back(snapshot1);
     }
@@ -85,7 +85,7 @@ TEST_F(CircuitStateStorage, ContainsTest)
     ASSERT_NO_THROW(_storage->add_component(snapshot));
     ASSERT_TRUE(_storage->contains(snapshot));
 
-    snapshot.update_state<Wire>(0, Wire::PULLED_HIGH);
+    snapshot.update_object_state_manual<Wire>(0, Wire::PULLED_HIGH);
 
     ASSERT_TRUE(_storage->contains(snapshot));
 }
@@ -98,13 +98,13 @@ TEST_F(CircuitStateStorage, UpdateTest)
     ASSERT_NO_THROW(_storage->add_component(snapshot));
     ASSERT_TRUE(_storage->contains_current(snapshot));
 
-    snapshot.update_state<Transistor>(0, Transistor::OFF);
+    snapshot.update_object_state_manual<Transistor>(0, Transistor::OFF);
 
     ASSERT_FALSE(_storage->contains_current(snapshot));
     ASSERT_NO_THROW(_storage->update_component(snapshot));
     ASSERT_TRUE(_storage->contains_current(snapshot));
 
-    snapshot.update_state<Wire>(0, Wire::PULLED_HIGH);
+    snapshot.update_object_state_manual<Wire>(0, Wire::PULLED_HIGH);
 
     ASSERT_FALSE(_storage->contains_current(snapshot));
     ASSERT_NO_THROW(_storage->update_component(snapshot));

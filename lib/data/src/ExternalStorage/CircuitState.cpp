@@ -162,8 +162,8 @@ CircuitState ExternalStorage::_decode(SqliteStatement& statement) const
     );
 
     CircuitState state_object(id);
-    state_object.update_all_states<Transistor>(transistor_ids, transistor_states);
-    state_object.update_all_states<Wire>(wire_ids, wire_states);
+    state_object.update_multiple_states_manual<Transistor>(transistor_ids, transistor_states);
+    state_object.update_multiple_states_manual<Wire>(wire_ids, wire_states);
 
     return state_object;
 }
