@@ -15,7 +15,6 @@
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalStorage.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 using Wire = circsim::components::Wire;

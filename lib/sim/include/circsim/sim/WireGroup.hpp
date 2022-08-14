@@ -3,9 +3,9 @@
  * @author Guy Marino (gmarino2048@gmail.com)
  * @brief This class contains the definition for the WireGroup
  *        class, which will allow the simulator to easily construct
- *        a group of connected wires given the component database.
+ *        a group of connected wires given the circuit definition.
  *        The WireGroup class will pull the connected wires from the
- *        database and allow easy state gathering.
+ *        circuit and allow easy state gathering.
  * @version 0.1
  * @date 2021-12-03
  * 
@@ -22,7 +22,6 @@
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalStorage.hpp>
 
 namespace circsim::sim
 {
@@ -111,7 +110,7 @@ public:
      *        gate states of each transistor.
      * 
      * @param wire The initial wire used to create the group.
-     * @param circuit The database used for component information.
+     * @param circuit The circuit used for component information.
      */
     void initialize(const uint64_t wire, const Circuit& circuit);
 

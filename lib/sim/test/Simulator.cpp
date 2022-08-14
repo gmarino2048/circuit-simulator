@@ -20,7 +20,6 @@
 #include <circsim/sim/Simulator.hpp>
 
 using namespace circsim::components;
-using namespace circsim::data;
 using namespace circsim::sim;
 
 class SimulatorTest : public ::testing::Test

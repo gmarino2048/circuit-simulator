@@ -214,7 +214,7 @@ public:
 
 
     /**
-     * @brief Add the component to the database if it does not already exist.
+     * @brief Add the component to the circuit if it does not already exist.
      * 
      *        This method will automatically update the index maps with the
      *        component's ID. If the ID already exists, this method will exit
