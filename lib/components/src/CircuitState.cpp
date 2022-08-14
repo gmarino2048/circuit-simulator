@@ -66,6 +66,19 @@ CircuitState::CircuitState(const uint64_t id):
 {}
 
 
+bool CircuitState::operator==(const CircuitState& rhs) const
+{
+    bool equivalent = true;
+
+    equivalent &= _id == rhs._id;
+
+    equivalent &= _transistor_states == rhs._transistor_states;
+    equivalent &= _wire_states == rhs._wire_states;
+
+    return equivalent;
+}
+
+
 template ObjectState<Transistor> CircuitState::get_state<Transistor>(const uint64_t id) const;
 template ObjectState<Wire> CircuitState::get_state<Wire>(const uint64_t id) const;
 
@@ -128,24 +141,67 @@ std::vector<ObjectState<T>> CircuitState::get_all_states() const
 }
 
 
-template void CircuitState::update_state<Transistor>(const Transistor& object);
-template void CircuitState::update_state<Wire>(const Wire& object);
+template void CircuitState::update_object_state(const Transistor& object);
+template void CircuitState::update_object_state(const Wire& object);
 
 template<class T>
-void CircuitState::update_state(const T& object)
+void CircuitState::update_object_state(const T& object)
 {
     _get_state_map<T>()[object.id()] = _get_object_state<T>(object);
 }
 
 
-template void CircuitState::update_all_states<Transistor>(const std::vector<Transistor>& objects);
-template void CircuitState::update_all_states<Wire>(const std::vector<Wire>& objects);
+template void CircuitState::update_object_state_manual<Transistor>(const uint64_t id, const Transistor::State state);
+template void CircuitState::update_object_state_manual<Wire>(const uint64_t id, const Wire::State state);
 
 template<class T>
-void CircuitState::update_all_states(const std::vector<T>& objects)
+void CircuitState::update_object_state_manual(const uint64_t id, const typename T::State state)
+{
+    _get_state_map<T>()[id] = state;
+}
+
+
+template void CircuitState::update_multiple_states<Transistor>(const std::vector<Transistor>& objects);
+template void CircuitState::update_multiple_states<Wire>(const std::vector<Wire>& objects);
+
+template<class T>
+void CircuitState::update_multiple_states(const std::vector<T>& objects)
 {
     for( const T& object : objects )
     {
-        update_state<T>(object);
+        update_object_state<T>(object);
+    }
+}
+
+
+template void CircuitState::update_multiple_states_manual<Transistor>
+(
+    const std::vector<uint64_t>& ids,
+    const std::vector<Transistor::State>& states
+);
+template void CircuitState::update_multiple_states_manual<Wire>
+(
+    const std::vector<uint64_t>& ids,
+    const std::vector<Wire::State>& states
+);
+
+template<class T>
+void CircuitState::update_multiple_states_manual
+(
+    const std::vector<uint64_t>& ids,
+    const typename std::vector<typename T::State>& states
+)
+{
+    if( ids.size() != states.size() )
+    {
+        throw circsim::common::ValueError
+        (
+            "ID list size does not match state list size"
+        );
+    }
+
+    for( size_t i = 0; i < ids.size(); i++ )
+    {
+        update_object_state_manual<T>(ids[i], states[i]);
     }
 }

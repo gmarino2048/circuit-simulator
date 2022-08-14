@@ -26,7 +26,9 @@
 #include <circsim/common/StateError.hpp>
 #include <circsim/common/ValueError.hpp>
 
+#include <circsim/components/CircuitState.hpp>
 #include <circsim/components/Transistor.hpp>
+#include <circsim/components/Wire.hpp>
 
 #include <circsim/data/ExternalStorage.hpp>
 
@@ -44,6 +46,9 @@ template<>
 SqlValue ExternalStorage::_to_sql_type(const uint64_t value);
 
 template<>
+SqlValue ExternalStorage::_to_sql_type(const std::vector<uint8_t> value);
+
+template<>
 SqlValue ExternalStorage::_to_sql_type(const std::vector<uint64_t> value);
 
 template<>
@@ -59,6 +64,9 @@ uint8_t ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
 uint64_t ExternalStorage::_from_sql_type(const SqlValue& value);
+
+template<>
+std::vector<uint8_t> ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
 std::vector<uint64_t> ExternalStorage::_from_sql_type(const SqlValue& value);
@@ -125,6 +133,12 @@ SqlValue ExternalStorage::_to_sql_type(const uint64_t value)
     int64_t converted_value = *(reinterpret_cast<const int64_t*>(value_ptr));
 
     return SqlValue(converted_value);
+}
+
+template<>
+SqlValue ExternalStorage::_to_sql_type(const std::vector<uint8_t> value)
+{
+    return value;
 }
 
 template<>
@@ -233,9 +247,24 @@ catch( const std::bad_variant_access& )
 {
     throw circsim::common::IndexError
     (
-        "SQL type does not contain int64, required for conversion to size."
+        "SQL type does not contain int64, required for conversion to uint64."
     );
 }
+
+template<>
+std::vector<uint8_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    const std::vector<uint8_t> num_value = std::get<std::vector<uint8_t>>(value);
+    return num_value;
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain blob, required for conversion to vector<uint8>."
+    );
+}
+
 
 template<>
 std::vector<uint64_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
@@ -279,7 +308,7 @@ catch( const std::bad_variant_access& )
 {
     throw circsim::common::IndexError
     (
-        "SQL type does not contain blob, required for conversion to vector<size>."
+        "SQL type does not contain blob, required for conversion to vector<uint64>."
     );
 }
 
@@ -457,6 +486,7 @@ bool ExternalStorage::_table_exists()
 
 void ExternalStorage::_create_tables()
 {
+    _create_table<circsim::components::CircuitState>();
     _create_table<circsim::components::Transistor>();
     _create_table<circsim::components::Wire>();
 }
@@ -531,6 +561,7 @@ ExternalStorage::~ExternalStorage()
 
 
 // Explicitly initialize count for transistor
+template size_t ExternalStorage::count<circsim::components::CircuitState>() const;
 template size_t ExternalStorage::count<circsim::components::Transistor>() const;
 template size_t ExternalStorage::count<circsim::components::Wire>() const;
 
@@ -559,6 +590,7 @@ size_t ExternalStorage::count() const
 }
 
 
+template bool ExternalStorage::contains(const circsim::components::CircuitState& object) const;
 template bool ExternalStorage::contains(const circsim::components::Transistor& object) const;
 template bool ExternalStorage::contains(const circsim::components::Wire& object) const;
 
@@ -589,6 +621,7 @@ bool ExternalStorage::contains(const T& object) const
 }
 
 
+template bool ExternalStorage::contains_current(const circsim::components::CircuitState& object) const;
 template bool ExternalStorage::contains_current(const circsim::components::Transistor& object) const;
 template bool ExternalStorage::contains_current(const circsim::components::Wire& object) const;
 
@@ -620,6 +653,7 @@ bool ExternalStorage::contains_current(const T& object) const
 }
 
 
+template circsim::components::CircuitState ExternalStorage::get(const uint64_t id) const;
 template circsim::components::Transistor ExternalStorage::get(const uint64_t id) const;
 template circsim::components::Wire ExternalStorage::get(const uint64_t id) const;
 
@@ -667,6 +701,7 @@ T ExternalStorage::get(const uint64_t id) const
 }
 
 
+template std::vector<circsim::components::CircuitState> ExternalStorage::get_all() const;
 template std::vector<circsim::components::Transistor> ExternalStorage::get_all() const;
 template std::vector<circsim::components::Wire> ExternalStorage::get_all() const;
 
