@@ -14,6 +14,7 @@ target_sources(circsim-data
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/InternalStorage.cpp
 
+        ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/Transistor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/Wire.cpp
 )
