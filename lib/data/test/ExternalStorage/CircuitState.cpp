@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 // Project Includes
+#include <circsim/common/StateError.hpp>
 #include <circsim/components/CircuitState.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
@@ -73,5 +74,59 @@ TEST_F(CircuitStateStorage, FidelityTest)
     CircuitState snapshot = _snapshots[0];
 
     ASSERT_NO_THROW(_storage->add_component(snapshot));
+    ASSERT_TRUE(_storage->contains_current(snapshot));
+}
+
+
+TEST_F(CircuitStateStorage, ContainsTest)
+{
+    CircuitState snapshot = _snapshots[0];
+
+    ASSERT_NO_THROW(_storage->add_component(snapshot));
+    ASSERT_TRUE(_storage->contains(snapshot));
+
+    snapshot.update_state<Wire>(0, Wire::PULLED_HIGH);
+
+    ASSERT_TRUE(_storage->contains(snapshot));
+}
+
+
+TEST_F(CircuitStateStorage, UpdateTest)
+{
+    CircuitState snapshot = _snapshots[0];
+
+    ASSERT_NO_THROW(_storage->add_component(snapshot));
+    ASSERT_TRUE(_storage->contains_current(snapshot));
+
+    snapshot.update_state<Transistor>(0, Transistor::OFF);
+
+    ASSERT_FALSE(_storage->contains_current(snapshot));
+    ASSERT_NO_THROW(_storage->update_component(snapshot));
+    ASSERT_TRUE(_storage->contains_current(snapshot));
+
+    snapshot.update_state<Wire>(0, Wire::PULLED_HIGH);
+
+    ASSERT_FALSE(_storage->contains_current(snapshot));
+    ASSERT_NO_THROW(_storage->update_component(snapshot));
+    ASSERT_TRUE(_storage->contains_current(snapshot));
+}
+
+
+TEST_F(CircuitStateStorage, DoubleInsertion)
+{
+    CircuitState snapshot = _snapshots[0];
+
+    ASSERT_NO_THROW(_storage->add_component(snapshot));
+    ASSERT_TRUE(_storage->contains_current(snapshot));
+
+    EXPECT_THROW(_storage->add_component(snapshot), circsim::common::StateError);
+}
+
+
+TEST_F(CircuitStateStorage, UpdateInsertion)
+{
+    CircuitState snapshot = _snapshots[0];
+
+    ASSERT_NO_THROW(_storage->update_component(snapshot));
     ASSERT_TRUE(_storage->contains_current(snapshot));
 }
