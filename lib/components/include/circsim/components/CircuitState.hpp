@@ -157,6 +157,17 @@ public:
     void update_state(const T& object);
 
     /**
+     * @brief Update the state of an existing object using only the ID and
+     *        the associated state.
+     * 
+     * @tparam T The type of object to be updated
+     * @param id The ID of the object
+     * @param state The state of the object to update
+     */
+    template<class T>
+    void update_state(const uint64_t id, const typename T::State state);
+
+    /**
      * @brief Update the state of several existing objects, or add
      *        them if they do not exist.
      * 
@@ -165,6 +176,21 @@ public:
      */
     template<class T>
     void update_all_states(const std::vector<T>& objects);
+
+    /**
+     * @brief Update with a list of ids and states only without needing to
+     *        create new objects.
+     * 
+     * @tparam T The type of object to be updated
+     * @param ids The list of IDs
+     * @param states The list of States
+     */
+    template<class T>
+    void update_all_states
+    (
+        const std::vector<uint64_t>& ids,
+        const typename std::vector<typename T::State>& states
+    );
 
 };  // end class CircuitState
 

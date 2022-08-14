@@ -138,6 +138,16 @@ void CircuitState::update_state(const T& object)
 }
 
 
+template void CircuitState::update_state<Transistor>(const uint64_t id, const Transistor::State state);
+template void CircuitState::update_state<Wire>(const uint64_t id, const Wire::State state);
+
+template<class T>
+void CircuitState::update_state(const uint64_t id, const typename T::State state)
+{
+    _get_state_map<T>()[id] = state;
+}
+
+
 template void CircuitState::update_all_states<Transistor>(const std::vector<Transistor>& objects);
 template void CircuitState::update_all_states<Wire>(const std::vector<Wire>& objects);
 
@@ -147,5 +157,38 @@ void CircuitState::update_all_states(const std::vector<T>& objects)
     for( const T& object : objects )
     {
         update_state<T>(object);
+    }
+}
+
+
+template void CircuitState::update_all_states<Transistor>
+(
+    const std::vector<uint64_t>& ids,
+    const std::vector<Transistor::State>& states
+);
+template void CircuitState::update_all_states<Wire>
+(
+    const std::vector<uint64_t>& ids,
+    const std::vector<Wire::State>& states
+);
+
+template<class T>
+void CircuitState::update_all_states
+(
+    const std::vector<uint64_t>& ids,
+    const typename std::vector<typename T::State>& states
+)
+{
+    if( ids.size() != states.size() )
+    {
+        throw circsim::common::ValueError
+        (
+            "ID list size does not match state list size"
+        );
+    }
+
+    for( size_t i = 0; i < ids.size(); i++ )
+    {
+        update_state<T>(ids[i], states[i]);
     }
 }
