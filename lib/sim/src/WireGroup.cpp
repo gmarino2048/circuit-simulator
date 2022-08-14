@@ -20,6 +20,9 @@
 
 // Project Includes
 #include <circsim/common/StateError.hpp>
+#include <circsim/components/Circuit.hpp>
+#include <circsim/components/Transistor.hpp>
+#include <circsim/components/Wire.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 using WireGroup = circsim::sim::WireGroup;
@@ -32,12 +35,12 @@ using Wire = WireGroup::Wire;
  * whether they are on, and then processing any wires which have not already
  * been added to the wire group.
  */
-void WireGroup::_build_wire_group(const uint64_t initial, const Database& database)
+void WireGroup::_build_wire_group(const uint64_t initial, const Circuit& circuit)
 {
     _wires.insert(initial);
     std::queue<Wire*> unprocessed_wires
     ({
-        database.get<Wire>(initial)
+        circuit.get<Wire>(initial)
     });
 
     while( !unprocessed_wires.empty() )
@@ -48,7 +51,7 @@ void WireGroup::_build_wire_group(const uint64_t initial, const Database& databa
         const std::vector<uint64_t> ctrl_transistors = next_wire->ctrl_transistors();
         for( const uint64_t transistor_id : ctrl_transistors )
         {
-            Transistor* transistor = database.get<components::Transistor>(transistor_id);
+            Transistor* transistor = circuit.get<components::Transistor>(transistor_id);
 
             // If the transistor is on, add the other wire to the unprocessed list
             if( transistor->current_state() == Transistor::ON )
@@ -80,7 +83,7 @@ void WireGroup::_build_wire_group(const uint64_t initial, const Database& databa
                 {
                     _wires.insert(unprocessed_wire_id);
 
-                    Wire* unproc_wire = database.get<Wire>(unprocessed_wire_id);
+                    Wire* unproc_wire = circuit.get<Wire>(unprocessed_wire_id);
                     unprocessed_wires.push(unproc_wire);
                 }
                 // Otherwise there is a circular reference, but the wires will all
@@ -97,7 +100,7 @@ void WireGroup::_build_wire_group(const uint64_t initial, const Database& databa
 }
 
 
-void WireGroup::_recalculate_group_state(const Database& database)
+void WireGroup::_recalculate_group_state(const Circuit& circuit)
 {
     // Check for GND wire
     if( Wire::GND_ID_EXISTS() && _wires.find(Wire::GND_ID()) != _wires.end() )
@@ -118,7 +121,7 @@ void WireGroup::_recalculate_group_state(const Database& database)
     size_t fh_count = 0;
     for( const uint64_t wire_id : _wires )
     {
-        Wire* wire = database.get<Wire>(wire_id);
+        Wire* wire = circuit.get<Wire>(wire_id);
         wire->set_floating();
 
         if ( wire->state() == Wire::State::FLOATING_HIGH )
@@ -157,11 +160,11 @@ void WireGroup::_recalculate_group_state(const Database& database)
 }
 
 
-void WireGroup::_update_wire_states(const Database& database) const
+void WireGroup::_update_wire_states(const Circuit& circuit) const
 {
     for( const uint64_t wire_id : _wires )
     {
-        Wire* wire = database.get<Wire>(wire_id);
+        Wire* wire = circuit.get<Wire>(wire_id);
 
         bool is_vcc = Wire::VCC_ID_EXISTS() ? wire->id() == Wire::VCC_ID() : false;
         bool is_gnd = Wire::GND_ID_EXISTS() ? wire->id() == Wire::GND_ID() : false;
@@ -202,9 +205,9 @@ WireGroup::WireGroup() :
 }
 
 
-WireGroup::WireGroup(const uint64_t wire, const Database& database) : WireGroup()
+WireGroup::WireGroup(const uint64_t wire, const Circuit& circuit) : WireGroup()
 {
-    initialize(wire, database);
+    initialize(wire, circuit);
 }
 
 
@@ -215,23 +218,23 @@ void WireGroup::reset()
 }
 
 
-void WireGroup::initialize(const uint64_t wire, const Database& database)
+void WireGroup::initialize(const uint64_t wire, const Circuit& circuit)
 {
     reset();
 
-    _build_wire_group(wire, database);
-    _recalculate_group_state(database);
-    _update_wire_states(database);
+    _build_wire_group(wire, circuit);
+    _recalculate_group_state(circuit);
+    _update_wire_states(circuit);
 }
 
 
-std::vector<uint64_t> WireGroup::gate_transistors(const Database &database) const
+std::vector<uint64_t> WireGroup::gate_transistors(const Circuit &circuit) const
 {
     std::vector<uint64_t> transistor_ids;
 
     for ( const uint64_t wire_id : _wires )
     {
-        const Wire *wire_object = database.get<Wire>(wire_id);
+        const Wire *wire_object = circuit.get<Wire>(wire_id);
 
         std::vector<uint64_t> gate_ids = wire_object->gate_transistors();
         for( const uint64_t trans_id : gate_ids )

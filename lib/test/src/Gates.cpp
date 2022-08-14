@@ -13,14 +13,14 @@
 #include <Gates.hpp>
 
 // Project Includes
+#include <circsim/components/Circuit.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalStorage.hpp>
 
 using Wire = circsim::components::Wire;
 using Transistor = circsim::components::Transistor;
 
-circsim::data::InternalStorage create_nor()
+circsim::components::Circuit create_nor()
 {
     
 
@@ -75,14 +75,15 @@ circsim::data::InternalStorage create_nor()
         gnd.id()
     );
 
-    return circsim::data::InternalStorage
-    (
-        { out, in_a, in_b, gnd },
-        { trans_a, trans_b }
-    );
+
+    circsim::components::Circuit circuit;
+    circuit.add_all_components<Wire>({ out, in_a, in_b, gnd });
+    circuit.add_all_components<Transistor>({ trans_a, trans_b });
+
+    return circuit;
 }
 
-circsim::data::InternalStorage create_nand()
+circsim::components::Circuit create_nand()
 {
     using Wire = circsim::components::Wire;
     using Transistor = circsim::components::Transistor;
@@ -149,9 +150,9 @@ circsim::data::InternalStorage create_nand()
         gnd.id()
     );
 
-    return circsim::data::InternalStorage
-    (
-        { gnd, out, connector, in_a, in_b },
-        { trans_a, trans_b }
-    );
+    circsim::components::Circuit circuit;
+    circuit.add_all_components<Wire>({ gnd, in_a, in_b, connector, out });
+    circuit.add_all_components<Transistor>({ trans_a, trans_b });
+
+    return circuit;
 }

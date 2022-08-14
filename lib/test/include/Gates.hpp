@@ -12,9 +12,9 @@
 #ifndef __CIRCSIM_TEST_COMMON_GATES_HPP
 #define __CIRCSIM_TEST_COMMON_GATES_HPP
 
-#include <circsim/data/InternalStorage.hpp>
+#include <circsim/components/Circuit.hpp>
 
-circsim::data::InternalStorage create_nand();
-circsim::data::InternalStorage create_nor();
+circsim::components::Circuit create_nand();
+circsim::components::Circuit create_nor();
 
 #endif // #ifndef __CIRCSIM_TEST_COMMON_GATES_HPP

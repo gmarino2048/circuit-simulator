@@ -3,9 +3,9 @@
  * @author Guy Marino (gmarino2048@gmail.com)
  * @brief This class contains the definition for the WireGroup
  *        class, which will allow the simulator to easily construct
- *        a group of connected wires given the component database.
+ *        a group of connected wires given the circuit definition.
  *        The WireGroup class will pull the connected wires from the
- *        database and allow easy state gathering.
+ *        circuit and allow easy state gathering.
  * @version 0.1
  * @date 2021-12-03
  * 
@@ -22,7 +22,6 @@
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalStorage.hpp>
 
 namespace circsim::sim
 {
@@ -44,8 +43,8 @@ public:
     /// Import easy-access definition for Transistor
     using Transistor = ::circsim::components::Transistor;
 
-    /// Import component database type
-    using Database = ::circsim::data::InternalStorage;
+    /// Import easy-access definition for Circuit
+    using Circuit = ::circsim::components::Circuit;
 
 private:
 
@@ -58,28 +57,28 @@ private:
 
 
     /**
-     * @brief Create the wire group given an initial wire and a database
-     *        of components.
+     * @brief Create the wire group given an initial wire and a circuit
+     *        definition.
      * 
      * @param initial The wire used to build the group.
-     * @param database The database of components used for reference.
+     * @param circuit The circuit used for reference.
      */
-    void _build_wire_group(const uint64_t initial, const Database& database);
+    void _build_wire_group(const uint64_t initial, const Circuit& circuit);
 
     /**
      * @brief Recalculate the wire group state given all of the wires in
      *        the group. Usually this should only be required once.
      * 
-     * @param database The component database.
+     * @param circuit The circuit object
      */
-    void _recalculate_group_state(const Database& database);
+    void _recalculate_group_state(const Circuit& circuit);
 
     /**
      * @brief Update the individual wire states in this wire group.
      * 
-     * @param database The database used to get the wire instances.
+     * @param circuit The circuit used to get the wire instances.
      */
-    void _update_wire_states(const Database& database) const;
+    void _update_wire_states(const Circuit& circuit) const;
 
 public:
 
@@ -90,13 +89,13 @@ public:
     WireGroup();
 
     /**
-     * @brief Constructs a new object given a wire and the component database.
+     * @brief Constructs a new object given a wire and the circuit definition.
      *        This will automatically find all wires connected to the given one.
      * 
      * @param wire The initial wire used to construct the group.
-     * @param database The database from which the components are gathered.
+     * @param circuit The circuit from which the components are gathered.
      */
-    WireGroup(const uint64_t wire, const Database& database);
+    WireGroup(const uint64_t wire, const Circuit& circuit);
 
 
     /**
@@ -106,14 +105,14 @@ public:
     void reset();
 
     /**
-     * @brief Initialize the group using a wire and a database. This method will
-     *        comb the database and assemble a group of connected wires given the
+     * @brief Initialize the group using a wire and a circuit. This method will
+     *        comb the circuit and assemble a group of connected wires given the
      *        gate states of each transistor.
      * 
      * @param wire The initial wire used to create the group.
-     * @param database The database used for component information.
+     * @param circuit The circuit used for component information.
      */
-    void initialize(const uint64_t wire, const Database& database);
+    void initialize(const uint64_t wire, const Circuit& circuit);
 
 
     /**
@@ -147,10 +146,12 @@ public:
      * @details This function will return a group of unique transistor IDs whose
      *          gate nodes are connected to this wire group. This will allow us to
      *          easily determine which transistors are going to switch.
-     * P
+     * 
+     * @param circuit The component circuit to use.
+     * 
      * @return std::vector<uint64_t> The IDs of the gate transistors for the group.
      */
-    std::vector<uint64_t> gate_transistors(const Database &database) const;
+    std::vector<uint64_t> gate_transistors(const Circuit &circuit) const;
 
 };
 

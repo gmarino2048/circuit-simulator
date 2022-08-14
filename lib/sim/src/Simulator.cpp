@@ -22,8 +22,10 @@
 #include <circsim/common/FormatError.hpp>
 #include <circsim/common/LimitError.hpp>
 #include <circsim/common/StateError.hpp>
+#include <circsim/components/Circuit.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
+#include <circsim/sim/WireGroup.hpp>
 #include <circsim/sim/Simulator.hpp>
 
 using namespace circsim;
@@ -32,7 +34,7 @@ using namespace circsim::sim;
 
 void Simulator::_create_wire_group(const uint64_t wire_id, WireGroup &group)
 {
-    group = WireGroup(wire_id, this->_internal_database);
+    group = WireGroup(wire_id, this->_circuit);
 
     // Remove the wires in the group from the simulator's list for efficiency
     std::set<uint64_t> group_wire_ids = group.wire_ids();
@@ -61,12 +63,12 @@ void Simulator::_update_transistors(const WireGroup &group)
 
     // Convert transistor Ids to objects
     std::vector<uint64_t> transistors_to_update =
-        group.gate_transistors(_internal_database);
+        group.gate_transistors(_circuit);
 
     for( const uint64_t id : transistors_to_update )
     {
         components::Transistor *transistor_object =
-            _internal_database.get<components::Transistor>(id);
+            _circuit.get<components::Transistor>(id);
 
         bool state_changed = transistor_object->update_state(group.group_state());
 
@@ -130,20 +132,20 @@ Simulator::Simulator(const size_t iteration_limit) :
     _iteration_count(0),
     _iteration_limit(iteration_limit),
     _wire_update_list(),
-    _internal_database()
+    _circuit()
 { }
 
 
 Simulator::Simulator
 (
-    const data::InternalStorage &database,
+    const components::Circuit &circuit,
     const size_t iteration_limit
 ) :
     _iteration_count(0),
     _iteration_limit(iteration_limit),
     _wire_update_list()
 {
-    this->database(database);
+    this->circuit(circuit);
 }
 
 
@@ -192,7 +194,7 @@ void Simulator::update_by_id
 )
 {
     components::Wire *wire_object =
-        _internal_database.get<components::Wire>(id);
+        _circuit.get<components::Wire>(id);
 
     // Preserve the internal order of the update list
     wire_object->state(state);
@@ -213,7 +215,7 @@ void Simulator::update_by_name
 )
 {
     components::Wire *wire_object =
-        _internal_database.find<components::Wire>(name);
+        _circuit.find<components::Wire>(name);
 
     // Preserve the internal order of the update list
     wire_object->state(state);

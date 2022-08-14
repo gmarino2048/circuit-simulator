@@ -12,7 +12,6 @@ target_include_directories(circsim-data
 target_sources(circsim-data
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/src/InternalStorage.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/Transistor.cpp
@@ -34,7 +33,6 @@ add_executable(circsim-data-test)
 target_sources(circsim-data-test
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/test/InternalStorage.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage/Transistor.cpp

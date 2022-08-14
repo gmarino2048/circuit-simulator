@@ -15,45 +15,44 @@
 
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
-#include <circsim/data/InternalStorage.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 using Wire = circsim::components::Wire;
 using Transistor = circsim::components::Transistor;
-using Database = circsim::data::InternalStorage;
+using Circuit = circsim::components::Circuit;
 using WireGroup = circsim::sim::WireGroup;
 
 TEST(WireGroup, NandTest)
 {
-    Database db = create_nand();
+    Circuit circuit = create_nand();
 
-    Wire* gnd = db.get<Wire>(Wire::GND_ID());
+    Wire* gnd = circuit.get<Wire>(Wire::GND_ID());
 
-    Wire* in_a = db.get<Wire>(1);
-    Wire* in_b = db.get<Wire>(2);
+    Wire* in_a = circuit.get<Wire>(1);
+    Wire* in_b = circuit.get<Wire>(2);
 
-    Wire* connector = db.get<Wire>(3);
-    Wire* out = db.get<Wire>(4);
+    Wire* connector = circuit.get<Wire>(3);
+    Wire* out = circuit.get<Wire>(4);
 
-    db.get<Transistor>(1)->update_state(Wire::PULLED_LOW);
-    db.get<Transistor>(2)->update_state(Wire::PULLED_LOW);
+    circuit.get<Transistor>(1)->update_state(Wire::PULLED_LOW);
+    circuit.get<Transistor>(2)->update_state(Wire::PULLED_LOW);
 
-    WireGroup group(out->id(), db);
+    WireGroup group(out->id(), circuit);
 
     EXPECT_TRUE(out->high());
 
     // Activate first transistor
-    db.get<Transistor>(1)->update_state(Wire::PULLED_HIGH);
+    circuit.get<Transistor>(1)->update_state(Wire::PULLED_HIGH);
 
-    group = WireGroup(out->id(), db);
+    group = WireGroup(out->id(), circuit);
 
     EXPECT_TRUE(out->high());
     EXPECT_TRUE(connector->high());
 
     // Activate second transistor
-    db.get<Transistor>(2)->update_state(Wire::PULLED_HIGH);
+    circuit.get<Transistor>(2)->update_state(Wire::PULLED_HIGH);
 
-    group = WireGroup(out->id(), db);
+    group = WireGroup(out->id(), circuit);
 
     EXPECT_TRUE(out->low());
     EXPECT_TRUE(connector->low());

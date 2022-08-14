@@ -11,6 +11,7 @@ target_include_directories(circsim-components
 
 target_sources(circsim-components
     PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/src/Circuit.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Transistor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Wire.cpp
@@ -27,6 +28,7 @@ add_executable(circsim-components-test)
 
 target_sources(circsim-components-test
     PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/test/Circuit.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/Transistor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/Wire.cpp
 )
