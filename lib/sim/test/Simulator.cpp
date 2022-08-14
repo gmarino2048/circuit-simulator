@@ -70,8 +70,8 @@ Wire::State SimulatorTest::encode_input(const bool input)
 TEST_F(SimulatorTest, TestNOR)
 {
     // Set up simulator
-    InternalStorage db = create_nor();
-    _simulator = new Simulator(db);
+    Circuit circuit = create_nor();
+    _simulator = new Simulator(circuit);
 
     bool input_options[2] = { true, false };
 
@@ -98,7 +98,7 @@ TEST_F(SimulatorTest, TestNOR)
             _simulator->update_all();
 
             // Get output of wire
-            Wire *out_wire = _simulator->database().find<Wire>("OUT");
+            Wire *out_wire = _simulator->circuit().find<Wire>("OUT");
             bool out = decode_output(out_wire);
 
             EXPECT_EQ( !(in_a || in_b), out );
@@ -109,8 +109,8 @@ TEST_F(SimulatorTest, TestNOR)
 TEST_F(SimulatorTest, TestNand)
 {
     // Set up simulator
-    InternalStorage db = create_nand();
-    _simulator = new Simulator(db);
+    Circuit circuit = create_nand();
+    _simulator = new Simulator(circuit);
 
     bool input_options[2] = { true, false };
 
@@ -137,7 +137,7 @@ TEST_F(SimulatorTest, TestNand)
             _simulator->update_all();
 
             // Get output of wire
-            Wire *out_wire = _simulator->database().find<Wire>("OUT");
+            Wire *out_wire = _simulator->circuit().find<Wire>("OUT");
             bool out = decode_output(out_wire);
 
             EXPECT_EQ( !(in_a && in_b), out );

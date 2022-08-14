@@ -16,8 +16,8 @@
 #include <string>
 #include <vector>
 
+#include <circsim/components/Circuit.hpp>
 #include <circsim/components/Wire.hpp>
-#include <circsim/data/InternalStorage.hpp>
 #include <circsim/sim/WireGroup.hpp>
 
 namespace circsim::sim
@@ -53,8 +53,8 @@ private:
     /// The list of wires which need to be updated
     std::list<uint64_t> _wire_update_list;
 
-    /// The internal component database for the simulator
-    data::InternalStorage _internal_database;
+    /// The internal component circuit for the simulator
+    components::Circuit _circuit;
 
 
     /**
@@ -88,36 +88,36 @@ public:
     Simulator(const size_t iteration_limit = 2500);
 
     /**
-     * @brief Construct a new Simulator object with an existing component database
+     * @brief Construct a new Simulator object with an existing circuit
      * 
-     * @param database The component database to use for the simulator
+     * @param circuit The circuit to use for the simulator
      * @param iteration_limit The limit of iterations to resolve changes in the simulator (default 2500)
      */
     Simulator
     (
-        const data::InternalStorage &database,
+        const components::Circuit &circuit,
         const size_t iteration_limit = 2500
     );
 
 
     /**
-     * @brief Get the internal database of the simulator
+     * @brief Get the internal circuit of the simulator
      * 
-     * @return data::InternalStorage& The internal component database
+     * @return components::Circuit& The internal circuit object
      */
-    inline data::InternalStorage& database() { return _internal_database; }
+    inline components::Circuit& circuit() { return _circuit; }
 
     /**
-     * @brief Update the internal component database with a newer version.
+     * @brief Update the internal component circuit with a newer version.
      * 
-     * Once the database has been updated, we need to reset the update list and
+     * Once the circuit has been updated, we need to reset the update list and
      * the counter, as they will no longer be valid.
      * 
-     * @param database The new database to use.
+     * @param circuit The new circuit to use.
      */
-    inline void database(const data::InternalStorage &database) 
+    inline void circuit(const components::Circuit &circuit) 
     {
-        this->_internal_database = database;
+        this->_circuit = circuit;
     }
 
 

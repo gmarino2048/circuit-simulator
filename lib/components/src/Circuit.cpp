@@ -221,7 +221,7 @@ void Circuit::add_component(const T& object)
     {
         throw common::IndexError
         (
-            "Database already contains wire with ID: " + std::to_string(object.id())
+            "Circuit already contains wire with ID: " + std::to_string(object.id())
         );
     }
 
