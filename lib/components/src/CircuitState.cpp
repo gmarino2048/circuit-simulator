@@ -66,6 +66,19 @@ CircuitState::CircuitState(const uint64_t id):
 {}
 
 
+bool CircuitState::operator==(const CircuitState& rhs) const
+{
+    bool equivalent = true;
+
+    equivalent &= _id == rhs._id;
+
+    equivalent &= _transistor_states == rhs._transistor_states;
+    equivalent &= _wire_states == rhs._wire_states;
+
+    return equivalent;
+}
+
+
 template ObjectState<Transistor> CircuitState::get_state<Transistor>(const uint64_t id) const;
 template ObjectState<Wire> CircuitState::get_state<Wire>(const uint64_t id) const;
 

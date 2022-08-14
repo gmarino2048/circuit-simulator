@@ -100,6 +100,16 @@ public:
 
 
     /**
+     * @brief Compare two CircuitState objects to see if
+     *        they are equivalent.
+     * 
+     * @param rhs The other object to compare to
+     * @return bool Whether the two objects are equivalent
+     */
+    bool operator==(const CircuitState& rhs) const;
+
+
+    /**
      * @brief Gets the ID of this object with error checking.
      * 
      * @return uint64_t The object ID
