@@ -1,7 +1,7 @@
 /**
  * @file Circuit.cpp
  * @author Guy Marino (gmarino2048@gmail.com)
- * @brief Unit test file for the internal database object
+ * @brief Unit test file for the Circuit object
  * @version 0.1
  * @date 2022-03-13
  * 
@@ -42,7 +42,7 @@ protected:
     std::vector<Wire> _wires;
     std::vector<Transistor> _transistors;
 
-    Circuit _database;
+    Circuit _circuit;
 
     CircuitTest() = default;
     ~CircuitTest() = default;
@@ -78,7 +78,7 @@ void CircuitTest::_verify_all_components()
     for( size_t i = 0; i < NORMAL_WIRE_COUNT; i++ )
     {
         Wire* wire = nullptr;
-        EXPECT_NO_FATAL_FAILURE(wire = _database.get<Wire>(i));
+        EXPECT_NO_FATAL_FAILURE(wire = _circuit.get<Wire>(i));
 
         ASSERT_NE(wire, nullptr);
         EXPECT_EQ(*wire, _wires[i]);
@@ -87,7 +87,7 @@ void CircuitTest::_verify_all_components()
     for( size_t i = 0; i < NORMAL_TRANSISTOR_COUNT; i++ )
     {
         Transistor* transistor;
-        EXPECT_NO_FATAL_FAILURE(transistor = _database.get<Transistor>(i));
+        EXPECT_NO_FATAL_FAILURE(transistor = _circuit.get<Transistor>(i));
 
         ASSERT_NE(transistor, nullptr);
         EXPECT_EQ(*transistor, _transistors[i]);
@@ -98,18 +98,18 @@ void CircuitTest::_verify_all_components()
 TEST_F(CircuitTest, DefaultConstructor)
 {
     // Test no-param default construction
-    EXPECT_EQ(_database._wire_instances.size(), 0);
-    EXPECT_EQ(_database._transistor_instances.size(), 0);
+    EXPECT_EQ(_circuit._wire_instances.size(), 0);
+    EXPECT_EQ(_circuit._transistor_instances.size(), 0);
 }
 
 
 TEST_F(CircuitTest, ComponentInsertion)
 {
-    ASSERT_NO_FATAL_FAILURE(_database.add_all_components(_transistors));
-    ASSERT_NO_FATAL_FAILURE(_database.add_all_components(_wires));
+    ASSERT_NO_FATAL_FAILURE(_circuit.add_all_components(_transistors));
+    ASSERT_NO_FATAL_FAILURE(_circuit.add_all_components(_wires));
 
-    ASSERT_EQ(_database.count<Wire>(), NORMAL_WIRE_COUNT);
-    ASSERT_EQ(_database.count<Transistor>(), NORMAL_TRANSISTOR_COUNT);
+    ASSERT_EQ(_circuit.count<Wire>(), NORMAL_WIRE_COUNT);
+    ASSERT_EQ(_circuit.count<Transistor>(), NORMAL_TRANSISTOR_COUNT);
 
     _verify_all_components();
 }
@@ -121,7 +121,7 @@ TEST_F(CircuitTest, CopyConstructor)
     ASSERT_NO_FATAL_FAILURE(db_original.add_all_components(_transistors));
     ASSERT_NO_FATAL_FAILURE(db_original.add_all_components(_wires));
 
-    _database = db_original;
+    _circuit = db_original;
 
     // Ensure copy
     ASSERT_EQ(db_original.count<Wire>(), NORMAL_WIRE_COUNT);
@@ -137,7 +137,7 @@ TEST_F(CircuitTest, MoveConstructor)
     ASSERT_NO_FATAL_FAILURE(db_original.add_all_components(_transistors));
     ASSERT_NO_FATAL_FAILURE(db_original.add_all_components(_wires));
 
-    _database = std::move(db_original);
+    _circuit = std::move(db_original);
 
     _verify_all_components();
 }
@@ -148,12 +148,12 @@ TEST_F(CircuitTest, AddComponentSimple)
     // This will trigger a recalc, so don't worry about an extra test for that
     for( const Wire& wire : _wires )
     {
-        ASSERT_NO_THROW(_database.add_component(wire));
+        ASSERT_NO_THROW(_circuit.add_component(wire));
     }
 
     for( const Transistor& transistor : _transistors )
     {
-        ASSERT_NO_THROW(_database.add_component(transistor));
+        ASSERT_NO_THROW(_circuit.add_component(transistor));
     }
 
     _verify_all_components();
@@ -162,17 +162,17 @@ TEST_F(CircuitTest, AddComponentSimple)
 
 TEST_F(CircuitTest, FastUpdateComponent)
 {
-    ASSERT_NO_FATAL_FAILURE(_database.add_all_components(_transistors));
-    ASSERT_NO_FATAL_FAILURE(_database.add_all_components(_wires));
+    ASSERT_NO_FATAL_FAILURE(_circuit.add_all_components(_transistors));
+    ASSERT_NO_FATAL_FAILURE(_circuit.add_all_components(_wires));
 
     const size_t index = 5;
     const Wire::State new_state = Wire::PULLED_HIGH;
 
     {
-        _database.get<Wire>(index)->state(new_state);
+        _circuit.get<Wire>(index)->state(new_state);
     }
 
-    EXPECT_EQ(_database.get<Wire>(index)->state(), new_state);
+    EXPECT_EQ(_circuit.get<Wire>(index)->state(), new_state);
 }
 
 
@@ -192,9 +192,9 @@ TEST_F(CircuitTest, UpdateComponent)
         gate_trans
     );
 
-    EXPECT_NO_THROW(_database.update_component(new_wire));
+    EXPECT_NO_THROW(_circuit.update_component(new_wire));
 
-    Wire* wire_ptr = _database.get<Wire>(index);
+    Wire* wire_ptr = _circuit.get<Wire>(index);
     ASSERT_NE(wire_ptr, nullptr);
 
     EXPECT_EQ(wire_ptr->primary_name(), new_name);
@@ -213,9 +213,9 @@ TEST_F(CircuitTest, UpdateComponent)
         new_drain
     );
 
-    _database.update_component(new_transistor);
+    _circuit.update_component(new_transistor);
 
-    Transistor* trans_ptr = _database.get<Transistor>(index);
+    Transistor* trans_ptr = _circuit.get<Transistor>(index);
     ASSERT_NE(trans_ptr, nullptr);
 
     EXPECT_EQ(trans_ptr->source(), new_source);
@@ -227,12 +227,12 @@ TEST_F(CircuitTest, UpdateAddsComponent)
 {
     for( const Wire& wire : _wires )
     {
-        _database.update_component(wire);
+        _circuit.update_component(wire);
     }
 
     for( const Transistor& transistor : _transistors )
     {
-        _database.update_component(transistor);
+        _circuit.update_component(transistor);
     }
 
     _verify_all_components();
