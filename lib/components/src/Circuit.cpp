@@ -100,6 +100,71 @@ void Circuit::_clear_index()
 }
 
 
+Circuit::Circuit(const std::string& name): _name(name) {}
+
+
+Circuit::Circuit(const Circuit& other)
+{
+    _name = other._name;
+
+    _transistor_instances = other._transistor_instances;
+    _index_all<Transistor>();
+
+    _wire_instances = other._wire_instances;
+    _index_all<Wire>();
+}
+
+
+Circuit& Circuit::operator=(const Circuit& other)
+{
+    if( this == &other )
+    {
+        return *this;
+    }
+
+    _name = other._name;
+
+    _transistor_instances = other._transistor_instances;
+    _index_all<Transistor>();
+
+    _wire_instances = other._wire_instances;
+    _index_all<Wire>();
+
+    return *this;
+}
+
+
+Circuit::Circuit(Circuit&& other) noexcept
+{
+    _name = std::move(other._name);
+
+    _transistor_instances = std::move(other._transistor_instances);
+    _transistor_index = std::move(other._transistor_index);
+
+    _wire_instances = std::move(other._wire_instances);
+    _wire_index = std::move(other._wire_index);
+}
+
+
+Circuit& Circuit::operator=(Circuit&& other) noexcept
+{
+    if( this == &other )
+    {
+        return *this;
+    }
+
+    _name = std::move(other._name);
+
+    _transistor_instances = std::move(other._transistor_instances);
+    _transistor_index = std::move(other._transistor_index);
+
+    _wire_instances = std::move(other._wire_instances);
+    _wire_index = std::move(other._wire_index);
+
+    return *this;
+}
+
+
 template size_t Circuit::count<Transistor>() const;
 template size_t Circuit::count<Wire>() const;
 

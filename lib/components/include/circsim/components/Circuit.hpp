@@ -102,9 +102,71 @@ private:
 
 public:
 
-    Circuit();
+    /**
+     * @brief Default constructor.
+     * 
+     */
+    Circuit() = default;
 
+    /**
+     * @brief Construct a new Circuit object with a name.
+     * 
+     * @param name The circuit name
+     */
     Circuit(const std::string& name);
+
+
+    /**
+     * @brief Copy constructor.
+     * 
+     * @param other The other instance
+     */
+    Circuit(const Circuit& other);
+
+    /**
+     * @brief Copy assignment operator.
+     * 
+     * @param other The other instance
+     * @return Circuit& The copied instance
+     */
+    Circuit& operator=(const Circuit& other);
+
+    /**
+     * @brief Move constructor.
+     * 
+     * @param other The other instance
+     */
+    Circuit(Circuit&& other) noexcept;
+
+    /**
+     * @brief Move assignment operator.
+     * 
+     * @param other The other instance
+     * @return Circuit& The moved instance
+     */
+    Circuit& operator=(Circuit&& other) noexcept;
+
+
+    /**
+     * @brief Default destructor.
+     * 
+     */
+    ~Circuit() = default;
+
+
+    /**
+     * @brief Get the circuit name.
+     * 
+     * @return std::string The circuit name
+     */
+    inline std::string name() { return _name; }
+
+    /**
+     * @brief Set the circuit name.
+     * 
+     * @param name The new circuit name
+     */
+    inline void name(const std::string& name) { _name = name; }
 
 
     /**
