@@ -11,7 +11,7 @@
  */
 
 // C++ Stdlib Includes
-// (none)
+#include <cstring>
 
 // Library Includes
 #include <sqlite3.h>
