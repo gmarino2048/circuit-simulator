@@ -28,6 +28,7 @@ add_executable(circsim-components-test)
 
 target_sources(circsim-components-test
     PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/test/Circuit.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/Transistor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/Wire.cpp
 )

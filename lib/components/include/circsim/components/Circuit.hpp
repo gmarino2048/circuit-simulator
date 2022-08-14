@@ -230,6 +230,18 @@ public:
 
 
     /**
+     * @brief Add all of the components to the circuit object.
+     * 
+     *        This method will not delete existing circuit components.
+     * 
+     * @tparam T The type of objects to be inserted
+     * @param object_list The list of objects to insert
+     */
+    template<class T>
+    void add_all_components(const std::vector<T>& object_list);
+
+
+    /**
      * @brief Update the internal storage object with the given object.
      * 
      *        If the object already exists in storage, then the existing one

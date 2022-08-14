@@ -246,6 +246,23 @@ void Circuit::add_component(const T& object)
 }
 
 
+template void Circuit::add_all_components<Transistor>(const std::vector<Transistor>& object_list);
+template void Circuit::add_all_components<Wire>(const std::vector<Wire>& object_list);
+
+template<class T>
+void Circuit::add_all_components(const std::vector<T>& object_list)
+{
+    std::vector<T>& instances = _get_instances<T>();
+    instances.reserve(instances.size() + object_list.size());
+    _index_all<T>();
+
+    for( const T& object : object_list )
+    {
+        add_component<T>(object);
+    }
+}
+
+
 template void Circuit::update_component<Transistor>(const Transistor& object);
 template void Circuit::update_component<Wire>(const Wire& object);
 
