@@ -44,6 +44,9 @@ template<>
 SqlValue ExternalStorage::_to_sql_type(const uint64_t value);
 
 template<>
+SqlValue ExternalStorage::_to_sql_type(const std::vector<uint8_t> value);
+
+template<>
 SqlValue ExternalStorage::_to_sql_type(const std::vector<uint64_t> value);
 
 template<>
@@ -59,6 +62,9 @@ uint8_t ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
 uint64_t ExternalStorage::_from_sql_type(const SqlValue& value);
+
+template<>
+std::vector<uint8_t> ExternalStorage::_from_sql_type(const SqlValue& value);
 
 template<>
 std::vector<uint64_t> ExternalStorage::_from_sql_type(const SqlValue& value);
@@ -125,6 +131,12 @@ SqlValue ExternalStorage::_to_sql_type(const uint64_t value)
     int64_t converted_value = *(reinterpret_cast<const int64_t*>(value_ptr));
 
     return SqlValue(converted_value);
+}
+
+template<>
+SqlValue ExternalStorage::_to_sql_type(const std::vector<uint8_t> value)
+{
+    return value;
 }
 
 template<>
@@ -233,9 +245,24 @@ catch( const std::bad_variant_access& )
 {
     throw circsim::common::IndexError
     (
-        "SQL type does not contain int64, required for conversion to size."
+        "SQL type does not contain int64, required for conversion to uint64."
     );
 }
+
+template<>
+std::vector<uint8_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
+{
+    const std::vector<uint8_t> num_value = std::get<std::vector<uint8_t>>(value);
+    return num_value;
+}
+catch( const std::bad_variant_access& )
+{
+    throw circsim::common::IndexError
+    (
+        "SQL type does not contain blob, required for conversion to vector<uint8>."
+    );
+}
+
 
 template<>
 std::vector<uint64_t> ExternalStorage::_from_sql_type(const SqlValue& value) try
@@ -279,7 +306,7 @@ catch( const std::bad_variant_access& )
 {
     throw circsim::common::IndexError
     (
-        "SQL type does not contain blob, required for conversion to vector<size>."
+        "SQL type does not contain blob, required for conversion to vector<uint64>."
     );
 }
 
