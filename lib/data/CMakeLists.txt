@@ -20,6 +20,7 @@ target_sources(circsim-data
 
 target_link_libraries(circsim-data
     PUBLIC
+        Boost::json
         sqlite3
 
         circsim-common
