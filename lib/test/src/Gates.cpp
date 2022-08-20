@@ -27,7 +27,7 @@ circsim::components::Circuit create_nor()
     Wire gnd
     (
         0,
-        Wire::GND,
+        Wire::SW_GND,
         { 1, 2 },       // Connected to drain of both transistors
         { }
     );
@@ -91,7 +91,7 @@ circsim::components::Circuit create_nand()
     Wire gnd
     (
         0,
-        Wire::GND,
+        Wire::SW_GND,
         { 2 },          // Connected to drain of first control transistor
         { }
     );
