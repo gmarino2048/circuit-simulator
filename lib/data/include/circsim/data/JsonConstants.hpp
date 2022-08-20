@@ -47,6 +47,13 @@ const char* WIRE_VALUE_SPECIAL = "special";
 const char* WIRE_VALUE_CTRL = "ctrl_transistors";
 const char* WIRE_VALUE_GATE = "gate_transistors";
 
+
+// Circuit Definitions
+
+const char* CIRCUIT_VALUE_NAME = "name";
+const char* CIRCUIT_VALUE_TRANSISTORS = "transistors";
+const char* CIRCUIT_VALUE_WIRES = "wires";
+
 }
 
 #endif
