@@ -30,7 +30,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt -y install \
 WORKDIR /root
 
 RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.bz2
-RUN mkdir boost
 RUN tar -xf boost_1_80_0.tar.bz2
 
 WORKDIR /root/boost_1_80_0

@@ -13,6 +13,7 @@
 // C++ Stdlib Includes
 #include <queue>
 #include <string>
+#include <stdexcept>
 #include <vector>
 
 // Library Includes
