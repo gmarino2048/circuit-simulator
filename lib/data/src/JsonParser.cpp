@@ -21,6 +21,7 @@
 
 // Project Includes
 #include <circsim/common/ValueError.hpp>
+#include <circsim/components/Circuit.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/data/JsonConstants.hpp>
@@ -66,7 +67,7 @@ catch( const std::invalid_argument& ex )
 {
     throw ValueError
     (
-        (std::string) "Cannot convert JSON value to uint64_t: " + ex.what()
+        (std::string) "Cannot convert JSON value to vector<uint64_t>: " + ex.what()
     );
 }
 
@@ -187,6 +188,33 @@ catch( const std::exception& ex )
     throw ValueError
     (
         (std::string) "Cannot convert JSON value to Transistor: " + ex.what()
+    );
+}
+
+
+template<>
+std::vector<Transistor> JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::array value_array = value.as_array();
+
+    std::vector<Transistor> values;
+    values.reserve(value_array.size());
+
+    for( const boost::json::value& arr_value : value_array )
+    {
+        values.push_back
+        (
+            _convert_object<Transistor>(arr_value)
+        );
+    }
+
+    return values;
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to vector<Transistor>: " + ex.what()
     );
 }
 
@@ -329,5 +357,73 @@ catch( const std::exception& ex )
     throw ValueError
     (
         (std::string) "Cannot convert JSON value to Wire: " + ex.what()
+    );
+}
+
+
+template<>
+std::vector<Wire> JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::array value_array = value.as_array();
+
+    std::vector<Wire> values;
+    values.reserve(value_array.size());
+
+    for( const boost::json::value& arr_value : value_array )
+    {
+        values.push_back
+        (
+            _convert_object<Wire>(arr_value)
+        );
+    }
+
+    return values;
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to vector<Wire>: " + ex.what()
+    );
+}
+
+
+template<>
+Circuit JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::object circuit_object = value.as_object();
+
+    std::optional<std::string> name = std::nullopt;
+    if( boost::json::value* name_ptr = circuit_object.if_contains(CIRCUIT_VALUE_NAME) )
+    {
+        name = _convert_object<std::string>(*name_ptr);
+    }
+
+    std::vector<Transistor> transistors = _convert_object<std::vector<Transistor>>
+    (
+        circuit_object.at(CIRCUIT_VALUE_TRANSISTORS)
+    );
+
+    std::vector<Wire> wires = _convert_object<std::vector<Wire>>
+    (
+        circuit_object.at(CIRCUIT_VALUE_WIRES)
+    );
+
+    Circuit circuit;
+    if( name.has_value() )
+    {
+        circuit = Circuit(name.value());
+    }
+
+    circuit.add_all_components(transistors);
+    circuit.add_all_components(wires);
+
+    return circuit;
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Could not convert JSON object to Circuit: " + ex.what()
     );
 }
