@@ -46,7 +46,7 @@ private:
      * @return T The C++ value of the given JSON object
      */
     template<class T>
-    static T convert_object(const boost::json::value& value);
+    static T _convert_object(const boost::json::value& value);
 
 public:
 
