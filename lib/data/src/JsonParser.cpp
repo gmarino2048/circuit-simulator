@@ -14,6 +14,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 // Library Includes
 #include <boost/json.hpp>
@@ -44,6 +45,33 @@ catch( const std::invalid_argument& ex )
 
 
 template<>
+std::vector<uint64_t> JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::array value_array = value.as_array();
+
+    std::vector<uint64_t> num_values;
+    num_values.reserve(value_array.size());
+
+    for( const boost::json::value& arr_value : value_array )
+    {
+        num_values.push_back
+        (
+            _convert_object<uint64_t>(arr_value)
+        );
+    }
+
+    return num_values;
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to uint64_t: " + ex.what()
+    );
+}
+
+
+template<>
 std::string JsonParser::_convert_object(const boost::json::value& value) try
 {
     return static_cast<std::string>(value.as_string());
@@ -58,18 +86,48 @@ catch( const std::invalid_argument& ex )
 
 
 template<>
+std::vector<std::string> JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::array value_array = value.as_array();
+
+    std::vector<std::string> string_array;
+    string_array.reserve(value_array.size());
+
+    for( const boost::json::value& arr_value : value_array )
+    {
+        string_array.push_back
+        (
+            _convert_object<std::string>(arr_value)
+        );
+    }
+
+    return string_array;
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to vector<string>: " + ex.what()
+    );
+}
+
+
+template<>
 Transistor::Type JsonParser::_convert_object(const boost::json::value& value) try
 {
-    uint64_t type_value = value.as_uint64();
+    std::string type = _convert_object<std::string>(value);
 
-    switch( type_value )
+    if( type == TRANSISTOR_TYPE_NMOS )
     {
-        case Transistor::Type::NMOS:
-            return Transistor::Type::NMOS;
-        case Transistor::Type::PMOS:
-            return Transistor::Type::PMOS;
-        default:
-            throw std::invalid_argument("Value out of range for Transistor::Type");
+        return Transistor::Type::NMOS;
+    }
+    else if( type == TRANSISTOR_TYPE_PMOS )
+    {
+        return Transistor::Type::PMOS;
+    }
+    else
+    {
+        throw std::invalid_argument("Must be one of { \"NMOS\", \"PMOS\" }");
     }
 }
 catch( const std::invalid_argument& ex )
@@ -115,7 +173,7 @@ Transistor JsonParser::_convert_object(const boost::json::value& value) try
         );
     }
 
-    if( name )
+    if( name.has_value() )
     {
         return Transistor(ids[0], name.value(), ids[1], ids[2], ids[3], type);
     }
@@ -129,5 +187,147 @@ catch( const std::exception& ex )
     throw ValueError
     (
         (std::string) "Cannot convert JSON value to Transistor: " + ex.what()
+    );
+}
+
+
+template<>
+Wire::PulledStatus JsonParser::_convert_object(const boost::json::value& value) try
+{
+    std::string status = _convert_object<std::string>(value);
+
+    if( status == WIRE_PULLED_HIGH )
+    {
+        return Wire::PulledStatus::PS_HIGH;
+    }
+    else if( status == WIRE_PULLED_LOW )
+    {
+        return Wire::PulledStatus::PS_LOW;
+    }
+    else if( status == WIRE_PULLED_NONE )
+    {
+        return Wire::PulledStatus::PS_NONE;
+    }
+    else
+    {
+        throw std::invalid_argument("Must be one of { \"HIGH\", \"LOW\", \"NONE\" }");
+    }
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to Wire::PulledStatus: " + ex.what()
+    );
+}
+
+
+template<>
+Wire::SpecialWireType JsonParser::_convert_object(const boost::json::value& value) try
+{
+    std::string special = _convert_object<std::string>(value);
+
+    if( special == WIRE_SPECIAL_VCC )
+    {
+        return Wire::SpecialWireType::SW_VCC;
+    }
+    else if( special == WIRE_SPECIAL_GND )
+    {
+        return Wire::SpecialWireType::SW_GND;
+    }
+    else if( special == WIRE_SPECIAL_NONE )
+    {
+        return Wire::SpecialWireType::SW_NONE;
+    }
+    else
+    {
+        throw std::invalid_argument("Must be one of { \"VCC\", \"GND\", \"NONE\" }");
+    }
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to Wire::SpecialWireType: " + ex.what()
+    );
+}
+
+
+template<>
+Wire JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::object wire_object = value.as_object();
+
+    uint8_t id = _convert_object<uint64_t>
+    (
+        wire_object.at(WIRE_VALUE_ID)
+    );
+
+    std::optional<std::string> name = std::nullopt;
+    if( boost::json::value* name_ptr = wire_object.if_contains(WIRE_VALUE_NAME) )
+    {
+        name = _convert_object<std::string>(*name_ptr);
+    }
+
+    std::optional<std::vector<std::string>> alt_names = std::nullopt;
+    if( boost::json::value* alt_ptr = wire_object.if_contains(WIRE_VALUE_ALT) )
+    {
+        alt_names = _convert_object<std::vector<std::string>>(*alt_ptr);
+    }
+
+    Wire::PulledStatus pulled = Wire::PulledStatus::PS_NONE;
+    if( boost::json::value* pulled_ptr = wire_object.if_contains(WIRE_VALUE_PULLED) )
+    {
+        pulled = _convert_object<Wire::PulledStatus>(*pulled_ptr);
+    }
+
+    Wire::SpecialWireType special = Wire::SpecialWireType::SW_NONE;
+    if( boost::json::value* special_ptr = wire_object.if_contains(WIRE_VALUE_SPECIAL) )
+    {
+        special = _convert_object<Wire::SpecialWireType>(*special_ptr);
+    }
+
+    std::vector<uint64_t> ctrl_transistors = _convert_object<std::vector<uint64_t>>
+    (
+        wire_object.at(WIRE_VALUE_CTRL)
+    );
+
+    std::vector<uint64_t> gate_transistors = _convert_object<std::vector<uint64_t>>
+    (
+        wire_object.at(WIRE_VALUE_GATE)
+    );
+
+    Wire wire;
+    if( special == Wire::SpecialWireType::SW_NONE )
+    {
+        if( name.has_value() )
+        {
+            wire = Wire(id, name.value(), pulled, ctrl_transistors, gate_transistors);
+        }
+        else
+        {
+            wire = Wire(id, "", pulled, ctrl_transistors, gate_transistors);
+        }
+    }
+    else
+    {
+        wire = Wire(id, special, ctrl_transistors, gate_transistors);
+    }
+
+    if( alt_names.has_value() )
+    {
+        for( const std::string& alt_name : alt_names.value() )
+        {
+            wire.add_name(alt_name);
+        }
+    }
+
+    return wire;
+}
+catch( const std::exception& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to Wire: " + ex.what()
     );
 }
