@@ -11,8 +11,11 @@
 
 // C++ Stdlib Includes
 #include <cinttypes>
+#include <filesystem>
+#include <fstream>
 #include <optional>
 #include <stdexcept>
+#include <streambuf>
 #include <string>
 #include <vector>
 
@@ -426,4 +429,40 @@ catch( const std::invalid_argument& ex )
     (
         (std::string) "Could not convert JSON object to Circuit: " + ex.what()
     );
+}
+
+
+Circuit JsonParser::parse(const std::string& json_string)
+{
+    boost::json::parse_options opts;
+    opts.allow_comments = true;
+    opts.allow_trailing_commas = true;
+    opts.allow_invalid_utf8 = false;
+
+    boost::json::monotonic_resource resource;
+    const boost::json::value circuit_value = boost::json::parse
+    (
+        json_string,
+        &resource,
+        opts
+    );
+
+    return _convert_object<Circuit>(circuit_value);
+}
+
+
+Circuit JsonParser::parse(const std::filesystem::path& json_filepath)
+{
+    std::string contents;
+
+    {
+        std::ifstream input_file(json_filepath);
+        contents = std::string
+        (
+            std::istreambuf_iterator<std::string::value_type>(input_file),
+            std::istreambuf_iterator<std::string::value_type>()
+        );
+    }
+
+    return parse(contents);
 }

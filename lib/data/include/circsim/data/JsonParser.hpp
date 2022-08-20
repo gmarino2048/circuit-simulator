@@ -34,10 +34,6 @@ class JsonParser final
 {
 private:
 
-    /// The parser object used to decode the raw JSON object
-    boost::json::parser _parser;
-
-
     /**
      * @brief Convert a JSON value to a circuit simulator object.
      * 
