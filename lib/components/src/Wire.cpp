@@ -111,8 +111,8 @@ Wire::Wire
 
 void Wire::RESET_CLASS()
 {
-    _VCC_ID = -1;
-    _GND_ID = -1;
+    _VCC_ID = std::nullopt;
+    _GND_ID = std::nullopt;
 }
 
 
