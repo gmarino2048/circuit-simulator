@@ -9,6 +9,7 @@ enable_testing()
 include(GoogleTest)
 find_package(GTest REQUIRED)
 
+find_package(Boost 1.75 REQUIRED COMPONENTS json)
 find_package(Threads REQUIRED)
 find_package(SQLite3 REQUIRED)
 

@@ -111,8 +111,8 @@ Wire::Wire
 
 void Wire::RESET_CLASS()
 {
-    _VCC_ID = -1;
-    _GND_ID = -1;
+    _VCC_ID = std::nullopt;
+    _GND_ID = std::nullopt;
 }
 
 
@@ -275,11 +275,11 @@ void Wire::set_special_wire_id(const SpecialWireType type)
 
     switch( type )
     {
-        case VCC:
+        case SW_VCC:
             id = &this->_VCC_ID;
             break;
 
-        case GND:
+        case SW_GND:
             id = &this->_GND_ID;
             break;
 
@@ -309,8 +309,8 @@ std::string Wire::special_wire_name(const SpecialWireType type)
 {
     switch( type )
     {
-        case VCC:       return WIRE_VCC;
-        case GND:       return WIRE_GND;
+        case SW_VCC:       return WIRE_VCC;
+        case SW_GND:       return WIRE_GND;
         default:
             throw std::runtime_error
             (
@@ -325,8 +325,8 @@ Wire::extern_func_t Wire::special_wire_func(const SpecialWireType type)
 {
     switch( type )
     {
-        case VCC:       return _VCC_FUNC;
-        case GND:       return _GND_FUNC;
+        case SW_VCC:       return _VCC_FUNC;
+        case SW_GND:       return _GND_FUNC;
         default:
             throw std::runtime_error
             (

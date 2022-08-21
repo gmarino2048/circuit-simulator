@@ -12,6 +12,7 @@
 // C++ Stdlib Includes
 #include <algorithm>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -291,7 +292,7 @@ T* Circuit::get(const uint64_t id) const try
     std::map<uint64_t, T*>& index_map = const_cast<Circuit*>(this)->_get_index<T>();
     return index_map.at(id);
 }
-catch(const std::out_of_range& )
+catch( const std::out_of_range& )
 {
     throw common::IndexError
     (

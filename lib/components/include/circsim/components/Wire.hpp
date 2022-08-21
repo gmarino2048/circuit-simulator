@@ -49,8 +49,9 @@ public:
      */
     enum SpecialWireType
     {
-        VCC,        //!< This is the high voltage rail
-        GND         //!< This is the grounding rail
+        SW_VCC,         //!< This is the high voltage rail
+        SW_GND,         //!< This is the grounding rail
+        SW_NONE         //!< The wire does not have a special type
     };
 
     /**

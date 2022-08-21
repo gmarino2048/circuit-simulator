@@ -12,6 +12,7 @@ target_include_directories(circsim-data
 target_sources(circsim-data
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/JsonParser.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/ExternalStorage/Transistor.cpp
@@ -20,6 +21,7 @@ target_sources(circsim-data
 
 target_link_libraries(circsim-data
     PUBLIC
+        Boost::json
         sqlite3
 
         circsim-common
@@ -33,6 +35,7 @@ add_executable(circsim-data-test)
 target_sources(circsim-data-test
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/test/JsonParser.cpp
 
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage/CircuitState.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/ExternalStorage/Transistor.cpp

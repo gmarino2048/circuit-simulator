@@ -13,7 +13,10 @@ target_sources(circsim-test
 
 target_link_libraries(circsim-test
     PUBLIC
-        circsim-data
-    PRIVATE
         circsim-components
+
+    PRIVATE
+        Boost::json
+
+        circsim-data
 )
