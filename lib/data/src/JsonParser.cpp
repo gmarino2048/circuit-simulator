@@ -37,9 +37,9 @@ using namespace circsim::data;
 template<>
 uint64_t JsonParser::_convert_object(const boost::json::value& value) try
 {
-   return value.as_uint64();
+   return value.to_number<uint64_t>();
 }
-catch( const std::invalid_argument& ex )
+catch( const std::exception& ex )
 {
     throw ValueError
     (
