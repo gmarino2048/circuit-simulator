@@ -289,7 +289,7 @@ Wire JsonParser::_convert_object(const boost::json::value& value) try
 {
     boost::json::object wire_object = value.as_object();
 
-    uint8_t id = _convert_object<uint64_t>
+    uint64_t id = _convert_object<uint64_t>
     (
         wire_object.at(WIRE_VALUE_ID)
     );
@@ -300,7 +300,7 @@ Wire JsonParser::_convert_object(const boost::json::value& value) try
         name = _convert_object<std::string>(*name_ptr);
     }
 
-    std::optional<std::vector<std::string>> alt_names = std::nullopt;
+    std::vector<std::string> alt_names;
     if( boost::json::value* alt_ptr = wire_object.if_contains(WIRE_VALUE_ALT) )
     {
         alt_names = _convert_object<std::vector<std::string>>(*alt_ptr);
@@ -345,12 +345,9 @@ Wire JsonParser::_convert_object(const boost::json::value& value) try
         wire = Wire(id, special, ctrl_transistors, gate_transistors);
     }
 
-    if( alt_names.has_value() )
+    for( const std::string& alt_name : alt_names )
     {
-        for( const std::string& alt_name : alt_names.value() )
-        {
-            wire.add_name(alt_name);
-        }
+        wire.add_name(alt_name);
     }
 
     return wire;
