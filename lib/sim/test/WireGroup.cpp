@@ -31,8 +31,8 @@ TEST(WireGroup, NandTest)
     Wire* in_a = circuit.get<Wire>(1);
     Wire* in_b = circuit.get<Wire>(2);
 
-    Wire* connector = circuit.get<Wire>(3);
-    Wire* out = circuit.get<Wire>(4);
+    Wire* out = circuit.get<Wire>(3);
+    Wire* connector = circuit.get<Wire>(4);
 
     circuit.get<Transistor>(1)->update_state(Wire::PULLED_LOW);
     circuit.get<Transistor>(2)->update_state(Wire::PULLED_LOW);
