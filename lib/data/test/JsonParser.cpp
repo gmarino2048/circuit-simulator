@@ -109,7 +109,15 @@ void JsonParserTest::SetUp()
     "   ]"
     "}";
 
-    _test_values = boost::json::parse(json_string).as_object();
+    // Parse like the actual method will
+    boost::json::parse_options opts;
+    opts.allow_comments = true;
+    opts.allow_trailing_commas = true;
+    opts.allow_invalid_utf8 = false;
+
+    boost::json::monotonic_resource resource;
+
+    _test_values = boost::json::parse(json_string, &resource, opts).as_object();
 }
 
 
@@ -251,4 +259,113 @@ TEST_F(JsonParserTest, WirePulled)
             EXPECT_NO_THROW(JsonParser::_convert_object<Wire::PulledStatus>(value));
         }
     }
+}
+
+
+TEST_F(JsonParserTest, TransistorTest)
+{
+    const std::string json_transistors =
+    "{"
+    "   \"transistors\": ["
+    "       {"
+    "           \"id\": 32,"
+    "           \"type\": \"NMOS\","
+    "           \"gate_wire\": 2,"
+    "           \"source_wire\": 4,"
+    "           \"drain_wire\": 8"
+    "       },"
+    "       {"
+    "           \"id\": 64,"
+    "           \"name\": \"test_transistor\","
+    "           \"type\": \"PMOS\","
+    "           \"gate_wire\": 3,"
+    "           \"source_wire\": 5,"
+    "           \"drain_wire\": 9"
+    "       }"
+    "   ]"
+    "}";
+
+    boost::json::parse_options opts;
+    opts.allow_comments = true;
+    opts.allow_trailing_commas = true;
+    opts.allow_invalid_utf8 = false;
+
+    boost::json::monotonic_resource resource;
+
+    const boost::json::value transistor_list = boost::json::parse
+    (
+        json_transistors,
+        &resource,
+        opts
+    ).as_object().at("transistors");
+
+    std::vector<Transistor> transistors;
+    ASSERT_NO_THROW(transistors = JsonParser::_convert_object<std::vector<Transistor>>(transistor_list));
+
+    std::vector<Transistor> expected =
+    {
+        Transistor(32, 2, 4, 8, Transistor::Type::NMOS),
+        Transistor(64, "test_transistor", 3, 5, 9, Transistor::Type::PMOS)
+    };
+
+    EXPECT_EQ(transistors, expected);
+}
+
+
+TEST_F(JsonParserTest, WireTest)
+{
+    const std::string json_wires =
+    "{"
+    "   \"wires\": ["
+    "       {"
+    "           \"id\": 32,"
+    "           \"ctrl_transistors\": [ 2, 4, 8, 16 ],"
+    "           \"gate_transistors\": [ 3, 5, 9, 17 ]"
+    "       },"
+    "       {"
+    "           \"id\": 64,"
+    "           \"name\": \"test_wire\","
+    "           \"alternate_names\": [ \"w1\", \"r3\" ],"
+    "           \"pulled\": \"HIGH\","
+    "           \"ctrl_transistors\": [],"
+    "           \"gate_transistors\": [ 2, 4, 6, 8, 10]"
+    "       },"
+    "       {"
+    "           \"id\": 128,"
+    "           \"special\": \"GND\","
+    "           \"ctrl_transistors\": [ 1, 3, 5, 7, 9 ],"
+    "           \"gate_transistors\": []"
+    "       }"
+    "   ]"
+    "}";
+
+    boost::json::parse_options parse_options;
+    parse_options.allow_comments = true;
+    parse_options.allow_trailing_commas = true;
+    parse_options.allow_invalid_utf8 = false;
+
+    boost::json::monotonic_resource resource;
+
+    boost::json::value wire_list = boost::json::parse
+    (
+        json_wires,
+        &resource,
+        parse_options
+    ).as_object().at("wires");
+
+    std::vector<Wire> wires;
+    ASSERT_NO_THROW(wires = JsonParser::_convert_object<std::vector<Wire>>(wire_list));
+
+    Wire::RESET_CLASS();
+    std::vector<Wire> expected =
+    {
+        Wire(32, "", Wire::PulledStatus::PS_NONE, { 2, 4, 8, 16 }, { 3, 5, 9, 17 }),
+        Wire(64, "test_wire", Wire::PulledStatus:: PS_HIGH, { }, { 2, 4, 6, 8, 10 }),
+        Wire(128, Wire::SpecialWireType::SW_GND, { 1, 3, 5, 7, 9 }, { })
+    };
+
+    expected[1].add_name("w1");
+    expected[1].add_name("r3");
+
+    EXPECT_EQ(wires, expected);
 }
