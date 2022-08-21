@@ -9,6 +9,9 @@
  * 
  */
 
+// C++ Stdlib Includes
+// (none)
+
 // Test Framework Includes
 #include <Gates.hpp>
 
@@ -16,71 +19,14 @@
 #include <circsim/components/Circuit.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
+#include <circsim/data/JsonParser.hpp>
 
 using Wire = circsim::components::Wire;
 using Transistor = circsim::components::Transistor;
 
 circsim::components::Circuit create_nor()
 {
-    
-
-    Wire gnd
-    (
-        0,
-        Wire::SW_GND,
-        { 1, 2 },       // Connected to drain of both transistors
-        { }
-    );
-
-    Wire in_a
-    (
-        1,
-        "IN_A",
-        Wire::PS_NONE,  // Not connected to pullup/pulldown
-        { },
-        { 1 }           // Connected to gate of transistor A
-    );
-
-    Wire in_b
-    (
-        2,
-        "IN_B",
-        Wire::PS_NONE,  // Not connected to pullup/pulldown
-        { },
-        { 2 }           // Connected to gate of transistor B
-    );
-
-    Wire out
-    (
-        3,
-        "OUT",
-        Wire::PS_HIGH,  // Connected to a pullup
-        { 1, 2 },       // Connected to source of both transistors
-        { }
-    );
-
-    Transistor trans_a
-    (
-        1,
-        in_a.id(),
-        out.id(),
-        gnd.id()
-    );
-
-    Transistor trans_b
-    (
-        2,
-        in_b.id(),
-        out.id(),
-        gnd.id()
-    );
-
-
-    circsim::components::Circuit circuit;
-    circuit.add_all_components<Wire>({ out, in_a, in_b, gnd });
-    circuit.add_all_components<Transistor>({ trans_a, trans_b });
-
-    return circuit;
+    return circsim::data::JsonParser::parse(NOR_DEF);
 }
 
 circsim::components::Circuit create_nand()
