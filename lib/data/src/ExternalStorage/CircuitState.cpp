@@ -75,7 +75,7 @@ std::vector<ExternalStorage::SqlValue> ExternalStorage::_encode(const CircuitSta
 
     transistor_ids.reserve(transistor_state_list.size());
     transistor_states.reserve(transistor_state_list.size());
-    for( const auto [id, state] : transistor_state_list )
+    for( const auto& [id, state] : transistor_state_list )
     {
         transistor_ids.push_back(id);
         transistor_states.push_back(state);
@@ -86,7 +86,7 @@ std::vector<ExternalStorage::SqlValue> ExternalStorage::_encode(const CircuitSta
 
     wire_ids.reserve(wire_state_list.size());
     wire_states.reserve(wire_state_list.size());
-    for( const auto [id, state] : wire_state_list )
+    for( const auto& [id, state] : wire_state_list )
     {
         wire_ids.push_back(id);
         wire_states.push_back(state);

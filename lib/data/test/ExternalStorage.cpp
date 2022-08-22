@@ -85,7 +85,7 @@ const std::vector<std::string> string_values =
 
 TEST(ExternalStorageTypes, STRING)
 {
-    for( const std::string str : string_values)
+    for( const std::string& str : string_values)
     {
         std::string decoded_value;
         ExternalStorage::SqlValue value = ExternalStorage::_to_sql_type(str);

@@ -51,10 +51,10 @@ bool Transistor::_update_pmos(const WireState gate_state)
 
 
 Transistor::Transistor(): _id(std::nullopt),
+                          _type(NMOS),
                           _gate_id(0),
                           _source_id(0),
                           _drain_id(0),
-                          _type(NMOS),
                           _current_state(OFF)
 {
     // Default constructor for all other members
@@ -69,10 +69,10 @@ Transistor::Transistor
     const uint64_t drain_id,
     const Type type
 ):  _id(id),
+    _type(type),
     _gate_id(gate_id),
     _source_id(source_id),
     _drain_id(drain_id),
-    _type(type),
     _current_state(OFF)
 {
     // Default constructor for all other members
@@ -89,10 +89,10 @@ Transistor::Transistor
     const Type type
 ):  _id(id),
     _name(name),
+    _type(type),
     _gate_id(gate_id),
     _source_id(source_id),
     _drain_id(drain_id),
-    _type(type),
     _current_state(OFF)
 {
     // No other members to initialize

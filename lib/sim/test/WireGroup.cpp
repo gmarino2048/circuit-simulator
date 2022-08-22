@@ -26,11 +26,6 @@ TEST(WireGroup, NandTest)
 {
     Circuit circuit = create_nand();
 
-    Wire* gnd = circuit.get<Wire>(Wire::GND_ID());
-
-    Wire* in_a = circuit.get<Wire>(1);
-    Wire* in_b = circuit.get<Wire>(2);
-
     Wire* out = circuit.get<Wire>(3);
     Wire* connector = circuit.get<Wire>(4);
 

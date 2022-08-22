@@ -58,9 +58,6 @@ void Simulator::_create_wire_group(const uint64_t wire_id, WireGroup &group)
 
 void Simulator::_update_transistors(const WireGroup &group)
 {
-    // Forward Declare Type
-    using ControlWirePair = std::pair<uint64_t, uint64_t>;
-
     // Convert transistor Ids to objects
     std::vector<uint64_t> transistors_to_update =
         group.gate_transistors(_circuit);
