@@ -61,7 +61,7 @@ const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
  * Default constructor for the wire object. Make sure that the
  * ID of the wire is -1 so the simulator can quickly detect an error
  */
-Wire::Wire(): _id(-1),
+Wire::Wire(): _id(std::nullopt),
               _state(FLOATING),
               _pulled(PS_NONE)
 {

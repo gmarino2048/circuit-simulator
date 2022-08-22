@@ -50,7 +50,7 @@ bool Transistor::_update_pmos(const WireState gate_state)
 }
 
 
-Transistor::Transistor(): _id(-1),
+Transistor::Transistor(): _id(std::nullopt),
                           _gate_id(0),
                           _source_id(0),
                           _drain_id(0),

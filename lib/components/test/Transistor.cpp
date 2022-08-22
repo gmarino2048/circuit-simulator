@@ -16,6 +16,7 @@
 #include <vector>
 
 // Project includes
+#include <circsim/common/ValueError.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
 
@@ -50,7 +51,7 @@ TEST_F(TransistorTest, DefaultConstructor)
 {
     Transistor transistor;
 
-    EXPECT_EQ(transistor.id(), -1);
+    EXPECT_THROW(transistor.id(), circsim::common::ValueError);
     EXPECT_TRUE(transistor.name().empty());
     EXPECT_EQ(transistor.type(), Transistor::NMOS);
     EXPECT_EQ(transistor.current_state(), Transistor::OFF);
