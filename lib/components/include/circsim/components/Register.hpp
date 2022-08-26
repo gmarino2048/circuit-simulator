@@ -81,7 +81,7 @@ public:
     (
         const uint64_t id,
         const std::string& name,
-        const std::vector<uint64_t>& wire_ids,
+        const std::vector<uint64_t>& wire_ids
     );
 
     /**
@@ -97,7 +97,7 @@ public:
         const uint64_t id,
         const std::string& name,
         const std::vector<uint64_t>& wire_ids,
-        const Circuit& circuit_ptr
+        const Circuit& circuit
     );
 
 
@@ -141,11 +141,18 @@ public:
     bool has_circuit() const;
 
     /**
-     * @brief Set the Circuit object used for 
+     * @brief Set the Circuit object used for looking up
+     *        wire states.
      * 
-     * @param circuit 
+     * @param circuit The new circuit object for lookup
      */
     void set_circuit(const Circuit& circuit);
+
+    /**
+     * @brief Clear this register's lookup circuit.
+     * 
+     */
+    void clear_circuit();
 
 
     /**
