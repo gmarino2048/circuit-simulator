@@ -46,7 +46,13 @@ Register::Register
     _wire_ids(wire_ids),
     _circuit(nullptr)
 {
-    // Intentionally left blank
+    if( _wire_ids.size() > 64 )
+    {
+        throw ValueError
+        (
+            "Current implementation does not support registers over 64 bits"
+        );
+    }
 }
 
 
@@ -62,7 +68,13 @@ Register::Register
     _wire_ids(wire_ids),
     _circuit(&circuit)
 {
-    // Intentionally left blank
+    if( _wire_ids.size() > 64 )
+    {
+        throw ValueError
+        (
+            "Current implementation does not support registers over 64 bits"
+        );
+    }
 }
 
 
@@ -92,8 +104,6 @@ template int64_t Register::value_signed() const;
 template<class T>
 T Register::value_signed() const
 {
-    int64_t value = 0;
-
     if( !has_circuit() )
     {
         throw StateError
@@ -102,6 +112,7 @@ T Register::value_signed() const
         );
     }
 
+    int64_t value = 0;
     for( size_t i = 0; i < _wire_ids.size(); i++ )
     {
         Wire* wire = _circuit->get<Wire>(_wire_ids[i]);
@@ -128,4 +139,71 @@ T Register::value_signed() const
     }
 
     return static_cast<T>(value);
+}
+
+template void Register::value_signed(const int8_t new_value);
+template void Register::value_signed(const int16_t new_value);
+template void Register::value_signed(const int32_t new_value);
+template void Register::value_signed(const int64_t new_value);
+
+template<class T>
+void Register::value_signed(const T new_value)
+{
+    if( !has_circuit() )
+    {
+        throw StateError
+        (
+            "Cannot set register value without circuit lookup object"
+        );
+    }
+
+    uint64_t regmax_unsigned = 1 << (_wire_ids.size() - 1);
+
+    int64_t regmax = regmax_unsigned - 1;
+    int64_t regmin = regmax_unsigned * -1;
+
+    if( new_value > regmax || new_value < regmin )
+    {
+        throw ValueError
+        (
+            "New value " + std::to_string(new_value) +
+            " is out of bounds for given register size " +
+            std::to_string(_wire_ids.size())
+        );
+    }
+
+    bool negative = new_value < 0;
+    uint64_t positive_value = new_value * -1 ? negative : new_value;
+
+    for( size_t i = 0; i < _wire_ids.size(); i++ )
+    {
+        Wire* wire_ref = _circuit->get<Wire>(_wire_ids[i]);
+
+        bool wire_value = positive_value & ( 1 << i );
+        wire_ref->set_high_low(wire_value);
+    }
+
+    if( negative )
+    {
+        // Invert all wire values
+        for( size_t i = 0; i < _wire_ids.size(); i++ )
+        {
+            Wire* wire_ref = _circuit->get<Wire>(_wire_ids[i]);
+            wire_ref->set_high_low(wire_ref->high());
+        }
+
+        // Add 1
+        size_t i = 0;
+        bool current_carry = true;
+        while( current_carry )
+        {
+            // We can ignore a lot of the checks for this since we've
+            // checked the bounds of this number earlier in the method
+            Wire* wire_ref = _circuit->get<Wire>(_wire_ids[i]);
+            bool current_value = wire_ref->high();
+
+            current_carry &= current_value;
+            wire_ref->set_high_low(!current_value);
+        }
+    }
 }
