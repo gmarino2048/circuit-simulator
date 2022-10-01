@@ -118,6 +118,36 @@ void RegisterTest::TearDown()
     delete _circuit;
 }
 
+TEST_F(RegisterTest, TestRegisterZero)
+{
+    std::array<Register*, 4> registers = {
+        _test_register_8,
+        _test_register_16,
+        _test_register_32,
+        _test_register_64
+    };
+
+    for( Register* reg : registers )
+    {
+        auto check_wires_zero = [this,reg]()
+        {
+            for( uint64_t wire_id : reg->wire_ids() )
+            {
+                Wire* instance = _circuit->get<Wire>(wire_id);
+                EXPECT_TRUE(instance->low());
+            }
+        };
+
+        reg->value_unsigned<uint64_t>(0);
+        EXPECT_EQ(reg->value_unsigned<uint64_t>(), 0);
+        check_wires_zero();
+
+        reg->value_signed<int64_t>(0);
+        EXPECT_EQ(reg->value_signed<int64_t>(), 0);
+        check_wires_zero();
+    }
+}
+
 TEST_F(RegisterTest, TestRegistersUnsigned)
 {
     _test_register_8->value_unsigned((uint64_t) 9);
