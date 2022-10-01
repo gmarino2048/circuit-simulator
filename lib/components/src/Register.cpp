@@ -119,7 +119,7 @@ T Register::value_signed() const
         bool wire_value = wire->high();
         if( wire_value )
         {
-            uint64_t increment = 1 << i;
+            uint64_t increment = uint64_t(1) << i;
             value = i < _wire_ids.size() - 1 ?
                 value + increment:
                 value - increment;
@@ -157,7 +157,7 @@ void Register::value_signed(const T new_value)
         );
     }
 
-    uint64_t regmax_unsigned = 1 << (_wire_ids.size() - 1);
+    uint64_t regmax_unsigned = uint64_t(1) << (_wire_ids.size() - 1);
 
     int64_t regmax = regmax_unsigned - 1;
     int64_t regmin = regmax_unsigned * -1;
@@ -179,7 +179,7 @@ void Register::value_signed(const T new_value)
     {
         Wire* wire_ref = _circuit->get<Wire>(_wire_ids[i]);
 
-        bool wire_value = positive_value & ( 1 << i );
+        bool wire_value = positive_value & ( uint64_t(1) << i );
         wire_ref->set_high_low(wire_value);
     }
 
@@ -205,5 +205,88 @@ void Register::value_signed(const T new_value)
             current_carry &= current_value;
             wire_ref->set_high_low(!current_value);
         }
+    }
+}
+
+
+template uint8_t Register::value_unsigned() const;
+template uint16_t Register::value_unsigned() const;
+template uint32_t Register::value_unsigned() const;
+template uint64_t Register::value_unsigned() const;
+
+template <class T>
+T Register::value_unsigned() const
+{
+    if( !has_circuit() )
+    {
+        throw StateError
+        (
+            "Cannot fetch register value without circuit lookup object"
+        );
+    }
+
+    uint64_t value = 0;
+    for( size_t i = 0; i < _wire_ids.size(); i++ )
+    {
+        uint64_t wire_id = _wire_ids[i];
+        Wire* instance = _circuit->get<Wire>(wire_id);
+
+        if( instance->high() )
+        {
+            value += uint64_t(1) << i;
+        }
+    }
+
+    if( value > std::numeric_limits<T>::max() )
+    {
+        throw ValueError
+        (
+            "Register value " + std::to_string(value) +
+            " is out of bounds for requested type."
+        );
+    }
+
+    return static_cast<T>(value);
+}
+
+
+template void Register::value_unsigned(const uint8_t value);
+template void Register::value_unsigned(const uint16_t value);
+template void Register::value_unsigned(const uint32_t value);
+template void Register::value_unsigned(const uint64_t value);
+
+template <class T>
+void Register::value_unsigned(const T value)
+{
+    if( !has_circuit() )
+    {
+        throw StateError
+        (
+            "Cannot set register value without a valid circuit lookup object"
+        );
+    }
+
+    uint64_t max_value = std::numeric_limits<uint64_t>::max();
+    if( _wire_ids.size() < (sizeof(uint64_t) * 8) )
+    {
+        max_value = (uint64_t(1) << _wire_ids.size()) - 1;
+    }
+
+    if( value > max_value )
+    {
+        throw ValueError
+        (
+            "Requested set value " + std::to_string(value) +
+            "is greater than maximum allowed value of " +
+            std::to_string(max_value)
+        );
+    }
+
+    for( size_t i = 0; i < _wire_ids.size(); i++ )
+    {
+        Wire* wire_instance = _circuit->get<Wire>(_wire_ids[i]);
+        bool wire_state = value & (uint64_t(1) << i);
+
+        wire_instance->set_high_low(wire_state);
     }
 }
