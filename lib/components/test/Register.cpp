@@ -32,11 +32,6 @@ protected:
 
     Circuit *_circuit;
 
-    Register *_test_register_8 = nullptr;
-    Register *_test_register_16 = nullptr;
-    Register *_test_register_32 = nullptr;
-    Register *_test_register_64 = nullptr;
-
     RegisterTest() = default;
     ~RegisterTest() = default;
 
@@ -77,16 +72,10 @@ void RegisterTest::SetUp()
     _circuit->add_all_components<Wire>(wires);
 
     size_t current = 0;
-    std::array<Register**, 4> registers = {
-        &_test_register_8,
-        &_test_register_16,
-        &_test_register_32,
-        &_test_register_64
-    };
+    std::vector<Register> registers;
 
-    for( size_t i = 0; i < registers.size(); i++ )
+    for( size_t i = 0; i < sizes.size(); i++ )
     {
-        Register** register_ptr_ref = registers[i];
         size_t register_size = sizes[i];
 
         std::vector<uint64_t> wire_ids;
@@ -99,7 +88,7 @@ void RegisterTest::SetUp()
 
         current += register_size;
 
-        *register_ptr_ref = new Register
+        registers.emplace_back
         (
             i,
             std::to_string(register_size),
@@ -107,29 +96,20 @@ void RegisterTest::SetUp()
             *_circuit
         );
     }
+
+    _circuit->add_all_components<Register>(registers);
 }
 
 void RegisterTest::TearDown()
 {
-    delete _test_register_64;
-    delete _test_register_32;
-    delete _test_register_16;
-    delete _test_register_8;
-
     delete _circuit;
 }
 
 TEST_F(RegisterTest, TestRegisterZero)
 {
-    std::array<Register*, 4> registers = {
-        _test_register_8,
-        _test_register_16,
-        _test_register_32,
-        _test_register_64
-    };
-
-    for( Register* reg : registers )
+    for( size_t i = 0; i < _circuit->count<Register>(); i++ )
     {
+        Register* reg = _circuit->get<Register>(i);
         auto check_wires_zero = [this,reg]()
         {
             for( uint64_t wire_id : reg->wire_ids() )
@@ -151,21 +131,15 @@ TEST_F(RegisterTest, TestRegisterZero)
 
 TEST_F(RegisterTest, TestRegistersUnsigned)
 {
-    _test_register_8->value_unsigned((uint64_t) 9);
-    _test_register_16->value_unsigned((uint64_t) 17);
-    _test_register_32->value_unsigned((uint64_t) 33);
-    _test_register_64->value_unsigned((uint64_t) 65);
+    _circuit->get<Register>(0)->value_unsigned((uint64_t) 9);
+    _circuit->get<Register>(1)->value_unsigned((uint64_t) 17);
+    _circuit->get<Register>(2)->value_unsigned((uint64_t) 33);
+    _circuit->get<Register>(3)->value_unsigned((uint64_t) 65);
 
     // Check the wires manually to make sure they were all changed
-    std::array<Register*, 4> registers = {
-        _test_register_8,
-        _test_register_16,
-        _test_register_32,
-        _test_register_64
-    };
-    for( size_t i = 0; i < registers.size(); i++ )
+    for( size_t i = 0; i < _circuit->count<Register>(); i++ )
     {
-        Register* reg = registers[i];
+        Register* reg = _circuit->get<Register>(i);
         std::vector<uint64_t> wire_ids = reg->wire_ids();
 
         size_t expected_high = i + 3;
@@ -174,54 +148,54 @@ TEST_F(RegisterTest, TestRegistersUnsigned)
     }
 
     // Now test with decimal comparison
-    EXPECT_EQ(_test_register_8->value_unsigned<uint64_t>(), 9);
-    EXPECT_EQ(_test_register_16->value_unsigned<uint64_t>(), 17);
-    EXPECT_EQ(_test_register_32->value_unsigned<uint64_t>(), 33);
-    EXPECT_EQ(_test_register_64->value_unsigned<uint64_t>(), 65);
+    EXPECT_EQ(_circuit->get<Register>(0)->value_unsigned<uint64_t>(), 9);
+    EXPECT_EQ(_circuit->get<Register>(1)->value_unsigned<uint64_t>(), 17);
+    EXPECT_EQ(_circuit->get<Register>(2)->value_unsigned<uint64_t>(), 33);
+    EXPECT_EQ(_circuit->get<Register>(3)->value_unsigned<uint64_t>(), 65);
 }
 
 
 TEST_F(RegisterTest, TestRegistersSigned)
 {
-    _test_register_8->value_signed(-9);
-    _test_register_16->value_signed(-17);
-    _test_register_32->value_signed(-33);
-    _test_register_64->value_signed(-65);
+    _circuit->get<Register>(0)->value_signed(-9);
+    _circuit->get<Register>(1)->value_signed(-17);
+    _circuit->get<Register>(2)->value_signed(-33);
+    _circuit->get<Register>(3)->value_signed(-65);
 
-    EXPECT_EQ(_test_register_8->value_signed<int64_t>(), -9);
-    EXPECT_EQ(_test_register_16->value_signed<int64_t>(), -17);
-    EXPECT_EQ(_test_register_32->value_signed<int64_t>(), -33);
-    EXPECT_EQ(_test_register_64->value_signed<int64_t>(), -65);
+    EXPECT_EQ(_circuit->get<Register>(0)->value_signed<int64_t>(), -9);
+    EXPECT_EQ(_circuit->get<Register>(1)->value_signed<int64_t>(), -17);
+    EXPECT_EQ(_circuit->get<Register>(2)->value_signed<int64_t>(), -33);
+    EXPECT_EQ(_circuit->get<Register>(3)->value_signed<int64_t>(), -65);
 }
 
 TEST_F(RegisterTest, TestRegisterUnsignedMax)
 {
-    _test_register_8->value_unsigned(std::numeric_limits<uint8_t>::max());
-    _test_register_16->value_unsigned(std::numeric_limits<uint16_t>::max());
-    _test_register_32->value_unsigned(std::numeric_limits<uint32_t>::max());
-    _test_register_64->value_unsigned(std::numeric_limits<uint64_t>::max());
+    _circuit->get<Register>(0)->value_unsigned(std::numeric_limits<uint8_t>::max());
+    _circuit->get<Register>(1)->value_unsigned(std::numeric_limits<uint16_t>::max());
+    _circuit->get<Register>(2)->value_unsigned(std::numeric_limits<uint32_t>::max());
+    _circuit->get<Register>(3)->value_unsigned(std::numeric_limits<uint64_t>::max());
 
     EXPECT_EQ
     (
-        _test_register_8->value_unsigned<uint8_t>(),
+        _circuit->get<Register>(0)->value_unsigned<uint8_t>(),
         std::numeric_limits<uint8_t>::max()
     );
 
     EXPECT_EQ
     (
-        _test_register_16->value_unsigned<uint16_t>(),
+        _circuit->get<Register>(1)->value_unsigned<uint16_t>(),
         std::numeric_limits<uint16_t>::max()
     );
 
     EXPECT_EQ
     (
-        _test_register_32->value_unsigned<uint32_t>(),
+        _circuit->get<Register>(2)->value_unsigned<uint32_t>(),
         std::numeric_limits<uint32_t>::max()
     );
 
     EXPECT_EQ
     (
-        _test_register_64->value_unsigned<uint64_t>(),
+        _circuit->get<Register>(3)->value_unsigned<uint64_t>(),
         std::numeric_limits<uint64_t>::max()
     );
 }
