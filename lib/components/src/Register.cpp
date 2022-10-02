@@ -173,7 +173,7 @@ void Register::value_signed(const T new_value)
     }
 
     bool negative = new_value < 0;
-    uint64_t positive_value = new_value * -1 ? negative : new_value;
+    uint64_t positive_value = negative ? new_value * -1 : new_value;
 
     for( size_t i = 0; i < _wire_ids.size(); i++ )
     {
@@ -189,7 +189,7 @@ void Register::value_signed(const T new_value)
         for( size_t i = 0; i < _wire_ids.size(); i++ )
         {
             Wire* wire_ref = _circuit->get<Wire>(_wire_ids[i]);
-            wire_ref->set_high_low(wire_ref->high());
+            wire_ref->set_high_low(!wire_ref->high());
         }
 
         // Add 1
