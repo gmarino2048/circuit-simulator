@@ -154,6 +154,7 @@ T Register::value_signed() const
     return static_cast<T>(value);
 }
 
+
 template void Register::value_signed(const int8_t new_value);
 template void Register::value_signed(const int16_t new_value);
 template void Register::value_signed(const int32_t new_value);
