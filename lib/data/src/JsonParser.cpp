@@ -117,6 +117,69 @@ catch( const std::invalid_argument& ex )
 
 
 template<>
+Register JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::object register_object = value.as_object();
+
+    std::string register_name = "";
+    if( const boost::json::value* name_value = register_object.if_contains(REGISTER_VALUE_NAME) )
+    {
+        register_name = _convert_object<std::string>(*name_value);
+    }
+
+    uint64_t register_id = _convert_object<uint64_t>
+    (
+        register_object.at(REGISTER_VALUE_ID)
+    );
+
+    std::vector<uint64_t> register_wire_ids = _convert_object<std::vector<uint64_t>>
+    (
+        register_object.at(REGISTER_VALUE_WIREID)
+    );
+
+    return Register
+    (
+        register_id,
+        register_name,
+        register_wire_ids
+    );
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to Register: " + ex.what()
+    );
+}
+
+
+template<>
+std::vector<Register> JsonParser::_convert_object(const boost::json::value& value) try
+{
+    boost::json::array register_array = value.as_array();
+
+    std::vector<Register> register_list;
+    register_list.reserve(register_array.size());
+
+    for( const boost::json::value& value : register_array )
+    {
+        register_list.push_back
+        (
+            _convert_object<Register>(value)
+        );
+    }
+
+    return register_list;
+}
+catch( const std::invalid_argument& ex )
+{
+    throw ValueError
+    (
+        (std::string) "Cannot convert JSON value to std::vector<Register>: " + ex.what()
+    );
+}
+
+template<>
 Transistor::Type JsonParser::_convert_object(const boost::json::value& value) try
 {
     std::string type = _convert_object<std::string>(value);
@@ -409,12 +472,19 @@ Circuit JsonParser::_convert_object(const boost::json::value& value) try
         circuit_object.at(CIRCUIT_VALUE_WIRES)
     );
 
+    std::vector<Register> registers;
+    if( const boost::json::value* value = circuit_object.if_contains(CIRCUIT_VALUE_REGISTERS) )
+    {
+        registers = _convert_object<std::vector<Register>>(*value);
+    }
+
     Circuit circuit;
     if( name.has_value() )
     {
         circuit = Circuit(name.value());
     }
 
+    circuit.add_all_components(registers);
     circuit.add_all_components(transistors);
     circuit.add_all_components(wires);
 

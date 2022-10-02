@@ -36,6 +36,12 @@ This section defines the format for all of the components within the file.
 - `"source_wire" (required) -> num`
 - `"drain_wire" (required) -> num`
 
+### Register
+
+- `"id" (required) -> num`
+- `"name" (optional) -> string`
+- `"wire_ids" (required) -> [num]`
+
 ### Circuit
 
 To decode the schema of the desired subtype, please see the references for the objects above.
@@ -43,3 +49,4 @@ To decode the schema of the desired subtype, please see the references for the o
 - `"name" (optional) -> string`
 - `"transistors" (required) -> [Transistor]`
 - `"wires" (required) -> [Wire]`
+- `"registers" (optional) -> [Register]`
