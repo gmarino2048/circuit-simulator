@@ -27,6 +27,7 @@
 #include <circsim/common/ValueError.hpp>
 
 #include <circsim/components/CircuitState.hpp>
+#include <circsim/components/Register.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
 
@@ -453,6 +454,8 @@ ExternalStorage::SqliteStatement ExternalStorage::_bind_values
 
 
 // Explicit instantiation of objects
+template bool ExternalStorage::_table_exists<circsim::components::CircuitState>();
+template bool ExternalStorage::_table_exists<circsim::components::Register>();
 template bool ExternalStorage::_table_exists<circsim::components::Transistor>();
 template bool ExternalStorage::_table_exists<circsim::components::Wire>();
 
@@ -487,6 +490,7 @@ bool ExternalStorage::_table_exists()
 void ExternalStorage::_create_tables()
 {
     _create_table<circsim::components::CircuitState>();
+    _create_table<circsim::components::Register>();
     _create_table<circsim::components::Transistor>();
     _create_table<circsim::components::Wire>();
 }
@@ -562,6 +566,7 @@ ExternalStorage::~ExternalStorage()
 
 // Explicitly initialize count for transistor
 template size_t ExternalStorage::count<circsim::components::CircuitState>() const;
+template size_t ExternalStorage::count<circsim::components::Register>() const;
 template size_t ExternalStorage::count<circsim::components::Transistor>() const;
 template size_t ExternalStorage::count<circsim::components::Wire>() const;
 
@@ -591,6 +596,7 @@ size_t ExternalStorage::count() const
 
 
 template bool ExternalStorage::contains(const circsim::components::CircuitState& object) const;
+template bool ExternalStorage::contains(const circsim::components::Register& object) const;
 template bool ExternalStorage::contains(const circsim::components::Transistor& object) const;
 template bool ExternalStorage::contains(const circsim::components::Wire& object) const;
 
@@ -622,6 +628,7 @@ bool ExternalStorage::contains(const T& object) const
 
 
 template bool ExternalStorage::contains_current(const circsim::components::CircuitState& object) const;
+template bool ExternalStorage::contains_current(const circsim::components::Register& object) const;
 template bool ExternalStorage::contains_current(const circsim::components::Transistor& object) const;
 template bool ExternalStorage::contains_current(const circsim::components::Wire& object) const;
 
@@ -654,6 +661,7 @@ bool ExternalStorage::contains_current(const T& object) const
 
 
 template circsim::components::CircuitState ExternalStorage::get(const uint64_t id) const;
+template circsim::components::Register ExternalStorage::get(const uint64_t id) const;
 template circsim::components::Transistor ExternalStorage::get(const uint64_t id) const;
 template circsim::components::Wire ExternalStorage::get(const uint64_t id) const;
 
@@ -702,6 +710,7 @@ T ExternalStorage::get(const uint64_t id) const
 
 
 template std::vector<circsim::components::CircuitState> ExternalStorage::get_all() const;
+template std::vector<circsim::components::Register> ExternalStorage::get_all() const;
 template std::vector<circsim::components::Transistor> ExternalStorage::get_all() const;
 template std::vector<circsim::components::Wire> ExternalStorage::get_all() const;
 

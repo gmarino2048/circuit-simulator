@@ -23,6 +23,7 @@
 // (none)
 
 // Project Includes
+#include <circsim/components/Register.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
 
@@ -54,6 +55,10 @@ private:
 
     /// An index which maps IDs to wire objects for faster lookup
     std::map<uint64_t, Wire*> _wire_index;
+
+
+    /// The array of register objects in the circuit
+    std::vector<Register> _register_instances;
 
 
     /**

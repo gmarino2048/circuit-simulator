@@ -16,6 +16,18 @@
 namespace circsim::data
 {
 
+// Register Definitions
+
+/// @brief Register ID field
+const char* REGISTER_VALUE_ID = "id";
+
+/// @brief Register Name field
+const char* REGISTER_VALUE_NAME = "name";
+
+/// @brief Register Wire IDs field
+const char* REGISTER_VALUE_WIREID = "wire_ids";
+
+
 // Transistor Definitions
 
 /// @brief Transistor type NMOS literal
@@ -92,6 +104,9 @@ const char* WIRE_VALUE_GATE = "gate_transistors";
 
 /// @brief Circuit Name field
 const char* CIRCUIT_VALUE_NAME = "name";
+
+/// @brief Circuit Registers field
+const char* CIRCUIT_VALUE_REGISTERS = "registers";
 
 /// @brief Circuit Transistors field
 const char* CIRCUIT_VALUE_TRANSISTORS = "transistors";
