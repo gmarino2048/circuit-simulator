@@ -300,7 +300,10 @@ void Circuit::add_component<Register>(const Register& object)
         );
     }
 
-    _register_instances.push_back(object);
+    Register register_copy = object;
+    register_copy.set_circuit(*this);
+
+    _register_instances.push_back(register_copy);
 }
 
 
@@ -323,10 +326,17 @@ void Circuit::add_all_components(const std::vector<T>& object_list)
 template<>
 void Circuit::add_all_components<Register>(const std::vector<Register>& object_list)
 {
+    std::vector<Register> registers = object_list;
+
+    for( Register& reg : registers )
+    {
+        reg.set_circuit(*this);
+    }
+
     std::copy
     (
-        object_list.begin(),
-        object_list.end(),
+        registers.begin(),
+        registers.end(),
         std::back_inserter(_register_instances)
     );
 }
@@ -366,6 +376,7 @@ void Circuit::update_component<Register>(const Register& object)
         );
 
         *it = object;
+        it->set_circuit(*this);
     }
     else
     {

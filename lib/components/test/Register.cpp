@@ -92,8 +92,7 @@ void RegisterTest::SetUp()
         (
             i,
             std::to_string(register_size),
-            wire_ids,
-            *_circuit
+            wire_ids
         );
     }
 
