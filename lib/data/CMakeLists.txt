@@ -15,6 +15,7 @@ target_sources(circsim-data
         ${CMAKE_CURRENT_SOURCE_DIR}/src/JsonParser.cpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/src/ExternalStorage/CircuitState.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ExternalStorage/Register.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/ExternalStorage/Transistor.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/ExternalStorage/Wire.cpp
 )
@@ -38,6 +39,7 @@ target_sources(circsim-data-test
         ${CMAKE_CURRENT_SOURCE_DIR}/test/JsonParser.cpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/test/ExternalStorage/CircuitState.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/ExternalStorage/Register.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/ExternalStorage/Transistor.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/ExternalStorage/Wire.cpp
 )
