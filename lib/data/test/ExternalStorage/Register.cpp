@@ -10,6 +10,7 @@
  */
 
 // C++ Stdlib Includes
+#include <algorithm>
 #include <utility>
 
 // Test Framework Includes
@@ -95,7 +96,7 @@ TEST_F(RegisterStorage, ElementFidelity)
     reg.clear_circuit();
     EXPECT_TRUE(_storage->contains_current(reg));
 
-    Register new_reg(0, "", {});
+    Register new_reg;
     ASSERT_NO_THROW(new_reg = _storage->get<Register>(0));
 
     EXPECT_FALSE(new_reg.has_circuit());
@@ -109,4 +110,40 @@ TEST_F(RegisterStorage, DuplicateAddition)
 
     ASSERT_NO_THROW(_storage->add_component(reg));
     EXPECT_THROW(_storage->add_component(reg), circsim::common::StateError);
+}
+
+
+TEST_F(RegisterStorage, Get)
+{
+    Register reg = _registers[0];
+    Register fetched;
+
+    ASSERT_NO_THROW(_storage->add_component(reg));
+    ASSERT_NO_THROW(fetched = _storage->get<Register>(reg.id()));
+
+    EXPECT_EQ(reg, fetched);
+}
+
+
+TEST_F(RegisterStorage, GetAll)
+{
+    for(const Register& reg : _registers )
+    {
+        ASSERT_NO_THROW(_storage->add_component(reg));
+    }
+
+    std::vector<Register> all_registers;
+    ASSERT_NO_THROW(all_registers = _storage->get_all<Register>());
+
+    std::sort
+    (
+        all_registers.begin(),
+        all_registers.end(),
+        [](const Register& a, const Register& b)
+        {
+            return a.id() < b.id();
+        }
+    );
+
+    EXPECT_EQ(all_registers, _registers);
 }
