@@ -178,3 +178,17 @@ TEST_F(RegisterTest, TestRegistersUnsigned)
     EXPECT_EQ(_test_register_32->value_unsigned<uint64_t>(), 33);
     EXPECT_EQ(_test_register_64->value_unsigned<uint64_t>(), 65);
 }
+
+
+TEST_F(RegisterTest, TestRegistersSigned)
+{
+    _test_register_8->value_signed(-9);
+    _test_register_16->value_signed(-17);
+    _test_register_32->value_signed(-33);
+    _test_register_64->value_signed(-65);
+
+    EXPECT_EQ(_test_register_8->value_signed<int64_t>(), -9);
+    EXPECT_EQ(_test_register_16->value_signed<int64_t>(), -17);
+    EXPECT_EQ(_test_register_32->value_signed<int64_t>(), -33);
+    EXPECT_EQ(_test_register_64->value_signed<int64_t>(), -65);
+}
