@@ -41,6 +41,12 @@ std::vector<Wire>& Circuit::_get_instances<Wire>()
     return _wire_instances;
 }
 
+template<>
+std::vector<Register>& Circuit::_get_instances<Register>()
+{
+    return _register_instances;
+}
+
 
 template<>
 std::map<uint64_t, Transistor*>& Circuit::_get_index<Transistor>()
@@ -168,6 +174,7 @@ Circuit& Circuit::operator=(Circuit&& other) noexcept
 
 template size_t Circuit::count<Transistor>() const;
 template size_t Circuit::count<Wire>() const;
+template size_t Circuit::count<Register>() const;
 
 template<class T>
 size_t Circuit::count() const
@@ -193,6 +200,22 @@ bool Circuit::contains(const T& object) const
         : false;
 }
 
+template<>
+bool Circuit::contains<Register>(const Register& object) const
+{
+    std::vector<Register>::const_iterator it = std::find_if
+    (
+        _register_instances.begin(),
+        _register_instances.end(),
+        [object](const Register& a)
+        {
+            return object.id() == a.id();
+        }
+    );
+
+    return it != _register_instances.end();
+}
+
 
 template bool Circuit::contains_current<Transistor>(const Transistor& object) const;
 template bool Circuit::contains_current<Wire>(const Wire& object) const;
@@ -211,6 +234,24 @@ bool Circuit::contains_current(const T& object) const
     return false;
 }
 
+template<>
+bool Circuit::contains_current<Register>(const Register& object) const
+{
+    std::vector<Register>::const_iterator it = std::find_if
+    (
+        _register_instances.begin(),
+        _register_instances.end(),
+        [object](const Register& a)
+        {
+            return object.id() == a.id();
+        }
+    );
+
+    return it == _register_instances.end()
+        ? false
+        : object == *it;
+}
+
 
 template void Circuit::add_component<Transistor>(const Transistor& object);
 template void Circuit::add_component<Wire>(const Wire& object);
@@ -222,7 +263,8 @@ void Circuit::add_component(const T& object)
     {
         throw common::IndexError
         (
-            "Circuit already contains wire with ID: " + std::to_string(object.id())
+            "Circuit already contains object with ID: " +
+            std::to_string(object.id())
         );
     }
 
@@ -246,6 +288,21 @@ void Circuit::add_component(const T& object)
     }
 }
 
+template<>
+void Circuit::add_component<Register>(const Register& object)
+{
+    if( contains(object) )
+    {
+        throw common::IndexError
+        (
+            "Circuit already contains Register with id: " +
+            std::to_string(object.id())
+        );
+    }
+
+    _register_instances.push_back(object);
+}
+
 
 template void Circuit::add_all_components<Transistor>(const std::vector<Transistor>& object_list);
 template void Circuit::add_all_components<Wire>(const std::vector<Wire>& object_list);
@@ -263,6 +320,17 @@ void Circuit::add_all_components(const std::vector<T>& object_list)
     }
 }
 
+template<>
+void Circuit::add_all_components<Register>(const std::vector<Register>& object_list)
+{
+    std::copy
+    (
+        object_list.begin(),
+        object_list.end(),
+        std::back_inserter(_register_instances)
+    );
+}
+
 
 template void Circuit::update_component<Transistor>(const Transistor& object);
 template void Circuit::update_component<Wire>(const Wire& object);
@@ -275,6 +343,29 @@ void Circuit::update_component(const T& object)
         // Replace the array instance
         std::map<uint64_t, T*>& index_map = _get_index<T>();
         *( index_map[object.id()] ) = object;
+    }
+    else
+    {
+        add_component(object);
+    }
+}
+
+template<>
+void Circuit::update_component<Register>(const Register& object)
+{
+    if( contains(object) )
+    {
+        std::vector<Register>::iterator it = std::find_if
+        (
+            _register_instances.begin(),
+            _register_instances.end(),
+            [object](const Register& a)
+            {
+                return object.id() == a.id();
+            }
+        );
+
+        *it = object;
     }
     else
     {
@@ -298,6 +389,32 @@ catch( const std::out_of_range& )
     (
         "Storage does not contain element with ID " + std::to_string(id)
     );
+}
+
+template<>
+Register* Circuit::get(const uint64_t id) const
+{
+    std::vector<Register>::const_iterator it = std::find_if
+    (
+        _register_instances.begin(),
+        _register_instances.end(),
+        [id](const Register& a)
+        {
+            return id == a.id();
+        }
+    );
+
+    if( it != _register_instances.end() )
+    {
+        return const_cast<Register*>(&(*it));
+    }
+    else
+    {
+        throw common::IndexError
+        (
+            "Storage does not contain register with ID " + std::to_string(id)
+        );
+    }
 }
 
 template<>

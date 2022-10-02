@@ -25,12 +25,14 @@
 
 // Project Includes
 #include <circsim/common/ValueError.hpp>
-#include <circsim/components/Circuit.hpp>
 #include <circsim/components/Wire.hpp>
 
 
 namespace circsim::components
 {
+
+/// Forward-Declare Circuit object
+class Circuit;
 
 /**
  * @brief This class contains a definition of the optional
@@ -107,7 +109,7 @@ public:
      * 
      * @return uint64_t The ID of this register
      */
-    inline uint64_t id() try
+    inline uint64_t id() const try
     {
         return _id.value();
     }
@@ -130,6 +132,15 @@ public:
      * @return std::vector<uint64_t> The little-endian wire ids
      */
     inline std::vector<uint64_t> wire_ids() const { return _wire_ids; }
+
+
+    /**
+     * @brief Compare the two register objects for functional equality.
+     * 
+     * @param rhs The other register instance to compare
+     * @return bool Whether the register objects are functionally equivalent
+     */
+    bool operator==(const Register& rhs) const;
 
 
     /**

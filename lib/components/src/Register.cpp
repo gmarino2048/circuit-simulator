@@ -21,6 +21,7 @@
 // Project Includes
 #include <circsim/common/StateError.hpp>
 #include <circsim/common/ValueError.hpp>
+#include <circsim/components/Circuit.hpp>
 #include <circsim/components/Register.hpp>
 
 using namespace circsim::common;
@@ -75,6 +76,18 @@ Register::Register
             "Current implementation does not support registers over 64 bits"
         );
     }
+}
+
+
+bool Register::operator==(const Register& rhs) const
+{
+    bool equal = true;
+
+    equal &= _id == rhs._id;
+    equal &= _name == rhs._name;
+    equal &= _wire_ids == rhs._wire_ids;
+
+    return equal;
 }
 
 
