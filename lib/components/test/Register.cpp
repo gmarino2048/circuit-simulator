@@ -12,6 +12,7 @@
 // C++ Stdlib Includes
 #include <array>
 #include <cinttypes>
+#include <limits>
 #include <vector>
 
 // Library Includes
@@ -191,4 +192,36 @@ TEST_F(RegisterTest, TestRegistersSigned)
     EXPECT_EQ(_test_register_16->value_signed<int64_t>(), -17);
     EXPECT_EQ(_test_register_32->value_signed<int64_t>(), -33);
     EXPECT_EQ(_test_register_64->value_signed<int64_t>(), -65);
+}
+
+TEST_F(RegisterTest, TestRegisterUnsignedMax)
+{
+    _test_register_8->value_unsigned(std::numeric_limits<uint8_t>::max());
+    _test_register_16->value_unsigned(std::numeric_limits<uint16_t>::max());
+    _test_register_32->value_unsigned(std::numeric_limits<uint32_t>::max());
+    _test_register_64->value_unsigned(std::numeric_limits<uint64_t>::max());
+
+    EXPECT_EQ
+    (
+        _test_register_8->value_unsigned<uint8_t>(),
+        std::numeric_limits<uint8_t>::max()
+    );
+
+    EXPECT_EQ
+    (
+        _test_register_16->value_unsigned<uint16_t>(),
+        std::numeric_limits<uint16_t>::max()
+    );
+
+    EXPECT_EQ
+    (
+        _test_register_32->value_unsigned<uint32_t>(),
+        std::numeric_limits<uint32_t>::max()
+    );
+
+    EXPECT_EQ
+    (
+        _test_register_64->value_unsigned<uint64_t>(),
+        std::numeric_limits<uint64_t>::max()
+    );
 }
