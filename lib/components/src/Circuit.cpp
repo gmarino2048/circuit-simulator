@@ -123,6 +123,8 @@ Circuit::Circuit(const Circuit& other)
 
     _wire_instances = other._wire_instances;
     _index_all<Wire>();
+
+    _register_instances = other._register_instances;
 }
 
 
@@ -141,6 +143,8 @@ Circuit& Circuit::operator=(const Circuit& other)
     _wire_instances = other._wire_instances;
     _index_all<Wire>();
 
+    _register_instances = other._register_instances;
+
     return *this;
 }
 
@@ -154,6 +158,8 @@ Circuit::Circuit(Circuit&& other) noexcept
 
     _wire_instances = std::move(other._wire_instances);
     _wire_index = std::move(other._wire_index);
+
+    _register_instances = std::move(other._register_instances);
 }
 
 
@@ -171,6 +177,8 @@ Circuit& Circuit::operator=(Circuit&& other) noexcept
 
     _wire_instances = std::move(other._wire_instances);
     _wire_index = std::move(other._wire_index);
+
+    _register_instances = std::move(other._register_instances);
 
     return *this;
 }
