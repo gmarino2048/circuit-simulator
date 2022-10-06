@@ -18,8 +18,12 @@ find_package(SQLite3 REQUIRED)
 
 include_directories(${SQLite3_INCLUDE_DIRS})
 
+# Add component directories
 add_subdirectory(lib/common)
 add_subdirectory(lib/components)
 add_subdirectory(lib/data)
 add_subdirectory(lib/sim)
 add_subdirectory(lib/test)
+
+# Add integration tests
+add_subdirectory(test)

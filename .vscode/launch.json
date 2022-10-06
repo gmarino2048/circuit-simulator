@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": 
+    [
+        {
+            "type": "lldb",
+            "name": "Component Unit Tests",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/build/lib/components",
+            "program": "${workspaceFolder}/build/lib/components/circsim-components-test",
+            "preLaunchTask": "CMake: build"
+        },
+        {
+            "type": "lldb",
+            "name": "Data Unit Tests",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/build/lib/data",
+            "program": "${workspaceFolder}/build/lib/data/circsim-data-test",
+            "preLaunchTask": "CMake: build"
+        },
+        {
+            "type": "lldb",
+            "name": "Sim Unit Tests",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/build/lib/sim",
+            "program": "${workspaceFolder}/build/lib/sim/circsim-sim-test",
+            "preLaunchTask": "CMake: build"
+        },
+        {
+            "type": "lldb",
+            "name": "Full Adder Integration Test",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/build/test",
+            "program": "${workspaceFolder}/build/test/full-adder-test",
+            "preLaunchTask": "CMake: build"
+        }
+    ]
+}
