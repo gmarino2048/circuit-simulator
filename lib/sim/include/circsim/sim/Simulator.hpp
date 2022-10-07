@@ -187,6 +187,33 @@ public:
 
 
     /**
+     * @brief Mark a wire as changed after an update.
+     * 
+     * @param id The wire ID to mark as updated
+     * @param update_all If set, this call will update the circuit
+     *                   state until convergence or the limit is reached.
+     */
+    void mark_updated
+    (
+        const uint64_t id,
+        const bool update_all = true
+    );
+
+    /**
+     * @brief Mark a series of wires as changed after an update.
+     * 
+     * @param ids The wire ID list to mark as updated
+     * @param update_all If set, this call will update the circuit
+     *                   state until convergence or the limit is reached.
+     */
+    void mark_all_updated
+    (
+        const std::vector<uint64_t>& ids,
+        const bool update_all = true
+    );
+
+
+    /**
      * @brief Update a wire using its ID and a given State. This method
      *        will change the wire to the provided state and add the wire
      *        to the simulator's internal recalculation list.
@@ -223,6 +250,24 @@ public:
     (
         const std::string &name,
         const WireState state,
+        const bool update_all = true
+    );
+
+    /**
+     * @brief Update a register in the simulator and automatically mark
+     *        all associated wires as modified.
+     * 
+     * @tparam T The type of integer value to use to set the register
+     * @param register_id The ID of the register to update
+     * @param value The integer value to set the register with
+     * @param update_all Whether to trigger the update funciton after
+     *                   the register has been updated.
+     */
+    template<class T>
+    void update_by_register
+    (
+        const uint64_t register_id,
+        const T value,
         const bool update_all = true
     );
 

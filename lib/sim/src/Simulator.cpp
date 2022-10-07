@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <list>
 #include <set>
+#include <type_traits>
 #include <utility>
 
 // Library Includes
@@ -23,6 +24,7 @@
 #include <circsim/common/LimitError.hpp>
 #include <circsim/common/StateError.hpp>
 #include <circsim/components/Circuit.hpp>
+#include <circsim/components/Register.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/sim/WireGroup.hpp>
@@ -183,6 +185,41 @@ void Simulator::update_all()
 }
 
 
+void Simulator::mark_updated
+(
+    const uint64_t id,
+    const bool update_all
+)
+{
+    _wire_update_list.push_back(id);
+
+    if( update_all )
+    {
+        this->update_all();
+    }
+}
+
+
+void Simulator::mark_all_updated
+(
+    const std::vector<uint64_t>& ids,
+    const bool update_all
+)
+{
+    std::copy
+    (
+        ids.begin(),
+        ids.end(),
+        std::back_inserter(_wire_update_list)
+    );
+
+    if( update_all )
+    {
+        this->update_all();
+    }
+}
+
+
 void Simulator::update_by_id
 (
     const uint64_t id,
@@ -222,6 +259,45 @@ void Simulator::update_by_name
     {
         this->update_all();
     }
+}
+
+
+template void Simulator::update_by_register(const uint64_t, const uint8_t, const bool);
+template void Simulator::update_by_register(const uint64_t, const uint16_t, const bool);
+template void Simulator::update_by_register(const uint64_t, const uint32_t, const bool);
+template void Simulator::update_by_register(const uint64_t, const uint64_t, const bool);
+
+template void Simulator::update_by_register(const uint64_t, const int8_t, const bool);
+template void Simulator::update_by_register(const uint64_t, const int16_t, const bool);
+template void Simulator::update_by_register(const uint64_t, const int32_t, const bool);
+template void Simulator::update_by_register(const uint64_t, const int64_t, const bool);
+
+template<class T>
+void Simulator::update_by_register
+(
+    const uint64_t register_id,
+    const T value,
+    const bool update_all
+)
+{
+    using Register = components::Register;
+
+    Register* reg = _circuit.get<Register>(register_id);
+
+    if constexpr ( std::is_signed<T>::value )
+    {
+        reg->value_signed(value);
+    }
+    else if ( std::is_unsigned<T>::value )
+    {
+        reg->value_unsigned(value);
+    }
+
+    mark_all_updated
+    (
+        reg->wire_ids(),
+        update_all
+    );
 }
 
 
