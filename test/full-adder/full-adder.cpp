@@ -64,51 +64,20 @@ void FullAdderTest::TearDown()
 TEST_F(FullAdderTest, Level1_InversionTest)
 {
     using Register = circsim::components::Register;
-    using Wire = circsim::components::Wire;
 
     const uint64_t REG_APRIME_ID = 2;
     const uint64_t REG_BPRIME_ID = 3;
 
-    Register* a = nullptr;
-    Register* b = nullptr;
-
     Register* not_a = nullptr;
     Register* not_b = nullptr;
-
-    a = _simulator->circuit().get<Register>(REG_A_ID);
-    b = _simulator->circuit().get<Register>(REG_B_ID);
 
     not_a = _simulator->circuit().get<Register>(REG_APRIME_ID);
     not_b = _simulator->circuit().get<Register>(REG_BPRIME_ID);
 
     for( uint8_t i = 0; i < std::numeric_limits<uint8_t>::max(); i++ )
     {
-        a->value_unsigned(i);
-        b->value_unsigned(i);
-
-        std::vector<uint64_t> wires;
-        for( Register* reg : {a, b} )
-        {
-            std::vector<uint64_t> wire_ids = reg->wire_ids();
-
-            std::copy
-            (
-                wire_ids.begin(),
-                wire_ids.end(),
-                std::back_inserter(wires)
-            );
-        }
-
-        // Temporary hack around register updates
-        for( uint64_t id : wires )
-        {
-            _simulator->update_by_id
-            (
-                id,
-                _simulator->circuit().get<Wire>(id)->state(),
-                false
-            );
-        }
+        _simulator->update_by_register(REG_A_ID, i, false);
+        _simulator->update_by_register(REG_B_ID, i, false);
 
         _simulator->update_all();
 
