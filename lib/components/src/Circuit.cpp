@@ -11,15 +11,18 @@
 
 // C++ Stdlib Includes
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 // Library Includes
 // (none)
 
 // Project Includes
+#include <circsim/common/ValidationError.hpp>
 #include <circsim/common/IndexError.hpp>
 #include <circsim/components/Transistor.hpp>
 #include <circsim/components/Wire.hpp>
@@ -169,6 +172,114 @@ Circuit& Circuit::operator=(Circuit&& other) noexcept
     _wire_index = std::move(other._wire_index);
 
     return *this;
+}
+
+
+void Circuit::validate() const
+{
+    // For each wire, go through the transistor and make
+    // sure the transistor has the correct wire id
+    std::vector<Wire>::const_iterator wire =
+        this->_wire_instances.begin();
+
+    while( wire != this->_wire_instances.end() )
+    {
+        const uint64_t wire_id = wire->id();
+
+        for( const uint64_t trans_id : wire->ctrl_transistors() )
+        {
+            Transistor* transistor = get<Transistor>(trans_id);
+            bool correct =
+                transistor->source() == wire_id ||
+                transistor->drain() == wire_id;
+
+            if( !correct )
+            {
+                throw circsim::common::ValidationError
+                (
+                    "Wire with ID \"" + std::to_string(wire_id) + "\" " +
+                    "lists control transistor with ID \"" +
+                    std::to_string(trans_id) + "\" but transistor does not " +
+                    "list wire as source or drain inputs."
+                );
+            }
+        }
+
+        for( const uint64_t trans_id : wire->gate_transistors() )
+        {
+            Transistor* transistor = get<Transistor>(trans_id);
+            bool correct = transistor->gate() == wire_id;
+
+            if( !correct )
+            {
+                throw circsim::common::ValidationError
+                (
+                    "Wire with ID \"" + std::to_string(wire_id) + "\" " +
+                    "lists gate transistor with ID \"" +
+                    std::to_string(trans_id) + "\" but transistor does not " +
+                    "list wire as gate input."
+                );
+            }
+        }
+
+        wire++;
+    }
+
+    std::vector<Transistor>::const_iterator transistor =
+        this->_transistor_instances.begin();
+
+    while( transistor != this->_transistor_instances.end() )
+    {
+        const uint64_t transistor_id = transistor->id();
+
+        Wire* source_wire = get<Wire>(transistor->source());
+        Wire* gate_wire = get<Wire>(transistor->gate());
+        Wire* drain_wire = get<Wire>(transistor->drain());
+
+        std::vector<uint64_t> source_trans = source_wire->ctrl_transistors();
+        std::vector<uint64_t>::const_iterator source_it =
+            std::find(source_trans.begin(), source_trans.end(), transistor_id);
+
+        if( source_it == source_trans.end() )
+        {
+            throw circsim::common::ValidationError
+            (
+                "Transistor with ID \"" + std::to_string(transistor_id) + "\" " +
+                "lists Source Wire \"" + std::to_string(source_wire->id()) + "\" " +
+                "but wire does not name transistor in ctrl list."
+            );
+        }
+
+        std::vector<uint64_t> gate_trans = gate_wire->ctrl_transistors();
+        std::vector<uint64_t>::const_iterator gate_it =
+            std::find(gate_trans.begin(), gate_trans.end(), transistor_id);
+
+        if( gate_it == gate_trans.end() )
+        {
+            throw circsim::common::ValidationError
+            (
+                "Transistor with ID \"" + std::to_string(transistor_id) + "\" " +
+                "lists Gate Wire \"" + std::to_string(gate_wire->id()) + "\" " +
+                "but wire does not name transistor in ctrl list."
+            );
+        }
+
+        std::vector<uint64_t> drain_trans = drain_wire->ctrl_transistors();
+        std::vector<uint64_t>::const_iterator drain_it =
+            std::find(drain_trans.begin(), drain_trans.end(), transistor_id);
+
+        if( drain_it == drain_trans.end() )
+        {
+            throw circsim::common::ValidationError
+            (
+                "Transistor with ID \"" + std::to_string(transistor_id) + "\" " +
+                "lists Drain Wire \"" + std::to_string(drain_wire->id()) + "\" " +
+                "but wire does not name transistor in ctrl list."
+            );
+        }
+
+        transistor++;
+    }
 }
 
 
