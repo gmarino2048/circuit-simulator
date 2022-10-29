@@ -17,6 +17,7 @@
 #include <vector>
 
 // Project Includes
+#include<circsim/common/ValidationError.hpp>
 #include <circsim/components/Wire.hpp>
 #include <circsim/components/Transistor.hpp>
 
@@ -236,4 +237,173 @@ TEST_F(CircuitTest, UpdateAddsComponent)
     }
 
     _verify_all_components();
+}
+
+TEST_F(CircuitTest, VerificationBaseTest)
+{
+    Wire::RESET_CLASS();
+
+    _wires = {
+        Wire(0, Wire::SW_GND, { 0 }, {}),
+        Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
+        Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+    };
+
+    _transistors = {
+        Transistor(0, 1, 2, 0)
+    };
+
+    ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+    ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+    EXPECT_NO_THROW(_circuit.validate());
+}
+
+TEST_F(CircuitTest, VerificationMissingWireTest)
+{
+    const size_t WIRE_COUNT = 3;
+
+    for( size_t i = 0; i < WIRE_COUNT; i++ )
+    {
+        Wire::RESET_CLASS();
+
+        _circuit = Circuit();
+
+        _wires = {
+            Wire(0, Wire::SW_GND, { 0 }, {}),
+            Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
+            Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+        };
+
+        _transistors = {
+            Transistor(0, 1, 2, 0)
+        };
+
+        _wires.erase(_wires.begin() + i);
+
+        ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+        ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+        EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
+    }
+}
+
+TEST_F(CircuitTest, VerificationMissingTransistorTest)
+{
+    Wire::RESET_CLASS();
+
+    _wires = {
+        Wire(0, Wire::SW_GND, { 0 }, {}),
+        Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
+        Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+    };
+
+    _transistors = {};
+
+    ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+    ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+    EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
+}
+
+TEST_F(CircuitTest, VerificationMissingTransistorIdTest)
+{
+    const size_t WIRE_COUNT = 3;
+
+    for( size_t i = 0; i < WIRE_COUNT; i++ )
+    {
+        Wire::RESET_CLASS();
+
+        _circuit = Circuit();
+
+        _wires = {
+            Wire(0, Wire::SW_GND, { 0 }, {}),
+            Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
+            Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+        };
+
+        if( i == 0 )
+        {
+            Wire::RESET_CLASS();
+            _wires[i] = Wire(_wires[i].id(), Wire::SW_GND, {}, {} );
+        }
+        else
+        {
+            _wires[i] = Wire
+            (
+                _wires[i].id(),
+                _wires[i].primary_name(),
+                _wires[i].pulled_state(),
+                {},
+                {}
+            );
+        }
+
+        _transistors = {
+            Transistor(0, 1, 2, 0)
+        };
+
+        ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+        ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+        EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
+    }
+}
+
+TEST_F(CircuitTest, ValidationWrongWire)
+{
+    Wire::RESET_CLASS();
+
+    _wires = {
+        Wire(0, Wire::SW_GND, { 0 }, {}),
+        Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
+        Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+    };
+
+    _transistors = {
+        Transistor(0, 1, 1, 0)
+    };
+
+    ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+    ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+    EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
+
+    _circuit = Circuit();
+    Wire::RESET_CLASS();
+
+    _wires = {
+        Wire(0, Wire::SW_GND, { 0 }, {}),
+        Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
+        Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+    };
+
+    _transistors = {
+        Transistor(0, 2, 2, 0)
+    };
+
+    ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+    ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+    EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
+}
+
+TEST_F(CircuitTest, ValidationWrongTransistorTest)
+{
+    Wire::RESET_CLASS();
+
+    _wires = {
+        Wire(0, Wire::SW_GND, { 0 }, {}),
+        Wire(1, "IN", Wire::PS_NONE, { 0 }, {}),
+        Wire(2, "OUT", Wire::PS_HIGH, { 0 }, {})
+    };
+
+    _transistors = {
+        Transistor(0, 2, 1, 0)
+    };
+
+    ASSERT_NO_THROW(_circuit.add_all_components<Wire>(_wires));
+    ASSERT_NO_THROW(_circuit.add_all_components<Transistor>(_transistors));
+
+    EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
 }

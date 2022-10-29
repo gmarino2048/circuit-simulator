@@ -282,7 +282,7 @@ void Circuit::validate() const
             );
         }
 
-        std::vector<uint64_t> gate_trans = gate_wire->ctrl_transistors();
+        std::vector<uint64_t> gate_trans = gate_wire->gate_transistors();
         std::vector<uint64_t>::const_iterator gate_it =
             std::find(gate_trans.begin(), gate_trans.end(), transistor_id);
 
