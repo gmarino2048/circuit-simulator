@@ -514,7 +514,10 @@ Circuit JsonParser::parse(const std::string& json_string)
         opts
     );
 
-    return _convert_object<Circuit>(circuit_value);
+    Circuit circuit = _convert_object<Circuit>(circuit_value);
+    circuit.validate();
+
+    return circuit;
 }
 
 
