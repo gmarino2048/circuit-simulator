@@ -22,6 +22,7 @@
 // (none)
 
 // Project Includes
+#include <circsim/common/IndexError.hpp>
 #include <circsim/common/ValidationError.hpp>
 #include <circsim/common/IndexError.hpp>
 #include <circsim/components/Transistor.hpp>
@@ -188,7 +189,17 @@ void Circuit::validate() const
 
         for( const uint64_t trans_id : wire->ctrl_transistors() )
         {
-            Transistor* transistor = get<Transistor>(trans_id);
+            Transistor* transistor = nullptr;
+
+            try
+            {
+                transistor = get<Transistor>(trans_id);
+            }
+            catch(const circsim::common::IndexError& ex)
+            {
+                throw circsim::common::ValidationError(ex.what());
+            }
+
             bool correct =
                 transistor->source() == wire_id ||
                 transistor->drain() == wire_id;
@@ -207,7 +218,17 @@ void Circuit::validate() const
 
         for( const uint64_t trans_id : wire->gate_transistors() )
         {
-            Transistor* transistor = get<Transistor>(trans_id);
+            Transistor* transistor = nullptr;
+
+            try
+            {
+                transistor = get<Transistor>(trans_id);
+            }
+            catch(const circsim::common::IndexError& ex)
+            {
+                throw circsim::common::ValidationError(ex.what());
+            }
+
             bool correct = transistor->gate() == wire_id;
 
             if( !correct )
@@ -232,9 +253,20 @@ void Circuit::validate() const
     {
         const uint64_t transistor_id = transistor->id();
 
-        Wire* source_wire = get<Wire>(transistor->source());
-        Wire* gate_wire = get<Wire>(transistor->gate());
-        Wire* drain_wire = get<Wire>(transistor->drain());
+        Wire* source_wire = nullptr;
+        Wire* gate_wire = nullptr;
+        Wire* drain_wire = nullptr;
+
+        try
+        {
+            source_wire = get<Wire>(transistor->source());
+            gate_wire = get<Wire>(transistor->gate());
+            drain_wire = get<Wire>(transistor->drain());
+        }
+        catch(const circsim::common::IndexError& ex)
+        {
+            throw circsim::common::ValidationError(ex.what());
+        }
 
         std::vector<uint64_t> source_trans = source_wire->ctrl_transistors();
         std::vector<uint64_t>::const_iterator source_it =
