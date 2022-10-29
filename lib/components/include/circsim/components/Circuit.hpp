@@ -175,6 +175,15 @@ public:
 
 
     /**
+     * @brief Validates this circuit object and throws an
+     *        exception if the circuit is invalid.
+     * 
+     * @throws ValidationError if the circuit connections are invalid
+     */
+    void validate() const;
+
+
+    /**
      * @brief Counts the number of objects stored in this instance.
      *        Only the count of the type specified by the template parameter
      *        is returned.
