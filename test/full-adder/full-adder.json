@@ -177,6 +177,22 @@
             "gate_wire": 36,
             "source_wire": 38,
             "drain_wire": 37
+        },
+        {
+            "id": 22,
+            "name": "Adder0 -> ~A NOR ~B -> Transistor ~A",
+            "type": "NMOS",
+            "gate_wire": 17,
+            "source_wire": 39,
+            "drain_wire": 0
+        },
+        {
+            "id": 23,
+            "name": "Adder0 -> ~A NOR ~B -> Transistor ~B",
+            "type": "NMOS",
+            "gate_wire": 25,
+            "source_wire": 39,
+            "drain_wire": 0
         }
     ],
     "wires":
@@ -189,7 +205,7 @@
             [
                 0, 1, 2, 3, 4, 5, 6, 7,
                 8, 9, 10, 11, 12, 13, 14, 15,
-                16, 18, 20
+                16, 18, 20, 22, 23
             ],
             "gate_transistors": []
         },
@@ -294,7 +310,7 @@
             "name": "~A0",
             "pulled": "HIGH",
             "ctrl_transistors": [ 0 ],
-            "gate_transistors": [ 19 ]
+            "gate_transistors": [ 19, 22 ]
         },
         {
             "id": 18,
@@ -350,7 +366,7 @@
             "name": "~B0",
             "pulled": "HIGH",
             "ctrl_transistors": [ 8 ],
-            "gate_transistors": [ 17 ]
+            "gate_transistors": [ 17, 23 ]
         },
         {
             "id": 26,
@@ -441,6 +457,13 @@
             "name": "Adder0 -> X NAND Y -> OUT0",
             "pulled": "HIGH",
             "ctrl_transistors": [ 21 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 39,
+            "name": "Adder0 -> C0",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 22, 23 ],
             "gate_transistors": []
         }
     ],
