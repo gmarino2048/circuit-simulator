@@ -129,6 +129,54 @@
             "gate_wire": 16,
             "source_wire": 32,
             "drain_wire": 0
+        },
+        {
+            "id": 16,
+            "name": "Adder0 -> A NAND ~B -> Transistor A",
+            "type": "NMOS",
+            "gate_wire": 1,
+            "source_wire": 33,
+            "drain_wire": 0
+        },
+        {
+            "id": 17,
+            "name": "Adder0 -> A NAND ~B -> Transistor ~B'",
+            "type": "NMOS",
+            "gate_wire": 25,
+            "source_wire": 34,
+            "drain_wire": 33
+        },
+        {
+            "id": 18,
+            "name": "Adder0 -> B NAND ~A -> Transistor B",
+            "type": "NMOS",
+            "gate_wire": 9,
+            "source_wire": 35,
+            "drain_wire": 0
+        },
+        {
+            "id": 19,
+            "name": "Adder0 -> B NAND ~A -> Transistor ~A",
+            "type": "NMOS",
+            "gate_wire": 17,
+            "source_wire": 36,
+            "drain_wire": 35
+        },
+        {
+            "id": 20,
+            "name": "Adder0 -> X NAND Y -> Transistor X",
+            "type": "NMOS",
+            "gate_wire": 34,
+            "source_wire": 37,
+            "drain_wire": 0
+        },
+        {
+            "id": 21,
+            "name": "Adder0 -> X NAND Y -> Transistor Y",
+            "type": "NMOS",
+            "gate_wire": 36,
+            "source_wire": 38,
+            "drain_wire": 37
         }
     ],
     "wires":
@@ -140,7 +188,8 @@
             "ctrl_transistors":
             [
                 0, 1, 2, 3, 4, 5, 6, 7,
-                8, 9, 10, 11, 12, 13, 14, 15
+                8, 9, 10, 11, 12, 13, 14, 15,
+                16, 18, 20
             ],
             "gate_transistors": []
         },
@@ -148,7 +197,7 @@
             "id": 1,
             "name": "A0",
             "ctrl_transistors":[],
-            "gate_transistors":[ 0 ]
+            "gate_transistors":[ 0, 16 ]
         },
         {
             "id": 2,
@@ -196,7 +245,7 @@
             "id": 9,
             "name": "B0",
             "ctrl_transistors":[],
-            "gate_transistors":[ 8 ]
+            "gate_transistors":[ 8, 18 ]
         },
         {
             "id": 10,
@@ -245,7 +294,7 @@
             "name": "~A0",
             "pulled": "HIGH",
             "ctrl_transistors": [ 0 ],
-            "gate_transistors": []
+            "gate_transistors": [ 19 ]
         },
         {
             "id": 18,
@@ -301,7 +350,7 @@
             "name": "~B0",
             "pulled": "HIGH",
             "ctrl_transistors": [ 8 ],
-            "gate_transistors": []
+            "gate_transistors": [ 17 ]
         },
         {
             "id": 26,
@@ -350,6 +399,48 @@
             "name": "~B7",
             "pulled": "HIGH",
             "ctrl_transistors": [ 15 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 33,
+            "name": "Adder0 -> A NAND ~B -> Intermediate",
+            "pulled": "NONE",
+            "ctrl_transistors": [ 16, 17 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 34,
+            "name": "Adder0 -> A NAND ~B -> X",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 17 ],
+            "gate_transistors": [ 20 ]
+        },
+        {
+            "id": 35,
+            "name": "Adder0 -> B NAND ~A -> Intermediate",
+            "pulled": "NONE",
+            "ctrl_transistors": [ 18, 19 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 36,
+            "name": "Adder0 -> B NAND ~A -> Y",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 19 ],
+            "gate_transistors": [ 21 ]
+        },
+        {
+            "id": 37,
+            "name": "Adder0 -> X NAND Y -> Intermediate",
+            "pulled": "NONE",
+            "ctrl_transistors": [ 20, 21 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 38,
+            "name": "Adder0 -> X NAND Y -> OUT0",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 21 ],
             "gate_transistors": []
         }
     ],
