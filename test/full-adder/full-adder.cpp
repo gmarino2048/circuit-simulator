@@ -52,13 +52,6 @@ void FullAdderTest::SetUp()
     circuit = circsim::data::JsonParser::parse(JSON_RELPATH);
 
     _simulator = new circsim::sim::Simulator(circuit);
-
-    // Quick and dirty hack to break in the circuit
-    _simulator->update_by_register<uint8_t>(REG_A_ID, 0b11111111, true);
-    _simulator->update_by_register<uint8_t>(REG_B_ID, 0b11111111, true);
-
-    _simulator->update_by_register<uint8_t>(REG_A_ID, 0b00000000, true);
-    _simulator->update_by_register<uint8_t>(REG_B_ID, 0b00000000, true);
 }
 
 

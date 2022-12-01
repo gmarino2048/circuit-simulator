@@ -70,11 +70,16 @@ void Simulator::_update_transistors(const WireGroup &group)
             _circuit.get<components::Transistor>(id);
 
         bool state_changed = transistor_object->update_state(group.group_state());
+        bool transistor_initialized = transistor_object->is_initialized();
 
         // If the gate state has not changed, then move on to the next transistor
-        if( !state_changed )
+        if( (!state_changed) && transistor_initialized )
         {
             continue;
+        }
+        else if( !transistor_initialized )
+        {
+            transistor_object->set_initialized();
         }
 
         // Don't add if they're already in the update list
