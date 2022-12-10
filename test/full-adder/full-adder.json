@@ -132,7 +132,7 @@
         },
         {
             "id": 16,
-            "name": "Adder0 -> A NAND ~B -> Transistor A",
+            "name": "Adder0 -> XINT = A0 NAND ~B0 -> Transistor A0",
             "type": "NMOS",
             "gate_wire": 1,
             "source_wire": 33,
@@ -140,7 +140,7 @@
         },
         {
             "id": 17,
-            "name": "Adder0 -> A NAND ~B -> Transistor ~B'",
+            "name": "Adder0 -> XINT = A0 NAND ~B0 -> Transistor ~B0",
             "type": "NMOS",
             "gate_wire": 25,
             "source_wire": 34,
@@ -148,7 +148,7 @@
         },
         {
             "id": 18,
-            "name": "Adder0 -> B NAND ~A -> Transistor B",
+            "name": "Adder0 -> YINT = B0 NAND ~A0 -> Transistor B0",
             "type": "NMOS",
             "gate_wire": 9,
             "source_wire": 35,
@@ -156,7 +156,7 @@
         },
         {
             "id": 19,
-            "name": "Adder0 -> B NAND ~A -> Transistor ~A",
+            "name": "Adder0 -> YINT = B0 NAND ~A0 -> Transistor ~A0",
             "type": "NMOS",
             "gate_wire": 17,
             "source_wire": 36,
@@ -164,7 +164,7 @@
         },
         {
             "id": 20,
-            "name": "Adder0 -> X NAND Y -> Transistor X",
+            "name": "Adder0 -> S0 = XINT NAND YINT -> Transistor XINT",
             "type": "NMOS",
             "gate_wire": 34,
             "source_wire": 37,
@@ -172,7 +172,7 @@
         },
         {
             "id": 21,
-            "name": "Adder0 -> X NAND Y -> Transistor Y",
+            "name": "Adder0 -> S0 = XINT NAND YINT -> Transistor YINT",
             "type": "NMOS",
             "gate_wire": 36,
             "source_wire": 38,
@@ -180,7 +180,7 @@
         },
         {
             "id": 22,
-            "name": "Adder0 -> ~A NOR ~B -> Transistor ~A",
+            "name": "Adder0 -> C0 = ~A0 NOR ~B0 -> Transistor ~A0",
             "type": "NMOS",
             "gate_wire": 17,
             "source_wire": 39,
@@ -188,7 +188,7 @@
         },
         {
             "id": 23,
-            "name": "Adder0 -> ~A NOR ~B -> Transistor ~B",
+            "name": "Adder0 -> C0 = ~A0 NOR ~B0 -> Transistor ~A0",
             "type": "NMOS",
             "gate_wire": 25,
             "source_wire": 39,
@@ -419,42 +419,42 @@
         },
         {
             "id": 33,
-            "name": "Adder0 -> A NAND ~B -> Intermediate",
+            "name": "Adder0 -> XINT = A0 NAND ~B0 -> Intermediate",
             "pulled": "NONE",
             "ctrl_transistors": [ 16, 17 ],
             "gate_transistors": []
         },
         {
             "id": 34,
-            "name": "Adder0 -> A NAND ~B -> X",
+            "name": "Adder0 -> XINT = A0 NAND ~B0 -> XINT",
             "pulled": "HIGH",
             "ctrl_transistors": [ 17 ],
             "gate_transistors": [ 20 ]
         },
         {
             "id": 35,
-            "name": "Adder0 -> B NAND ~A -> Intermediate",
+            "name": "Adder0 -> YINT = B0 NAND ~A0 -> Intermediate",
             "pulled": "NONE",
             "ctrl_transistors": [ 18, 19 ],
             "gate_transistors": []
         },
         {
             "id": 36,
-            "name": "Adder0 -> B NAND ~A -> Y",
+            "name": "Adder0 -> YINT = B0 NAND ~A0 -> YINT",
             "pulled": "HIGH",
             "ctrl_transistors": [ 19 ],
             "gate_transistors": [ 21 ]
         },
         {
             "id": 37,
-            "name": "Adder0 -> X NAND Y -> Intermediate",
+            "name": "Adder0 -> S0 = XINT NAND YINT -> Intermediate",
             "pulled": "NONE",
             "ctrl_transistors": [ 20, 21 ],
             "gate_transistors": []
         },
         {
             "id": 38,
-            "name": "Adder0 -> X NAND Y -> OUT0",
+            "name": "Adder0 -> S0 = XINT NAND YINT -> S0",
             "pulled": "HIGH",
             "ctrl_transistors": [ 21 ],
             "gate_transistors": []
