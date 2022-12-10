@@ -117,3 +117,58 @@ TEST_F(FullAdderTest, Level1_BaseAdderTest)
     EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT0_ID)->high());
     EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C0_ID)->low());
 }
+
+TEST_F(FullAdderTest, Level2_FullAdderTest)
+{
+    using Wire = circsim::components::Wire;
+
+    const uint64_t WIRE_OUT1_ID = 53;
+    const uint64_t WIRE_C1_ID = 61;
+
+    // Base test, set all to 0
+    _simulator->update_by_register<uint8_t>(REG_A_ID, 0x00, false);
+    _simulator->update_by_register<uint8_t>(REG_B_ID, 0x00, false);
+    _simulator->update_all();
+
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->low());
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->low());
+
+    // Carry test, set to 2 1's
+    _simulator->update_by_register<uint8_t>(REG_A_ID, 0x01, false);
+    _simulator->update_by_register<uint8_t>(REG_B_ID, 0x01, false);
+    _simulator->update_all();
+
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->high());
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->low());
+
+    // Input Test, set to 2 and 1
+    _simulator->update_by_register<uint8_t>(REG_A_ID, 0x02, false);
+    _simulator->update_by_register<uint8_t>(REG_B_ID, 0x01, false);
+    _simulator->update_all();
+
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->high());
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->low());
+
+    _simulator->update_by_register<uint8_t>(REG_A_ID, 0x01, false);
+    _simulator->update_by_register<uint8_t>(REG_B_ID, 0x02, false);
+    _simulator->update_all();
+
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->high());
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->low());
+
+    // Carry out test, set to 2 2's
+    _simulator->update_by_register<uint8_t>(REG_A_ID, 0x02, false);
+    _simulator->update_by_register<uint8_t>(REG_B_ID, 0x02, false);
+    _simulator->update_all();
+
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->low());
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->high());
+
+    // Combined input & output test, set to 2 3's
+    _simulator->update_by_register<uint8_t>(REG_A_ID, 0x03, false);
+    _simulator->update_by_register<uint8_t>(REG_B_ID, 0x03, false);
+    _simulator->update_all();
+
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->high());
+    EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->high());
+}
