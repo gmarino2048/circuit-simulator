@@ -4,7 +4,7 @@
     [
         {
             "id": 0,
-            "name": "NOT_A0",
+            "name": "NOT A0",
             "type": "NMOS",
             "gate_wire": 1,
             "source_wire": 17,
@@ -12,7 +12,7 @@
         },
         {
             "id": 1,
-            "name": "NOT_A1",
+            "name": "NOT A1",
             "type": "NMOS",
             "gate_wire": 2,
             "source_wire": 18,
@@ -20,7 +20,7 @@
         },
         {
             "id": 2,
-            "name": "NOT_A2",
+            "name": "NOT A2",
             "type": "NMOS",
             "gate_wire": 3,
             "source_wire": 19,
@@ -28,7 +28,7 @@
         },
         {
             "id": 3,
-            "name": "NOT_A3",
+            "name": "NOT A3",
             "type": "NMOS",
             "gate_wire": 4,
             "source_wire": 20,
@@ -36,7 +36,7 @@
         },
         {
             "id": 4,
-            "name": "NOT_A4",
+            "name": "NOT A4",
             "type": "NMOS",
             "gate_wire": 5,
             "source_wire": 21,
@@ -44,7 +44,7 @@
         },
         {
             "id": 5,
-            "name": "NOT_A5",
+            "name": "NOT A5",
             "type": "NMOS",
             "gate_wire": 6,
             "source_wire": 22,
@@ -52,7 +52,7 @@
         },
         {
             "id": 6,
-            "name": "NOT_A6",
+            "name": "NOT A6",
             "type": "NMOS",
             "gate_wire": 7,
             "source_wire": 23,
@@ -60,7 +60,7 @@
         },
         {
             "id": 7,
-            "name": "NOT_A7",
+            "name": "NOT A7",
             "type": "NMOS",
             "gate_wire": 8,
             "source_wire": 24,
@@ -68,7 +68,7 @@
         },
         {
             "id": 8,
-            "name": "NOT_B0",
+            "name": "NOT B0",
             "type": "NMOS",
             "gate_wire": 9,
             "source_wire": 25,
@@ -76,7 +76,7 @@
         },
         {
             "id": 9,
-            "name": "NOT_B1",
+            "name": "NOT B1",
             "type": "NMOS",
             "gate_wire": 10,
             "source_wire": 26,
@@ -84,7 +84,7 @@
         },
         {
             "id": 10,
-            "name": "NOT_B2",
+            "name": "NOT B2",
             "type": "NMOS",
             "gate_wire": 11,
             "source_wire": 27,
@@ -92,7 +92,7 @@
         },
         {
             "id": 11,
-            "name": "NOT_B3",
+            "name": "NOT B3",
             "type": "NMOS",
             "gate_wire": 12,
             "source_wire": 28,
@@ -100,7 +100,7 @@
         },
         {
             "id": 12,
-            "name": "NOT_B4",
+            "name": "NOT B4",
             "type": "NMOS",
             "gate_wire": 13,
             "source_wire": 29,
@@ -108,7 +108,7 @@
         },
         {
             "id": 13,
-            "name": "NOT_B5",
+            "name": "NOT B5",
             "type": "NMOS",
             "gate_wire": 14,
             "source_wire": 30,
@@ -116,7 +116,7 @@
         },
         {
             "id": 14,
-            "name": "NOT_B6",
+            "name": "NOT B6",
             "type": "NMOS",
             "gate_wire": 15,
             "source_wire": 31,
@@ -124,7 +124,7 @@
         },
         {
             "id": 15,
-            "name": "NOT_B7",
+            "name": "NOT B7",
             "type": "NMOS",
             "gate_wire": 16,
             "source_wire": 32,
