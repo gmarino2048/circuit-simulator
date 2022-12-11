@@ -34,6 +34,7 @@ protected:
 
     const uint64_t REG_A_ID = 0;
     const uint64_t REG_B_ID = 1;
+    const uint64_t REG_OUT_ID = 4;
 
     circsim::sim::Simulator* _simulator = nullptr;
 
@@ -171,4 +172,26 @@ TEST_F(FullAdderTest, Level2_FullAdderTest)
 
     EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_OUT1_ID)->high());
     EXPECT_TRUE(_simulator->circuit().get<Wire>(WIRE_C1_ID)->high());
+}
+
+TEST_F(FullAdderTest, Level3_HalfwayPointFidelityTest)
+{
+    using Register = circsim::components::Register;
+
+    for( uint8_t in_a = 0b0000; in_a < 0b1000; in_a++ )
+    {
+        for( uint8_t in_b = 0b0000; in_b < 0b1000; in_b++ )
+        {
+            uint8_t expected = in_a + in_b;
+
+            _simulator->update_by_register<uint8_t>(REG_A_ID, in_a, false);
+            _simulator->update_by_register<uint8_t>(REG_B_ID, in_b, false);
+            _simulator->update_all();
+
+            Register* output_register = _simulator->circuit().get<Register>(REG_OUT_ID);
+            uint8_t out_value = output_register->value_unsigned<uint8_t>();
+
+            EXPECT_EQ(out_value, expected);
+        }
+    }
 }
