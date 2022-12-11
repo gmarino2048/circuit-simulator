@@ -545,6 +545,182 @@
             "gate_wire": 81,
             "source_wire": 83,
             "drain_wire": 82
+        },
+        {
+            "id": 68,
+            "name": "Adder3 -> NOT C2",
+            "type": "NMOS",
+            "gate_wire": 83,
+            "source_wire": 84,
+            "drain_wire": 0
+        },
+        {
+            "id": 69,
+            "name": "Adder3 -> DINT = A3 NAND ~B3 -> Transistor A3",
+            "type": "NMOS",
+            "gate_wire": 4,
+            "source_wire": 85,
+            "drain_wire": 0
+        },
+        {
+            "id": 70,
+            "name": "Adder3 -> DINT = A3 NAND ~B3 -> Transistor ~B3",
+            "type": "NMOS",
+            "gate_wire": 28,
+            "source_wire": 86,
+            "drain_wire": 85
+        },
+        {
+            "id": 71,
+            "name": "Adder3 -> DINT = ~A3 NAND B3 -> Transistor ~A3",
+            "type": "NMOS",
+            "gate_wire": 20,
+            "source_wire": 87,
+            "drain_wire": 0
+        },
+        {
+            "id": 72,
+            "name": "Adder3 -> DINT = ~A3 NAND B3 -> Transistor B3",
+            "type": "NMOS",
+            "gate_wire": 12,
+            "source_wire": 88,
+            "drain_wire": 87
+        },
+        {
+            "id": 73,
+            "name": "Adder3 -> FINT = DINT NAND EINT -> Transistor DINT",
+            "type": "NMOS",
+            "gate_wire": 86,
+            "source_wire": 89,
+            "drain_wire": 0
+        },
+        {
+            "id": 74,
+            "name": "Adder3 -> FINT = DINT NAND EINT -> Transistor EINT",
+            "type": "NMOS",
+            "gate_wire": 88,
+            "source_wire": 90,
+            "drain_wire": 89
+        },
+        {
+            "id": 75,
+            "name": "Adder3 -> NOT FINT",
+            "type": "NMOS",
+            "gate_wire": 90,
+            "source_wire": 91,
+            "drain_wire": 0
+        },
+        {
+            "id": 76,
+            "name": "Adder3 -> GINT = ~FINT NAND C2 -> Transistor ~FINT",
+            "type": "NMOS",
+            "gate_wire": 91,
+            "source_wire": 92,
+            "drain_wire": 0
+        },
+        {
+            "id": 77,
+            "name": "Adder3 -> GINT = ~FINT NAND C2 -> Transistor C2",
+            "type": "NMOS",
+            "gate_wire": 83,
+            "source_wire": 93,
+            "drain_wire": 92
+        },
+        {
+            "id": 78,
+            "name": "Adder3 -> HINT = FINT NAND ~C2 -> Transistor FINT",
+            "type": "NMOS",
+            "gate_wire": 90,
+            "source_wire": 94,
+            "drain_wire": 0
+        },
+        {
+            "id": 79,
+            "name": "Adder3 -> HINT = FINT NAND ~C2 -> Transistor ~C2",
+            "type": "NMOS",
+            "gate_wire": 84,
+            "source_wire": 95,
+            "drain_wire": 94
+        },
+        {
+            "id": 80,
+            "name": "Adder3 -> S3 = GINT NAND HINT -> Transistor GINT",
+            "type": "NMOS",
+            "gate_wire": 93,
+            "source_wire": 96,
+            "drain_wire": 0
+        },
+        {
+            "id": 81,
+            "name": "Adder3 -> S3 = GINT NAND HINT -> Transistor HINT",
+            "type": "NMOS",
+            "gate_wire": 95,
+            "source_wire": 97,
+            "drain_wire": 96
+        },
+        {
+            "id": 82,
+            "name": "Adder3 -> IINT = A3 NAND B3 -> Transistor A3",
+            "type": "NMOS",
+            "gate_wire": 4,
+            "source_wire": 98,
+            "drain_wire": 0
+        },
+        {
+            "id": 83,
+            "name": "Adder3 -> IINT = A3 NAND B3 -> Transistor B3",
+            "type": "NMOS",
+            "gate_wire": 12,
+            "source_wire": 99,
+            "drain_wire": 98
+        },
+        {
+            "id": 84,
+            "name": "Adder3 -> JINT = ~A3 NAND ~B3 -> Transistor ~A3",
+            "type": "NMOS",
+            "gate_wire": 20,
+            "source_wire": 100,
+            "drain_wire": 0
+        },
+        {
+            "id": 85,
+            "name": "Adder3 -> JINT = ~A3 NAND ~B3 -> Transistor ~B3",
+            "type": "NMOS",
+            "gate_wire": 28,
+            "source_wire": 101,
+            "drain_wire": 100
+        },
+        {
+            "id": 86,
+            "name": "Adder3 -> KINT = C2 NAND JINT -> Transistor C2",
+            "type": "NMOS",
+            "gate_wire": 83,
+            "source_wire": 102,
+            "drain_wire": 0
+        },
+        {
+            "id": 87,
+            "name": "Adder3 -> KINT = C2 NAND JINT -> Transistor JINT",
+            "type": "NMOS",
+            "gate_wire": 101,
+            "source_wire": 103,
+            "drain_wire": 102
+        },
+        {
+            "id": 88,
+            "name": "Adder3 -> C3 = IINT NAND KINT -> Transistor IINT",
+            "type": "NMOS",
+            "gate_wire": 99,
+            "source_wire": 104,
+            "drain_wire": 0
+        },
+        {
+            "id": 89,
+            "name": "Adder3 -> C3 = IINT NAND KINT -> Transistor KINT",
+            "type": "NMOS",
+            "gate_wire": 103,
+            "source_wire": 105,
+            "drain_wire": 104
         }
     ],
     "wires":
@@ -559,7 +735,8 @@
                 8, 9, 10, 11, 12, 13, 14, 15,
                 16, 18, 20, 22, 23,
                 24, 25, 27, 29, 31, 32, 34, 36, 38, 40, 42, 44,
-                46, 47, 49, 51, 53, 54, 56, 58, 60, 62, 64, 66
+                46, 47, 49, 51, 53, 54, 56, 58, 60, 62, 64, 66,
+                68, 69, 71, 73, 75, 76, 78, 80, 82, 84, 86, 88
             ],
             "gate_transistors": []
         },
@@ -585,7 +762,7 @@
             "id": 4,
             "name": "A3",
             "ctrl_transistors":[],
-            "gate_transistors":[ 3 ]
+            "gate_transistors":[ 3, 69, 82 ]
         },
         {
             "id": 5,
@@ -633,7 +810,7 @@
             "id": 12,
             "name": "B3",
             "ctrl_transistors":[],
-            "gate_transistors":[ 11 ]
+            "gate_transistors":[ 11, 72, 83 ]
         },
         {
             "id": 13,
@@ -685,7 +862,7 @@
             "name": "~A3",
             "pulled": "HIGH",
             "ctrl_transistors": [ 3 ],
-            "gate_transistors": []
+            "gate_transistors": [ 71, 84 ]
         },
         {
             "id": 21,
@@ -741,7 +918,7 @@
             "name": "~B3",
             "pulled": "HIGH",
             "ctrl_transistors": [ 11 ],
-            "gate_transistors": []
+            "gate_transistors": [ 70, 85 ]
         },
         {
             "id": 29,
@@ -1032,28 +1209,28 @@
         },
         {
             "id": 70,
-            "name": "Adder2 -> GINT = ~FINT NAND C0 -> Intermediate",
+            "name": "Adder2 -> GINT = ~FINT NAND C1 -> Intermediate",
             "pulled": "HIGH",
             "ctrl_transistors": [ 54, 55 ],
             "gate_transistors": []
         },
         {
             "id": 71,
-            "name": "Adder2 -> GINT = ~FINT NAND C0 -> GINT",
+            "name": "Adder2 -> GINT = ~FINT NAND C1 -> GINT",
             "pulled": "HIGH",
             "ctrl_transistors": [ 55 ],
             "gate_transistors": [ 58 ]
         },
         {
             "id": 72,
-            "name": "Adder2 -> HINT = FINT NAND ~C0 -> Intermediate",
+            "name": "Adder2 -> HINT = FINT NAND ~C1 -> Intermediate",
             "pulled": "HIGH",
             "ctrl_transistors": [ 56, 57 ],
             "gate_transistors": []
         },
         {
             "id": 73,
-            "name": "Adder2 -> HINT = FINT NAND ~C0 -> HINT",
+            "name": "Adder2 -> HINT = FINT NAND ~C1 -> HINT",
             "pulled": "HIGH",
             "ctrl_transistors": [ 57 ],
             "gate_transistors": [ 59 ]
@@ -1102,14 +1279,14 @@
         },
         {
             "id": 80,
-            "name": "Adder2 -> KINT = C0 NAND JINT -> Intermediate",
+            "name": "Adder2 -> KINT = C1 NAND JINT -> Intermediate",
             "pulled": "HIGH",
             "ctrl_transistors": [ 64, 65 ],
             "gate_transistors": []
         },
         {
             "id": 81,
-            "name": "Adder2 -> KINT = C0 NAND JINT -> KINT",
+            "name": "Adder2 -> KINT = C1 NAND JINT -> KINT",
             "pulled": "HIGH",
             "ctrl_transistors": [ 65 ],
             "gate_transistors": [ 67 ]
@@ -1126,6 +1303,160 @@
             "name": "Adder2 -> C2 = IINT NAND KINT -> C2",
             "pulled": "HIGH",
             "ctrl_transistors": [ 67 ],
+            "gate_transistors": [ 68, 77, 86 ]
+        },
+        {
+            "id": 84,
+            "name": "Adder3 -> ~C2",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 68 ],
+            "gate_transistors": [ 79 ]
+        },
+        {
+            "id": 85,
+            "name": "Adder3 -> DINT = A3 NAND ~B3 -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 69, 70 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 86,
+            "name": "Adder3 -> DINT = A3 NAND ~B3 -> DINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 70 ],
+            "gate_transistors": [ 73 ]
+        },
+        {
+            "id": 87,
+            "name": "Adder3 -> EINT = ~A3 NAND B3 -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 71, 72 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 88,
+            "name": "Adder3 -> EINT = ~A3 NAND B3 -> EINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 72 ],
+            "gate_transistors": [ 74 ]
+        },
+        {
+            "id": 89,
+            "name": "Adder3 -> FINT = DINT NAND EINT -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 73, 74 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 90,
+            "name": "Adder3 -> FINT = DINT NAND EINT -> FINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 74 ],
+            "gate_transistors": [ 75, 78 ]
+        },
+        {
+            "id": 91,
+            "name": "Adder3 -> ~FINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 75 ],
+            "gate_transistors": [ 76 ]
+        },
+        {
+            "id": 92,
+            "name": "Adder3 -> GINT = ~FINT NAND C2 -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 76, 77 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 93,
+            "name": "Adder3 -> GINT = ~FINT NAND C2 -> GINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 77 ],
+            "gate_transistors": [ 80 ]
+        },
+        {
+            "id": 94,
+            "name": "Adder3 -> HINT = FINT NAND ~C2 -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 78, 79 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 95,
+            "name": "Adder3 -> HINT = FINT NAND ~C2 -> HINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 79 ],
+            "gate_transistors": [ 81 ]
+        },
+        {
+            "id": 96,
+            "name": "Adder3 -> S3 = GINT NAND HINT -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 80, 81 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 97,
+            "name": "Adder3 -> S3 = GINT NAND HINT -> S3",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 81 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 98,
+            "name": "Adder3 -> IINT = A3 NAND B3 -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 82, 83 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 99,
+            "name": "Adder3 -> IINT = A3 NAND B3 -> IINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 83 ],
+            "gate_transistors": [ 88 ]
+        },
+        {
+            "id": 100,
+            "name": "Adder3 -> JINT = ~A3 NAND ~B3 -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 84, 85 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 101,
+            "name": "Adder3 -> JINT = ~A3 NAND ~B3 -> JINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 85 ],
+            "gate_transistors": [ 87 ]
+        },
+        {
+            "id": 102,
+            "name": "Adder3 -> KINT = C2 NAND JINT -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 86, 87 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 103,
+            "name": "Adder3 -> KINT = C2 NAND JINT -> KINT",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 87 ],
+            "gate_transistors": [ 89 ]
+        },
+        {
+            "id": 104,
+            "name": "Adder3 -> C3 = IINT NAND KINT -> Intermediate",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 88, 89 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 105,
+            "name": "Adder3 -> C3 = IINT NAND KINT -> C3",
+            "pulled": "HIGH",
+            "ctrl_transistors": [ 89 ],
             "gate_transistors": []
         }
     ],
@@ -1154,12 +1485,12 @@
         {
             "id": 4,
             "name": "S",
-            "wire_ids": [ 38, 53, 75 ]
+            "wire_ids": [ 38, 53, 75, 97 ]
         },
         {
             "id": 5,
             "name": "C",
-            "wire_ids": [ 39, 61, 83 ]
+            "wire_ids": [ 39, 61, 83, 105 ]
         }
     ]
 }
