@@ -178,9 +178,9 @@ TEST_F(FullAdderTest, Level3_HalfwayPointFidelityTest)
 {
     using Register = circsim::components::Register;
 
-    for( uint8_t in_a = 0b0000; in_a < 0b1000; in_a++ )
+    for( uint8_t in_a = 0b00000; in_a < 0b10000; in_a++ )
     {
-        for( uint8_t in_b = 0b0000; in_b < 0b1000; in_b++ )
+        for( uint8_t in_b = 0b00000; in_b < 0b10000; in_b++ )
         {
             uint8_t expected = in_a + in_b;
 
