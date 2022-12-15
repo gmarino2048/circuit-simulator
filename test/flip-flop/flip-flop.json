@@ -1,0 +1,110 @@
+{
+    "name": "flip-flop",
+    "transistors":
+    [
+        {
+            "id": 0,
+            "name": "~D",
+            "type": "NMOS",
+            "gate_wire": 1,
+            "source_wire": 2,
+            "drain_wire": 0
+        },
+        {
+            "id": 1,
+            "name": "D NAND CLK -> Transistor CLK",
+            "type": "NMOS",
+            "gate_wire": 3,
+            "source_wire": 6,
+            "drain_wire": 0
+        },
+        {
+            "id": 2,
+            "name": "D NAND CLK -> Transistor D",
+            "type": "NMOS",
+            "gate_wire": 1,
+            "source_wire": 7,
+            "drain_wire": 6
+        },
+        {
+            "id": 3,
+            "name":"CLK NAND ~D -> Transistor ~D",
+            "type": "NMOS",
+            "gate_wire": 2,
+            "source_wire": 8,
+            "drain_wire": 0
+        },
+        {
+            "id": 4,
+            "name":"CLK NAND ~D -> Transistor CLK",
+            "type": "NMOS",
+            "gate_wire": 3,
+            "source_wire": 9,
+            "drain_wire": 8
+        }
+    ],
+    "wires":
+    [
+        {
+            "id": 0,
+            "name": "GND",
+            "special": "GND",
+            "ctrl_transistors": [ 0, 1, 3 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 1,
+            "name": "D",
+            "ctrl_transistors": [],
+            "gate_transistors": [ 0, 2 ]
+        },
+        {
+            "id": 2,
+            "name": "~D",
+            "ctrl_transistors": [ 0 ],
+            "gate_transistors": [ 3 ]
+        },
+        {
+            "id": 3,
+            "name": "CLK",
+            "ctrl_transistors": [],
+            "gate_transistors": [ 1, 4 ]
+        },
+        {
+            "id": 4,
+            "name": "Q",
+            "ctrl_transistors": [],
+            "gate_transistors": []
+        },
+        {
+            "id": 5,
+            "name": "~Q",
+            "ctrl_transistors": [],
+            "gate_transistors": []
+        },
+        {
+            "id": 6,
+            "name": "D NAND CLK -> Intermediate",
+            "ctrl_transistors": [ 1, 2 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 7,
+            "name": "D NAND CLK -> LATCH0",
+            "ctrl_transistors": [ 2 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 8,
+            "name": "CLK NAND ~D -> Intermediate",
+            "ctrl_transistors": [ 3, 4 ],
+            "gate_transistors": []
+        },
+        {
+            "id": 9,
+            "name": "CLK NAND ~D -> LATCH1",
+            "ctrl_transistors": [ 4 ],
+            "gate_transistors": []
+        }
+    ]
+}
