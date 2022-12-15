@@ -75,6 +75,9 @@ private:
     uint64_t _drain_id;
 
 
+    /// Whether the transistor has been inititalized
+    bool _initialized;
+
     /// The current state of the transistor
     State _current_state;
 
@@ -195,6 +198,22 @@ public:
      * @return size_t The drain wire ID.
      */
     inline size_t drain() const noexcept { return _drain_id; }
+
+    /**
+     * @brief Returns the initialization state of this transistor.
+     * 
+     * If the object has not been initialized, we can't use state optimization
+     * when running the simulation since wires might not get updated properly.
+     * 
+     * @return true if the transistor has already been initialized, false otherwise.
+     */
+    inline bool is_initialized() const noexcept { return _initialized; }
+
+    /**
+     * @brief Mark this transistor as initialized for optimized simulator behavior.
+     * 
+     */
+    inline void set_initialized() noexcept { _initialized = true; }
 
     /**
      * @brief Get the current state of the transistor.

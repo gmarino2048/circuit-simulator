@@ -101,6 +101,16 @@ void Circuit::_index_all()
 }
 
 
+template<>
+void Circuit::_index_all<Register>()
+{
+    for( Register& reg : _register_instances )
+    {
+        reg.set_circuit(*this);
+    }
+}
+
+
 template void Circuit::_clear_index<Transistor>();
 template void Circuit::_clear_index<Wire>();
 
@@ -123,6 +133,9 @@ Circuit::Circuit(const Circuit& other)
 
     _wire_instances = other._wire_instances;
     _index_all<Wire>();
+
+    _register_instances = other._register_instances;
+    _index_all<Register>();
 }
 
 
@@ -141,6 +154,9 @@ Circuit& Circuit::operator=(const Circuit& other)
     _wire_instances = other._wire_instances;
     _index_all<Wire>();
 
+    _register_instances = other._register_instances;
+    _index_all<Register>();
+
     return *this;
 }
 
@@ -154,6 +170,9 @@ Circuit::Circuit(Circuit&& other) noexcept
 
     _wire_instances = std::move(other._wire_instances);
     _wire_index = std::move(other._wire_index);
+
+    _register_instances = std::move(other._register_instances);
+    _index_all<Register>();
 }
 
 
@@ -171,6 +190,9 @@ Circuit& Circuit::operator=(Circuit&& other) noexcept
 
     _wire_instances = std::move(other._wire_instances);
     _wire_index = std::move(other._wire_index);
+
+    _register_instances = std::move(other._register_instances);
+    _index_all<Register>();
 
     return *this;
 }
