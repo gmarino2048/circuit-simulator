@@ -16,7 +16,7 @@ target_sources(circsim-sim
 )
 
 target_link_libraries(circsim-sim
-    PRIVATE
+    PUBLIC
         circsim-common
         circsim-components
         circsim-data
