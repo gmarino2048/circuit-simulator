@@ -36,6 +36,14 @@
             "cwd": "${workspaceFolder}/build/test",
             "program": "${workspaceFolder}/build/test/full-adder-test",
             "preLaunchTask": "CMake: build"
+        },
+        {
+            "type": "lldb",
+            "name": "Flip Flop Integration Test",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/build/test",
+            "program": "${workspaceFolder}/build/test/flip-flop-test",
+            "preLaunchTask": "CMake: build"
         }
     ]
 }
