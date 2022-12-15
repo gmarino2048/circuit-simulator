@@ -35,6 +35,7 @@ protected:
     const uint64_t REG_A_ID = 0;
     const uint64_t REG_B_ID = 1;
     const uint64_t REG_OUT_ID = 4;
+    const uint64_t REG_CARRY_ID = 5;
 
     circsim::sim::Simulator* _simulator = nullptr;
 
@@ -178,9 +179,9 @@ TEST_F(FullAdderTest, Level3_HalfwayPointFidelityTest)
 {
     using Register = circsim::components::Register;
 
-    for( uint8_t in_a = 0b0000000; in_a < 0b1000000; in_a++ )
+    for( uint8_t in_a = 0b00000000; in_a < 0b10000000; in_a++ )
     {
-        for( uint8_t in_b = 0b0000000; in_b < 0b1000000; in_b++ )
+        for( uint8_t in_b = 0b00000000; in_b < 0b10000000; in_b++ )
         {
             uint8_t expected = in_a + in_b;
 
@@ -192,6 +193,38 @@ TEST_F(FullAdderTest, Level3_HalfwayPointFidelityTest)
             uint8_t out_value = output_register->value_unsigned<uint8_t>();
 
             EXPECT_EQ(out_value, expected);
+        }
+    }
+}
+
+TEST_F(FullAdderTest, Level4_FullFidelityTest)
+{
+    using Register = circsim::components::Register;
+    using Wire = circsim::components::Wire;
+
+    for( uint16_t in_a = 0x0000; in_a < 0x0100; in_a++ )
+    {
+        for( uint16_t in_b = 0x0000; in_b < 0x0100; in_b++)
+        {
+            uint16_t expected_total = in_a + in_b;
+
+            uint16_t carry_set = static_cast<bool>(expected_total & 0x0100);
+            uint8_t sum_result = static_cast<uint8_t>(expected_total & 0xFF);
+
+            _simulator->update_by_register<uint8_t>(REG_A_ID, in_a, false);
+            _simulator->update_by_register<uint8_t>(REG_B_ID, in_b, false);
+            _simulator->update_all();
+
+            Register* output_register = _simulator->circuit().get<Register>(REG_OUT_ID);
+            Register* carry_register = _simulator->circuit().get<Register>(REG_CARRY_ID);
+
+            uint8_t out_value = output_register->value_unsigned<uint8_t>();
+            EXPECT_EQ(out_value, sum_result);
+
+            Wire *carry_flag = _simulator->circuit().get<Wire>(carry_register->wire_ids()[7]);
+            bool carry_value = carry_flag->high();
+
+            EXPECT_EQ(carry_value, carry_set);
         }
     }
 }
