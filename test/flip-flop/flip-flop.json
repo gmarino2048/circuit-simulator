@@ -93,6 +93,7 @@
         {
             "id": 2,
             "name": "~D",
+            "pulled": "HIGH",
             "ctrl_transistors": [ 0 ],
             "gate_transistors": [ 3 ]
         },
@@ -105,48 +106,56 @@
         {
             "id": 4,
             "name": "Q",
+            "pulled": "HIGH",
             "ctrl_transistors": [ 6 ],
             "gate_transistors": [ 8 ]
         },
         {
             "id": 5,
             "name": "~Q",
+            "pulled": "HIGH",
             "ctrl_transistors": [ 8 ],
             "gate_transistors": [ 5 ]
         },
         {
             "id": 6,
             "name": "D NAND CLK -> Intermediate",
+            "pulled": "NONE",
             "ctrl_transistors": [ 1, 2 ],
             "gate_transistors": []
         },
         {
             "id": 7,
             "name": "D NAND CLK -> LATCH0",
+            "pulled": "HIGH",
             "ctrl_transistors": [ 2 ],
             "gate_transistors": [ 6 ]
         },
         {
             "id": 8,
             "name": "CLK NAND ~D -> Intermediate",
+            "pulled": "NONE",
             "ctrl_transistors": [ 3, 4 ],
             "gate_transistors": []
         },
         {
             "id": 9,
             "name": "CLK NAND ~D -> LATCH1",
+            "pulled": "HIGH",
             "ctrl_transistors": [ 4 ],
             "gate_transistors": [ 7 ]
         },
         {
             "id": 10,
             "name": "LATCH0 NAND ~Q -> Intermediate",
+            "pulled": "NONE",
             "ctrl_transistors": [ 5, 6 ],
             "gate_transistors": []
         },
         {
             "id": 11,
             "name": "LATCH1 NAND Q -> Intermediate",
+            "pulled": "NONE",
             "ctrl_transistors": [ 7, 8 ],
             "gate_transistors": []
         }
