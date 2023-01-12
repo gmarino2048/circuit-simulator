@@ -38,31 +38,13 @@ const char *WIRE_VCC = "VCC";
 const char *WIRE_GND = "GND";
 
 
-/// Initialize to -1 until it is set
-std::optional<uint64_t> Wire::_VCC_ID = std::nullopt;
-
-/// Initialize to -1 until it is set
-std::optional<uint64_t> Wire::_GND_ID = std::nullopt;
-
-
-// Initialize special wire functions
-const std::function<Wire::State(Wire::State)> Wire::_VCC_FUNC = [](State)
-{
-    return HIGH;
-};
-
-const std::function<Wire::State(Wire::State)> Wire::_GND_FUNC = [](State)
-{
-    return GROUNDED;
-};
-
-
 /**
  * Default constructor for the wire object. Make sure that the
  * ID of the wire is -1 so the simulator can quickly detect an error
  */
 Wire::Wire(): _id(std::nullopt),
               _pulled(PS_NONE),
+              _special_type(SW_NONE),
               _state(FLOATING)
 {
     // All other fields get default constructor calls
@@ -80,12 +62,11 @@ Wire::Wire
     const std::vector<uint64_t> &gate_transistors
 ):  _id(id),
     _pulled(PS_NONE),
+    _special_type(special_type),
     _trans_ctl_ids(control_transistors),
     _trans_gate_ids(gate_transistors)
 {
     _primary_name = special_wire_name(special_type);
-    
-    set_special_wire_id(special_type);
 }
 
 
@@ -102,6 +83,7 @@ Wire::Wire
 ):  _id(id),
     _primary_name(name),
     _pulled(pulled),
+    _special_type(SW_NONE),
     _trans_ctl_ids(control_transistors),
     _trans_gate_ids(gate_transistors)
 {
@@ -109,26 +91,9 @@ Wire::Wire
 }
 
 
-void Wire::RESET_CLASS()
-{
-    _VCC_ID = std::nullopt;
-    _GND_ID = std::nullopt;
-}
-
-
 bool Wire::special() const
 {
-    if( GND_ID_EXISTS() && id() == GND_ID() )
-    {
-        return true;
-    }
-
-    if( VCC_ID_EXISTS() && id() == VCC_ID() )
-    {
-        return true;
-    }
-
-    return false;
+    return _special_type != SW_NONE;
 }
 
 
@@ -254,6 +219,7 @@ bool Wire::operator==(const Wire &rhs) const
     equivalent &= _other_names == rhs._other_names;
 
     equivalent &= _pulled == rhs._pulled;
+    equivalent &= _special_type == rhs._special_type;
     equivalent &= _state == rhs._state;
 
     // Don't check function equality, it's not worth it
@@ -268,65 +234,12 @@ bool Wire::operator==(const Wire &rhs) const
 // Helper functions
 const char *ERR_UNK_SPECIAL_WIRE = "Unknown special wire type specified: ";
 
-void Wire::set_special_wire_id(const SpecialWireType type)
-{
-    // Use a pointer to select between the different special wire types
-    std::optional<uint64_t>* id = nullptr;
-
-    switch( type )
-    {
-        case SW_VCC:
-            id = &this->_VCC_ID;
-            break;
-
-        case SW_GND:
-            id = &this->_GND_ID;
-            break;
-
-        default:
-            throw std::runtime_error
-            (
-                ERR_UNK_SPECIAL_WIRE +
-                std::to_string(type)
-            );
-    }
-
-    if( !id->has_value() )
-    {
-        *id = this->_id;
-    }
-    else
-    {
-        throw std::runtime_error
-        (
-            "ID of " + this->_primary_name + " already specified"
-        );
-    }
-}
-
-
 std::string Wire::special_wire_name(const SpecialWireType type)
 {
     switch( type )
     {
         case SW_VCC:       return WIRE_VCC;
         case SW_GND:       return WIRE_GND;
-        default:
-            throw std::runtime_error
-            (
-                ERR_UNK_SPECIAL_WIRE +
-                std::to_string(type)
-            );
-    }
-}
-
-
-Wire::extern_func_t Wire::special_wire_func(const SpecialWireType type)
-{
-    switch( type )
-    {
-        case SW_VCC:       return _VCC_FUNC;
-        case SW_GND:       return _GND_FUNC;
         default:
             throw std::runtime_error
             (

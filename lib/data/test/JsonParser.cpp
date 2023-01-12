@@ -356,7 +356,6 @@ TEST_F(JsonParserTest, WireTest)
     std::vector<Wire> wires;
     ASSERT_NO_THROW(wires = JsonParser::_convert_object<std::vector<Wire>>(wire_list));
 
-    Wire::RESET_CLASS();
     std::vector<Wire> expected =
     {
         Wire(32, "", Wire::PulledStatus::PS_NONE, { 2, 4, 8, 16 }, { 3, 5, 9, 17 }),

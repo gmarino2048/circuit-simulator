@@ -54,7 +54,6 @@ void FlipFlopTest::SetUp()
 
 void FlipFlopTest::TearDown()
 {
-    circsim::components::Wire::RESET_CLASS();
     delete _simulator;
 }
 
