@@ -103,26 +103,23 @@ void WireGroup::_build_wire_group(const uint64_t initial, const Circuit& circuit
 
 void WireGroup::_recalculate_group_state(const Circuit& circuit)
 {
-    // Check for GND wire
-    if( Wire::GND_ID_EXISTS() && _wires.find(Wire::GND_ID()) != _wires.end() )
-    {
-        _state = Wire::GROUNDED;
-        return;
-    }
-
-    // Check for VCC wire
-    if( Wire::VCC_ID_EXISTS() && _wires.find(Wire::VCC_ID()) != _wires.end() )
-    {
-        _state = Wire::HIGH;
-        return;
-    }
-
     uint8_t value = 0;
     size_t fl_count = 0;
     size_t fh_count = 0;
     for( const uint64_t wire_id : _wires )
     {
         Wire* wire = circuit.get<Wire>(wire_id);
+
+        if( wire->special_type() == Wire::SpecialWireType::SW_GND )
+        {
+            value |= Wire::State::GROUNDED;
+            break;
+        }
+        else if( wire->special_type() == Wire::SpecialWireType::SW_VCC )
+        {
+            value |= Wire::State::HIGH;
+        }
+
         wire->set_floating();
 
         if ( wire->state() == Wire::State::FLOATING_HIGH )
@@ -167,8 +164,8 @@ void WireGroup::_update_wire_states(const Circuit& circuit) const
     {
         Wire* wire = circuit.get<Wire>(wire_id);
 
-        bool is_vcc = Wire::VCC_ID_EXISTS() ? wire->id() == Wire::VCC_ID() : false;
-        bool is_gnd = Wire::GND_ID_EXISTS() ? wire->id() == Wire::GND_ID() : false;
+        bool is_vcc = wire->special_type() == Wire::SW_VCC;
+        bool is_gnd = wire->special_type() == Wire::SW_GND;
 
         if( is_vcc || is_gnd )
         {

@@ -67,8 +67,6 @@ Wire::Wire
     _trans_gate_ids(gate_transistors)
 {
     _primary_name = special_wire_name(special_type);
-    
-    set_special_wire_id(special_type);
 }
 
 

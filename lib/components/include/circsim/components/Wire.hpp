@@ -311,14 +311,6 @@ public:
 private:
 
     /**
-     * @brief Set the static wire ID parameter when the special wire
-     *        is defined.
-     * 
-     * @param type The type of the special wire
-     */
-    void set_special_wire_id(const SpecialWireType type);
-
-    /**
      * @brief Get the name for the special wire.
      * 
      * @param type The type of the special wire
