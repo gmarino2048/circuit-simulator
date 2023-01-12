@@ -59,7 +59,6 @@ void FullAdderTest::SetUp()
 
 void FullAdderTest::TearDown()
 {
-    circsim::components::Wire::RESET_CLASS();
     delete _simulator;
 }
 

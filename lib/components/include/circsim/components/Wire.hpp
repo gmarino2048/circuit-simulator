@@ -86,24 +86,6 @@ public:
 
 private:
 
-    /// Typedef the optional external driver function so the code is cleaner
-    typedef std::optional<std::function<State(State)>> extern_func_t;
-
-
-    /// The ID of the VCC rail
-    static std::optional<uint64_t> _VCC_ID;
-
-    /// The ID of the GND rail
-    static std::optional<uint64_t> _GND_ID;
-
-
-    /// The VCC rail state function
-    static const std::function<State(State)> _VCC_FUNC;
-
-    /// The GND rail state function
-    static const std::function<State(State)> _GND_FUNC;
-
-
     /// The ID of the wire. This will be -1 if it has not been initialized yet
     std::optional<uint64_t> _id;
 
@@ -116,6 +98,9 @@ private:
 
     /// Tells whether this wire is connected to a pullup/pulldown
     PulledStatus _pulled;
+
+    /// Tells whether this wire is a special wire (GND/VCC) or not
+    SpecialWireType _special_type;
 
     /// The current state of the wire, given as one of the above Wire States
     State _state = State::FLOATING;
@@ -171,58 +156,6 @@ public:
         const std::vector<uint64_t> &control_transistors,
         const std::vector<uint64_t> &gate_transistors
     );
-
-
-    /**
-     * @brief Returns whether the VCC wire currently has an assigned value.
-     * 
-     * @return true There is a VCC wire in the circuit
-     * @return false There is no VCC wire in the circuit
-     */
-    static inline bool VCC_ID_EXISTS() { return _VCC_ID.has_value(); }
-
-    /**
-     * @brief Get the ID for the VCC Rail
-     * 
-     * @return uint64_t The VCC Rail ID
-     */
-    static inline uint64_t VCC_ID() try
-    {
-        return _VCC_ID.value();
-    }
-    catch( const std::bad_optional_access& )
-    {
-        throw circsim::common::ValueError("VCC_ID is not currently set.");
-    }
-
-
-    /**
-     * @brief Returns whether the GND wire currently has an assigned value.
-     * 
-     * @return true There is a GND wire in the circuit
-     * @return false There is no GND wire in the circuit
-     */
-    static inline bool GND_ID_EXISTS() { return _GND_ID.has_value(); }
-
-    /**
-     * @brief Get the ID for the GND Rail
-     * 
-     * @return uint64_t The GND rail ID
-     */
-    static inline uint64_t GND_ID() try
-    {
-        return _GND_ID.value();
-    }
-    catch( const std::bad_optional_access& )
-    {
-        throw circsim::common::ValueError("GND_ID is not currently set.");
-    }
-
-    /**
-     * @brief Reset the class instance to its original state.
-     * 
-     */
-    static void RESET_CLASS();
 
 
     /**
@@ -311,6 +244,18 @@ public:
 
 
     /**
+     * @brief Return the special wire type, or SW_NONE if it is not
+     *        special.
+     * 
+     * @return SpecialWireType The special wire type
+     */
+    inline SpecialWireType special_type() const noexcept
+    {
+        return this->_special_type;
+    }
+
+
+    /**
      * @brief Determines if the wire has been pulled high or low
      * 
      * @return PulledStatus whether the wire is pulled high, low, or neither
@@ -380,14 +325,6 @@ private:
      * @return std::string The special wire's name
      */
     static std::string special_wire_name(const SpecialWireType type);
-
-    /**
-     * @brief Get the driver function for a special wire.
-     * 
-     * @param type The type of the special wire
-     * @return extern_func_t The external driver function
-     */
-    static extern_func_t special_wire_func(const SpecialWireType type);
 
 
     /**

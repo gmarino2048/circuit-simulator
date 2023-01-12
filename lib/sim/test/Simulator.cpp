@@ -47,7 +47,6 @@ void SimulatorTest::SetUp()
 void SimulatorTest::TearDown()
 {
     delete _simulator;
-    Wire::RESET_CLASS();
 }
 
 bool SimulatorTest::decode_output(const Wire *wire)

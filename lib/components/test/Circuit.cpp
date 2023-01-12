@@ -241,8 +241,6 @@ TEST_F(CircuitTest, UpdateAddsComponent)
 
 TEST_F(CircuitTest, VerificationBaseTest)
 {
-    Wire::RESET_CLASS();
-
     _wires = {
         Wire(0, Wire::SW_GND, { 0 }, {}),
         Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
@@ -265,8 +263,6 @@ TEST_F(CircuitTest, VerificationMissingWireTest)
 
     for( size_t i = 0; i < WIRE_COUNT; i++ )
     {
-        Wire::RESET_CLASS();
-
         _circuit = Circuit();
 
         _wires = {
@@ -290,8 +286,6 @@ TEST_F(CircuitTest, VerificationMissingWireTest)
 
 TEST_F(CircuitTest, VerificationMissingTransistorTest)
 {
-    Wire::RESET_CLASS();
-
     _wires = {
         Wire(0, Wire::SW_GND, { 0 }, {}),
         Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
@@ -312,8 +306,6 @@ TEST_F(CircuitTest, VerificationMissingTransistorIdTest)
 
     for( size_t i = 0; i < WIRE_COUNT; i++ )
     {
-        Wire::RESET_CLASS();
-
         _circuit = Circuit();
 
         _wires = {
@@ -324,7 +316,6 @@ TEST_F(CircuitTest, VerificationMissingTransistorIdTest)
 
         if( i == 0 )
         {
-            Wire::RESET_CLASS();
             _wires[i] = Wire(_wires[i].id(), Wire::SW_GND, {}, {} );
         }
         else
@@ -352,8 +343,6 @@ TEST_F(CircuitTest, VerificationMissingTransistorIdTest)
 
 TEST_F(CircuitTest, ValidationWrongWire)
 {
-    Wire::RESET_CLASS();
-
     _wires = {
         Wire(0, Wire::SW_GND, { 0 }, {}),
         Wire(1, "IN", Wire::PS_NONE, {}, { 0 }),
@@ -370,7 +359,6 @@ TEST_F(CircuitTest, ValidationWrongWire)
     EXPECT_THROW(_circuit.validate(), circsim::common::ValidationError);
 
     _circuit = Circuit();
-    Wire::RESET_CLASS();
 
     _wires = {
         Wire(0, Wire::SW_GND, { 0 }, {}),
@@ -390,8 +378,6 @@ TEST_F(CircuitTest, ValidationWrongWire)
 
 TEST_F(CircuitTest, ValidationWrongTransistorTest)
 {
-    Wire::RESET_CLASS();
-
     _wires = {
         Wire(0, Wire::SW_GND, { 0 }, {}),
         Wire(1, "IN", Wire::PS_NONE, { 0 }, {}),
