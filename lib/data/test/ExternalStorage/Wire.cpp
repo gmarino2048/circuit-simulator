@@ -49,6 +49,13 @@ protected:
             ),
             Wire
             (
+                1,
+                Wire::SpecialWireType::SW_GND,
+                { 3, 6, 9 },
+                { 2, 4, 8 }
+            ),
+            Wire
+            (
                 84,
                 "wire2",
                 Wire::PulledStatus::PS_LOW,

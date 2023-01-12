@@ -47,11 +47,11 @@ public:
      *        GND rails.
      * 
      */
-    enum SpecialWireType
+    enum SpecialWireType : uint8_t
     {
-        SW_VCC,         //!< This is the high voltage rail
-        SW_GND,         //!< This is the grounding rail
-        SW_NONE         //!< The wire does not have a special type
+        SW_NONE = 0,        //!< The wire does not have a special type
+        SW_GND  = 1,        //!< This is the grounding rail
+        SW_VCC  = 2,        //!< This is the high voltage rail
     };
 
     /**

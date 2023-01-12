@@ -219,6 +219,7 @@ bool Wire::operator==(const Wire &rhs) const
     equivalent &= _other_names == rhs._other_names;
 
     equivalent &= _pulled == rhs._pulled;
+    equivalent &= _special_type == rhs._special_type;
     equivalent &= _state == rhs._state;
 
     // Don't check function equality, it's not worth it

@@ -32,7 +32,6 @@ target_sources(circsim-components-test
         ${CMAKE_CURRENT_SOURCE_DIR}/test/Circuit.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/Register.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/Transistor.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/Wire.cpp
 )
 
 target_link_libraries(circsim-components-test
