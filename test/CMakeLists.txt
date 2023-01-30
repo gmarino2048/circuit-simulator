@@ -50,3 +50,29 @@ configure_file(
 gtest_add_tests(
     TARGET flip-flop-test
 )
+
+# Add 6502 test
+add_executable(cpu-test)
+
+target_sources(cpu-test
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/6502/main.cpp
+)
+
+target_link_libraries(cpu-test
+    PRIVATE
+        circsim-sim
+
+        GTest::Main
+        GTest::GTest
+)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/6502/6502.json
+    6502.json
+    COPYONLY
+)
+
+gtest_add_tests(
+    TARGET cpu-test
+)
