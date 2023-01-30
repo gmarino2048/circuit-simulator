@@ -52,14 +52,14 @@ gtest_add_tests(
 )
 
 # Add 6502 test
-add_executable(cpu-test)
+add_executable(cpu-import-test)
 
-target_sources(cpu-test
+target_sources(cpu-import-test
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/6502/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/cpu-import/cpu-import.cpp
 )
 
-target_link_libraries(cpu-test
+target_link_libraries(cpu-import-test
     PRIVATE
         circsim-sim
 
@@ -68,11 +68,17 @@ target_link_libraries(cpu-test
 )
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/6502/6502.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/cpu-import/6502.json
     6502.json
     COPYONLY
 )
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cpu-import/6800.json
+    6800.json
+    COPYONLY
+)
+
 gtest_add_tests(
-    TARGET cpu-test
+    TARGET cpu-import-test
 )
