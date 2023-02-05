@@ -13,6 +13,7 @@ target_sources(circsim-components
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Circuit.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/CircuitState.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/Clock.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Register.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Transistor.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Wire.cpp
