@@ -48,6 +48,17 @@ private:
     /// Circuit reference for performing updates
     Circuit* _circuit;
 
+    /**
+     * @brief Update all of the wires in the clock module as
+     *        long as the circuit reference is properly set
+     * 
+     * @param new_state The new state of the clock wires.
+     * 
+     * @throw IndexError if the wire IDs do not exist in the
+     *        circuit reference
+     */
+    void _update_wires(const Wire::State new_state);
+
 public:
 
     /**
@@ -62,6 +73,26 @@ public:
      * 
      */
     ~Clock() = default;
+
+
+    /**
+     * @brief Get the list of wires connected to this
+     *        clock object.
+     * 
+     * @return std::vector<uint64_t> The wire list
+     */
+    std::vector<uint64_t> wires() const
+    {
+        return _wires;
+    }
+
+    /**
+     * @brief Update the wire list of the clock object with
+     *        new values.
+     * 
+     * @param new_list The new list of wires to use.
+     */
+    void update_wires(const std::vector<uint64_t> new_list);
 
 
     /**
